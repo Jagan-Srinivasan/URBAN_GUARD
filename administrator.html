@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>URBANGUARD — Administrator</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--slate:#334155;--slate-dark:#1e293b;--danger:#dc2626;--warning:#f59e0b;--success:#10b981;--blue:#3b82f6;--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--bg:#f8fafc;--card:#fff}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+.topbar{background:linear-gradient(90deg,#0f172a,#334155);color:#fff;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;box-shadow:0 4px 20px rgba(15,23,42,0.3)}
+.brand{display:flex;align-items:center;gap:14px}
+.brand-icon{width:44px;height:44px;background:rgba(255,255,255,0.1);border-radius:12px;display:grid;place-items:center;font-size:20px}
+.brand-text{font-family:Orbitron,sans-serif;font-weight:900;letter-spacing:1px;line-height:1.1}
+.brand-text small{display:block;font-family:Inter,sans-serif;font-size:10px;font-weight:500;opacity:.75;letter-spacing:0.5px;margin-top:2px}
+.logout-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:8px 16px;border-radius:10px;font-weight:600;font-size:13px;cursor:pointer}
+
+.container{max-width:1400px;margin:0 auto;padding:28px}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+@media(max-width:900px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
+.stat-card{background:var(--card);border-radius:16px;padding:20px;border:1px solid var(--line);position:relative;overflow:hidden}
+.stat-card::before{content:"";position:absolute;top:0;left:0;width:4px;height:100%;background:var(--slate)}
+.stat-card.ok::before{background:var(--success)}
+.stat-card.warn::before{background:var(--warning)}
+.stat-card.err::before{background:var(--danger)}
+.stat-card .lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px}
+.stat-card .val{font-size:26px;font-weight:900;line-height:1;margin-bottom:4px}
+.stat-card .sub{font-size:11px;color:var(--muted)}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:1000px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border-radius:20px;padding:24px;box-shadow:0 4px 20px rgba(15,23,42,0.06);border:1px solid var(--line);margin-bottom:24px}
+.card h3{font-size:15px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.card h3 i{color:var(--slate)}
+.card h3 .count{background:var(--slate);color:#fff;font-size:11px;padding:2px 8px;border-radius:999px;margin-left:auto}
+
+table{width:100%;border-collapse:collapse;font-size:13px}
+table th{text-align:left;padding:10px 8px;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);border-bottom:2px solid var(--line);font-weight:800}
+table td{padding:12px 8px;border-bottom:1px solid var(--line);color:var(--ink)}
+table tr:last-child td{border-bottom:none}
+.pill{padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;text-transform:uppercase}
+.pill.ok{background:#d1fae5;color:#065f46}
+.pill.warn{background:#fef3c7;color:#92400e}
+.pill.err{background:#fee2e2;color:#991b1b}
+.pill.info{background:#dbeafe;color:#1e40af}
+
+.action-btn{background:#f1f5f9;border:none;color:var(--slate);padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;margin-right:4px}
+.action-btn:hover{background:#e2e8f0}
+.action-btn.danger{color:var(--danger)}
+.action-btn.danger:hover{background:#fee2e2}
+.action-btn.success{color:var(--success)}
+.action-btn.success:hover{background:#d1fae5}
+
+.empty{text-align:center;padding:30px;color:var(--muted);font-size:13px}
+.empty i{font-size:32px;opacity:.3;display:block;margin-bottom:10px}
+
+.audit-item{padding:12px 0;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:flex-start;font-size:13px}
+.audit-item:last-child{border-bottom:none}
+.audit-item .audit-icon{width:32px;height:32px;background:#f1f5f9;border-radius:8px;display:grid;place-items:center;color:var(--slate);flex-shrink:0;font-size:12px}
+.audit-item .audit-body{flex:1}
+.audit-item .audit-title{font-weight:600;margin-bottom:2px}
+.audit-item .audit-time{font-size:11px;color:var(--muted)}
+
+.toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:#fff;padding:14px 20px;border-radius:12px;font-size:13px;font-weight:600;z-index:200;box-shadow:0 12px 30px rgba(15,23,42,0.3);max-width:340px}
+.toast.success{background:var(--success)} .toast.err{background:var(--danger)} .toast.warn{background:var(--warning)}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-icon">⚙️</div>
+    <div class="brand-text">URBANGUARD
+      <small>SYSTEM ADMINISTRATOR</small>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Exit</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="stats-grid">
+    <div class="stat-card ok">
+      <div class="lbl">System Health</div>
+      <div class="val" style="color:var(--success)">99.9%</div>
+      <div class="sub">All services operational</div>
+    </div>
+    <div class="stat-card">
+      <div class="lbl">Active Users</div>
+      <div class="val" id="userCount">0</div>
+      <div class="sub">Across all roles</div>
+    </div>
+    <div class="stat-card warn">
+      <div class="lbl">Pending Approvals</div>
+      <div class="val" id="pendingCount" style="color:#92400e">0</div>
+      <div class="sub">Awaiting review</div>
+    </div>
+    <div class="stat-card">
+      <div class="lbl">Data Stored</div>
+      <div class="val" id="dataSize">0</div>
+      <div class="sub">localStorage keys</div>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <h3><i class="fas fa-users-cog"></i> User Management <span class="count" id="userBadge">0</span></h3>
+      <div id="userTable"><div class="empty"><i class="fas fa-user-slash"></i>No users registered</div></div>
+    </div>
+
+    <div class="card">
+      <h3><i class="fas fa-heartbeat"></i> System Health Monitor</h3>
+      <table>
+        <tr><td><i class="fas fa-database" style="color:var(--blue);width:20px"></i> Database (localStorage)</td><td><span class="pill ok">Healthy</span></td><td id="dbSize" style="color:var(--muted);font-size:11px">—</td></tr>
+        <tr><td><i class="fas fa-broadcast-tower" style="color:var(--success);width:20px"></i> Broadcast Sync</td><td><span class="pill ok">Active</span></td><td style="color:var(--muted);font-size:11px">Real-time</td></tr>
+        <tr><td><i class="fas fa-bell" style="color:var(--warning);width:20px"></i> Alert Level Engine</td><td><span class="pill ok">Running</span></td><td style="color:var(--muted);font-size:11px">Polling</td></tr>
+        <tr><td><i class="fas fa-map-marked-alt" style="color:var(--blue);width:20px"></i> Sensor Network</td><td><span class="pill info">12 nodes</span></td><td style="color:var(--muted);font-size:11px">All online</td></tr>
+        <tr><td><i class="fas fa-envelope" style="color:var(--slate);width:20px"></i> Mailer Service</td><td><span class="pill warn">Demo</span></td><td style="color:var(--muted);font-size:11px">SMTP mocked</td></tr>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <h3><i class="fas fa-key"></i> Quick Config</h3>
+      <table>
+        <tr><td><strong>API Endpoint</strong></td><td>http://localhost:5000/api</td><td><span class="pill ok">Reachable</span></td></tr>
+        <tr><td><strong>JWT Expiry</strong></td><td>7 days</td><td>—</td></tr>
+        <tr><td><strong>Rate Limit</strong></td><td>10 auth / 15 min</td><td>—</td></tr>
+        <tr><td><strong>Password Hash</strong></td><td>bcrypt (12 rounds)</td><td>—</td></tr>
+        <tr><td><strong>Session Type</strong></td><td>HttpOnly Cookie</td><td><span class="pill ok">Secure</span></td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3><i class="fas fa-history"></i> Recent Audit Log</h3>
+      <div id="auditLog"><div class="empty"><i class="fas fa-clipboard-list"></i>No audit events yet</div></div>
+    </div>
+
+  </div>
+
+<!-- NODE MANAGEMENT ADD-ON -->
+<style>
+.node-admin-card{background:var(--card);border-radius:20px;padding:24px;box-shadow:0 4px 20px rgba(15,23,42,.06);border:1px solid var(--line);margin-bottom:24px}.node-admin-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}.node-admin-head i{color:var(--blue)}.node-admin-head h3{margin:0;font-size:15px}.node-admin-sub{font-size:12px;color:var(--muted);margin-bottom:18px}.node-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}@media(max-width:760px){.node-form-grid{grid-template-columns:1fr}}.node-field label{display:block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px}.node-field input,.node-field select{width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;font:inherit;font-size:13px;outline:none}.node-field input:focus,.node-field select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,.1)}.node-field.full{grid-column:1/-1}.node-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}.node-primary{background:var(--blue);color:#fff;border:0;padding:11px 18px;border-radius:10px;font-weight:800;cursor:pointer}.node-secondary{background:#f1f5f9;color:var(--slate);border:0;padding:11px 18px;border-radius:10px;font-weight:800;cursor:pointer}.node-table-wrap{overflow:auto;margin-top:20px}.node-table-wrap table{min-width:900px}.node-live{font-size:10px;color:#047857;background:#d1fae5;padding:3px 8px;border-radius:999px;font-weight:800}.node-empty{padding:25px;text-align:center;color:var(--muted);background:#f8fafc;border-radius:12px}
+</style>
+<div class="node-admin-card">
+  <div class="node-admin-head"><i class="fas fa-satellite-dish"></i><h3>Node Management</h3><span class="count" id="nodeAdminCount">0</span></div>
+  <div class="node-admin-sub">Register a newly installed river node. Saved nodes are immediately available to Authority and Government portals.</div>
+  <form id="nodeForm" onsubmit="saveUrbanGuardNode(event)">
+    <div class="node-form-grid">
+      <div class="node-field"><label>State *</label><select id="nodeState" required onchange="populateNodeDistricts()"><option value="">Select state</option></select></div>
+      <div class="node-field"><label>District *</label><select id="nodeDistrict" required disabled><option value="">Select state first</option></select></div>
+      <div class="node-field"><label>Node Number *</label><input id="nodeNumber" required placeholder="e.g. CBR-008"></div>
+      <div class="node-field"><label>Channel ID (ThingSpeak) *</label><input id="nodeChannel" required placeholder="e.g. 2456789"></div>
+      <div class="node-field"><label>Latitude *</label><input id="nodeLatitude" required type="number" step="any" min="-90" max="90" placeholder="e.g. 11.5714"></div>
+      <div class="node-field"><label>Longitude *</label><input id="nodeLongitude" required type="number" step="any" min="-180" max="180" placeholder="e.g. 77.7331"></div>
+      <div class="node-field"><label>Date of Installation *</label><input id="nodeInstallDate" required type="date"></div>
+      <div class="node-field"><label>Installer Name *</label><input id="nodeInstaller" required placeholder="e.g. Arun Kumar"></div>
+      <div class="node-field full"><label>Worker ID *</label><input id="nodeWorkerId" required placeholder="e.g. UG-WKR-014"></div>
+    </div>
+    <div class="node-actions"><button type="button" class="node-secondary" onclick="resetNodeForm()">Reset</button><button type="submit" class="node-primary"><i class="fas fa-plus-circle"></i> Add Node</button></div>
+  </form>
+  <div class="node-table-wrap"><table><thead><tr><th>Node</th><th>State</th><th>District</th><th>Coordinates</th><th>ThingSpeak</th><th>Installed</th><th>Installer</th><th>Status</th><th>Action</th></tr></thead><tbody id="nodeAdminTable"></tbody></table></div>
+</div>
+
+  <div class="card">
+    <h3><i class="fas fa-tools"></i> Maintenance Actions</h3>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <button class="action-btn success" style="padding:12px 20px;font-size:13px" onclick="exportData()"><i class="fas fa-download"></i> Export All Data (JSON)</button>
+      <button class="action-btn" style="padding:12px 20px;font-size:13px" onclick="simulateBackup()"><i class="fas fa-cloud-upload-alt"></i> Trigger Backup</button>
+      <button class="action-btn danger" style="padding:12px 20px;font-size:13px" onclick="clearAllData()"><i class="fas fa-trash-alt"></i> Clear All Demo Data</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ============================================
+// ADMINISTRATOR PORTAL
+// ============================================
+
+// Demo users (in real system, this comes from backend)
+let demoUsers = [
+  {id:1, name:'Aarav Citizen', email:'aarav@test.com', role:'citizen', status:'approved', joined:'2024-01-15'},
+  {id:2, name:'Priya Field', email:'priya@urbanguard.in', role:'authority', status:'approved', joined:'2024-02-20'},
+  {id:3, name:'Raj Kumar', email:'raj@urbanguard.in', role:'authority', status:'pending', joined:'2024-11-28'},
+  {id:4, name:'Minister Office', email:'minister@gov.in', role:'government', status:'approved', joined:'2024-03-10'},
+  {id:5, name:'Sneha New', email:'sneha@test.com', role:'citizen', status:'approved', joined:'2024-12-01'},
+  {id:6, name:'Deepak Chief', email:'deepak@gov.in', role:'government', status:'pending', joined:'2024-12-05'}
+];
+
+let auditLog = JSON.parse(localStorage.getItem('nfms_audit_log') || '[]');
+
+window.addEventListener('load', () => {
+  if (auditLog.length === 0){
+    // Seed some demo audit entries
+    auditLog = [
+      {action:'User login', detail:'priya@urbanguard.in signed in', time:new Date(Date.now()-5*60000).toLocaleTimeString()},
+      {action:'Alert level changed', detail:'Level: WATCH (1)', time:new Date(Date.now()-12*60000).toLocaleTimeString()},
+      {action:'Broadcast sent', detail:'Evacuation order for Zone A', time:new Date(Date.now()-25*60000).toLocaleTimeString()},
+      {action:'New user signup', detail:'sneha@test.com registered', time:new Date(Date.now()-60*60000).toLocaleTimeString()}
+    ];
+    localStorage.setItem('nfms_audit_log', JSON.stringify(auditLog));
+  }
+  renderAll();
+});
+
+function renderAll(){
+  renderUsers();
+  renderAudit();
+  updateStats();
+}
+
+function updateStats(){
+  document.getElementById('userCount').textContent = demoUsers.length;
+  document.getElementById('pendingCount').textContent = demoUsers.filter(u => u.status === 'pending').length;
+  document.getElementById('userBadge').textContent = demoUsers.length;
+  document.getElementById('dataSize').textContent = Object.keys(localStorage).length;
+  document.getElementById('dbSize').textContent = Object.keys(localStorage).length + ' keys';
+}
+
+function renderUsers(){
+  const container = document.getElementById('userTable');
+  if (demoUsers.length === 0){
+    container.innerHTML = '<div class="empty"><i class="fas fa-user-slash"></i>No users registered</div>';
+    return;
+  }
+
+  let html = `<table><thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
+  demoUsers.forEach(u => {
+    const statusPill = u.status === 'approved' ? '<span class="pill ok">Approved</span>' : '<span class="pill warn">Pending</span>';
+    html += `
+      <tr>
+        <td>
+          <div style="font-weight:700">${escapeHtml(u.name)}</div>
+          <div style="font-size:11px;color:var(--muted)">${escapeHtml(u.email)}</div>
+        </td>
+        <td><span class="pill info">${u.role}</span></td>
+        <td>${statusPill}</td>
+        <td>
+          ${u.status === 'pending' ? `<button class="action-btn success" onclick="approveUser(${u.id})">Approve</button>` : ''}
+          <button class="action-btn danger" onclick="removeUser(${u.id})">Remove</button>
+        </td>
+      </tr>`;
+  });
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
+function approveUser(id){
+  const u = demoUsers.find(x => x.id === id);
+  if (!u) return;
+  u.status = 'approved';
+  addAudit('User approved', `${u.email} approved by admin`);
+  renderAll();
+  toast('✅ User approved', 'success');
+}
+
+function removeUser(id){
+  const u = demoUsers.find(x => x.id === id);
+  if (!u) return;
+  if (!confirm(`Remove user ${u.email}?`)) return;
+  demoUsers = demoUsers.filter(x => x.id !== id);
+  addAudit('User removed', `${u.email} removed by admin`);
+  renderAll();
+  toast('🗑️ User removed', 'warn');
+}
+
+function renderAudit(){
+  const container = document.getElementById('auditLog');
+  if (auditLog.length === 0){
+    container.innerHTML = '<div class="empty"><i class="fas fa-clipboard-list"></i>No audit events yet</div>';
+    return;
+  }
+
+  const icons = {
+    'User login': 'fa-sign-in-alt',
+    'User approved': 'fa-user-check',
+    'User removed': 'fa-user-slash',
+    'Alert level changed': 'fa-bell',
+    'Broadcast sent': 'fa-bullhorn',
+    'New user signup': 'fa-user-plus'
+  };
+
+  container.innerHTML = auditLog.slice(0, 8).map(a => `
+    <div class="audit-item">
+      <div class="audit-icon"><i class="fas ${icons[a.action] || 'fa-info-circle'}"></i></div>
+      <div class="audit-body">
+        <div class="audit-title">${escapeHtml(a.action)}</div>
+        <div style="font-size:12px;color:var(--muted)">${escapeHtml(a.detail)}</div>
+        <div class="audit-time">${a.time}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addAudit(action, detail){
+  auditLog.unshift({action, detail, time: new Date().toLocaleTimeString()});
+  auditLog = auditLog.slice(0, 100);
+  localStorage.setItem('nfms_audit_log', JSON.stringify(auditLog));
+}
+
+function exportData(){
+  const data = {};
+  Object.keys(localStorage).forEach(k => data[k] = localStorage.getItem(k));
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `urbanguard-backup-${Date.now()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  addAudit('Data exported', 'Admin downloaded full backup');
+  toast('📦 Data exported', 'success');
+}
+
+function simulateBackup(){
+  addAudit('Backup triggered', 'Manual backup by admin');
+  toast('☁️ Backup started (demo)', 'success');
+}
+
+function clearAllData(){
+  if (!confirm('Delete ALL demo data? This cannot be undone.')) return;
+  if (!confirm('Really sure? This will clear citizen reports, broadcasts, users, everything.')) return;
+  localStorage.clear();
+  toast('🗑️ All demo data cleared', 'err');
+  setTimeout(() => location.reload(), 1200);
+}
+
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str || '';
+  return d.innerHTML;
+}
+
+function toast(msg, type=''){
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3200);
+}
+
+function logout(){
+  localStorage.removeItem('ug_demo_role');
+  window.location.href = 'index.html';
+}
+
+window.approveUser = approveUser;
+window.removeUser = removeUser;
+window.exportData = exportData;
+window.simulateBackup = simulateBackup;
+window.clearAllData = clearAllData;
+window.logout = logout;
+// NODE MANAGEMENT ADD-ON
+const UG_NODE_STORAGE='urbanguard_nodes_v1',UG_NODE_SYNC='urbanguard_nodes_sync';
+const UG_STATES=["Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal", "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Jammu and Kashmir", "Ladakh", "Lakshadweep", "Puducherry"],UG_DISTRICTS={"Andhra Pradesh": ["Alluri Sitharama Raju", "Anakapalli", "Ananthapuramu", "Annamayya", "Bapatla", "Chittoor", "Dr. B.R. Ambedkar Konaseema", "East Godavari", "Eluru", "Guntur", "Kakinada", "Krishna", "Kurnool", "Nandyal", "NTR", "Palnadu", "Parvathipuram Manyam", "Prakasam", "Srikakulam", "Sri Potti Sriramulu Nellore", "Sri Sathya Sai", "Tirupati", "Visakhapatnam", "Vizianagaram", "West Godavari", "YSR Kadapa"], "Arunachal Pradesh": ["Anjaw", "Changlang", "Dibang Valley", "East Kameng", "East Siang", "Kamle", "Kra Daadi", "Kurung Kumey", "Lepa Rada", "Lohit", "Longding", "Lower Dibang Valley", "Lower Siang", "Lower Subansiri", "Namsai", "Pakke-Kessang", "Papum Pare", "Shi-Yomi", "Siang", "Tawang", "Tirap", "Upper Siang", "Upper Subansiri", "West Kameng", "West Siang"], "Assam": ["Baksa", "Bajali", "Barpeta", "Biswanath", "Bongaigaon", "Cachar", "Charaideo", "Chirang", "Darrang", "Dhemaji", "Dhubri", "Dibrugarh", "Dima Hasao", "Goalpara", "Golaghat", "Hailakandi", "Hojai", "Jorhat", "Kamrup", "Kamrup Metropolitan", "Karbi Anglong", "Kokrajhar", "Lakhimpur", "Majuli", "Morigaon", "Nagaon", "Nalbari", "Sivasagar", "Sonitpur", "South Salmara-Mankachar", "Tamulpur", "Tinsukia", "Udalguri", "West Karbi Anglong"], "Bihar": ["Araria", "Arwal", "Aurangabad", "Banka", "Begusarai", "Bhagalpur", "Bhojpur", "Buxar", "Darbhanga", "East Champaran", "Gaya", "Gopalganj", "Jamui", "Jehanabad", "Kaimur", "Katihar", "Khagaria", "Kishanganj", "Lakhisarai", "Madhepura", "Madhubani", "Munger", "Muzaffarpur", "Nalanda", "Nawada", "Patna", "Purnia", "Rohtas", "Saharsa", "Samastipur", "Saran", "Sheikhpura", "Sheohar", "Sitamarhi", "Siwan", "Supaul", "Vaishali", "West Champaran"], "Chhattisgarh": ["Balod", "Baloda Bazar", "Balrampur-Ramanujganj", "Bastar", "Bemetara", "Bijapur", "Bilaspur", "Dantewada", "Dhamtari", "Durg", "Gariaband", "Gaurela-Pendra-Marwahi", "Janjgir-Champa", "Jashpur", "Kabirdham", "Kanker", "Kondagaon", "Korba", "Korea", "Mahasamund", "Manendragarh-Chirmiri-Bharatpur", "Mungeli", "Narayanpur", "Raigarh", "Rajnandgaon", "Sakti", "Sarangarh-Bilaigarh", "Sukma", "Surajpur", "Surguja"], "Goa": ["North Goa", "South Goa"], "Gujarat": ["Ahmedabad", "Amreli", "Anand", "Aravalli", "Banaskantha", "Bharuch", "Bhavnagar", "Botad", "Chhota Udaipur", "Dahod", "Dang", "Devbhumi Dwarka", "Gandhinagar", "Gir Somnath", "Jamnagar", "Junagadh", "Kachchh", "Kheda", "Mahisagar", "Mehsana", "Morbi", "Narmada", "Navsari", "Panchmahal", "Patan", "Porbandar", "Rajkot", "Sabarkantha", "Surat", "Surendranagar", "Tapi", "Vadodara", "Valsad"], "Haryana": ["Ambala", "Bhiwani", "Charkhi Dadri", "Faridabad", "Fatehabad", "Gurugram", "Hisar", "Jhajjar", "Jind", "Kaithal", "Karnal", "Kurukshetra", "Mahendragarh", "Nuh", "Palwal", "Panchkula", "Panipat", "Rewari", "Rohtak", "Sirsa", "Sonipat", "Yamunanagar"], "Himachal Pradesh": ["Bilaspur", "Chamba", "Hamirpur", "Kangra", "Kinnaur", "Kullu", "Lahaul and Spiti", "Mandi", "Shimla", "Sirmaur", "Solan", "Una"], "Jharkhand": ["Bokaro", "Chatra", "Deoghar", "Dhanbad", "Dumka", "East Singhbhum", "Garhwa", "Giridih", "Godda", "Gumla", "Hazaribagh", "Jamtara", "Khunti", "Koderma", "Latehar", "Lohardaga", "Pakur", "Palamu", "Ramgarh", "Ranchi", "Sahebganj", "Seraikela-Kharsawan", "Simdega", "West Singhbhum"], "Karnataka": ["Bagalkot", "Ballari", "Belagavi", "Bengaluru Rural", "Bengaluru Urban", "Bidar", "Chamarajanagar", "Chikkaballapur", "Chikkamagaluru", "Chitradurga", "Dakshina Kannada", "Davanagere", "Dharwad", "Gadag", "Hassan", "Haveri", "Kalaburagi", "Kodagu", "Kolar", "Koppal", "Mandya", "Mysuru", "Raichur", "Ramanagara", "Shivamogga", "Tumakuru", "Udupi", "Uttara Kannada", "Vijayapura", "Yadgir"], "Kerala": ["Alappuzha", "Ernakulam", "Idukki", "Kannur", "Kasaragod", "Kollam", "Kottayam", "Kozhikode", "Malappuram", "Palakkad", "Pathanamthitta", "Thiruvananthapuram", "Thrissur", "Wayanad"], "Madhya Pradesh": ["Agar Malwa", "Alirajpur", "Anuppur", "Ashoknagar", "Balaghat", "Barwani", "Betul", "Bhind", "Bhopal", "Burhanpur", "Chhatarpur", "Chhindwara", "Damoh", "Datia", "Dewas", "Dhar", "Dindori", "Guna", "Gwalior", "Harda", "Indore", "Jabalpur", "Jhabua", "Katni", "Khandwa", "Khargone", "Maihar", "Mandla", "Mandsaur", "Mauganj", "Morena", "Narmadapuram", "Narsinghpur", "Neemuch", "Panna", "Raisen", "Rajgarh", "Ratlam", "Rewa", "Sagar", "Satna", "Sehore", "Seoni", "Shahdol", "Shajapur", "Sheopur", "Shivpuri", "Sidhi", "Singrauli", "Tikamgarh", "Ujjain", "Umaria", "Vidisha"], "Maharashtra": ["Ahmednagar", "Akola", "Amravati", "Beed", "Bhandara", "Buldhana", "Chandrapur", "Dhule", "Gadchiroli", "Gondia", "Hingoli", "Jalgaon", "Jalna", "Kolhapur", "Latur", "Mumbai City", "Mumbai Suburban", "Nagpur", "Nanded", "Nandurbar", "Nashik", "Osmanabad", "Palghar", "Parbhani", "Pune", "Raigad", "Ratnagiri", "Sangli", "Satara", "Sindhudurg", "Solapur", "Thane", "Wardha", "Washim", "Yavatmal"], "Manipur": ["Bishnupur", "Chandel", "Churachandpur", "Imphal East", "Imphal West", "Jiribam", "Kakching", "Kamjong", "Kangpokpi", "Noney", "Pherzawl", "Senapati", "Tamenglong", "Tengnoupal", "Thoubal", "Ukhrul"], "Meghalaya": ["East Garo Hills", "East Jaintia Hills", "East Khasi Hills", "North Garo Hills", "Ri Bhoi", "South Garo Hills", "South West Garo Hills", "South West Khasi Hills", "West Garo Hills", "West Jaintia Hills", "West Khasi Hills"], "Mizoram": ["Aizawl", "Champhai", "Hnahthial", "Khawzawl", "Kolasib", "Lawngtlai", "Lunglei", "Mamit", "Saitual", "Serchhip"], "Nagaland": ["Chumoukedima", "Dimapur", "Kiphire", "Kohima", "Longleng", "Meluri", "Mokokchung", "Mon", "Niuland", "Noklak", "Peren", "Phek", "Shamator", "Tuensang", "Wokha", "Zunheboto"], "Odisha": ["Angul", "Balangir", "Balasore", "Bargarh", "Bhadrak", "Boudh", "Cuttack", "Deogarh", "Dhenkanal", "Gajapati", "Ganjam", "Jagatsinghpur", "Jajpur", "Jharsuguda", "Kalahandi", "Kandhamal", "Kendrapara", "Keonjhar", "Khordha", "Koraput", "Malkangiri", "Mayurbhanj", "Nabarangpur", "Nayagarh", "Nuapada", "Puri", "Rayagada", "Sambalpur", "Subarnapur", "Sundargarh"], "Punjab": ["Amritsar", "Barnala", "Bathinda", "Faridkot", "Fatehgarh Sahib", "Fazilka", "Ferozepur", "Gurdaspur", "Hoshiarpur", "Jalandhar", "Kapurthala", "Ludhiana", "Malerkotla", "Mansa", "Moga", "Pathankot", "Patiala", "Rupnagar", "Sahibzada Ajit Singh Nagar", "Sangrur", "Shahid Bhagat Singh Nagar", "Sri Muktsar Sahib", "Tarn Taran"], "Rajasthan": ["Ajmer", "Alwar", "Anupgarh", "Balotra", "Banswara", "Baran", "Barmer", "Beawar", "Bharatpur", "Bhilwara", "Bikaner", "Bundi", "Chittorgarh", "Churu", "Dausa", "Deeg", "Dholpur", "Didwana-Kuchamana", "Dungarpur", "Ganganagar", "Hanumangarh", "Jaipur", "Jaisalmer", "Jalore", "Jhalawar", "Jhunjhunu", "Jodhpur", "Karauli", "Kota", "Nagaur", "Pali", "Phalodi", "Pratapgarh", "Rajsamand", "Salumbar", "Sawai Madhopur", "Sikar", "Sirohi", "Tonk", "Udaipur"], "Sikkim": ["Gangtok", "Gyalshing", "Mangan", "Namchi", "Pakyong", "Soreng"], "Tamil Nadu": ["Ariyalur", "Chengalpattu", "Chennai", "Coimbatore", "Cuddalore", "Dharmapuri", "Dindigul", "Erode", "Kallakurichi", "Kancheepuram", "Karur", "Krishnagiri", "Madurai", "Mayiladuthurai", "Nagapattinam", "Kanniyakumari", "Namakkal", "Perambalur", "Pudukkottai", "Ramanathapuram", "Ranipet", "Salem", "Sivaganga", "Tenkasi", "Thanjavur", "Theni", "Thoothukudi", "Tiruchirappalli", "Tirunelveli", "Tirupathur", "Tiruppur", "Tiruvallur", "Tiruvarur", "Tiruvannamalai", "The Nilgiris", "Vellore", "Viluppuram", "Virudhunagar"], "Telangana": ["Adilabad", "Bhadradri Kothagudem", "Hanamkonda", "Hyderabad", "Jagtial", "Jangaon", "Jayashankar Bhupalpally", "Jogulamba Gadwal", "Kamareddy", "Karimnagar", "Khammam", "Komaram Bheem Asifabad", "Mahabubabad", "Mahabubnagar", "Mancherial", "Medak", "Medchal-Malkajgiri", "Mulugu", "Nagarkurnool", "Nalgonda", "Narayanpet", "Nirmal", "Nizamabad", "Peddapalli", "Rajanna Sircilla", "Rangareddy", "Sangareddy", "Siddipet", "Suryapet", "Vikarabad", "Wanaparthy", "Warangal", "Yadadri Bhuvanagiri"], "Tripura": ["Dhalai", "Gomati", "Khowai", "North Tripura", "Sepahijala", "South Tripura", "Unakoti", "West Tripura"], "Uttar Pradesh": ["Agra", "Aligarh", "Ambedkar Nagar", "Amethi", "Amroha", "Auraiya", "Ayodhya", "Azamgarh", "Baghpat", "Bahraich", "Ballia", "Balrampur", "Banda", "Barabanki", "Bareilly", "Basti", "Bhadohi", "Bijnor", "Budaun", "Bulandshahr", "Chandauli", "Chitrakoot", "Deoria", "Etah", "Etawah", "Farrukhabad", "Fatehpur", "Firozabad", "Gautam Buddha Nagar", "Ghaziabad", "Ghazipur", "Gonda", "Gorakhpur", "Hamirpur", "Hapur", "Hardoi", "Hathras", "Jalaun", "Jaunpur", "Jhansi", "Kannauj", "Kanpur Dehat", "Kanpur Nagar", "Kasganj", "Kaushambi", "Kushinagar", "Lakhimpur Kheri", "Lalitpur", "Lucknow", "Maharajganj", "Mahoba", "Mainpuri", "Mathura", "Mau", "Meerut", "Mirzapur", "Moradabad", "Muzaffarnagar", "Pilibhit", "Pratapgarh", "Prayagraj", "Raebareli", "Rampur", "Saharanpur", "Sambhal", "Sant Kabir Nagar", "Shahjahanpur", "Shamli", "Shravasti", "Siddharthnagar", "Sitapur", "Sonbhadra", "Sultanpur", "Unnao", "Varanasi"], "Uttarakhand": ["Almora", "Bageshwar", "Chamoli", "Champawat", "Dehradun", "Haridwar", "Nainital", "Pauri Garhwal", "Pithoragarh", "Rudraprayag", "Tehri Garhwal", "Udham Singh Nagar", "Uttarkashi"], "West Bengal": ["Alipurduar", "Bankura", "Paschim Bardhaman", "Purba Bardhaman", "Birbhum", "Cooch Behar", "Darjeeling", "Hooghly", "Howrah", "Jalpaiguri", "Jhargram", "Kalimpong", "Kolkata", "Maldah", "Murshidabad", "Nadia", "North 24 Parganas", "South 24 Parganas", "Paschim Medinipur", "Purba Medinipur", "Uttar Dinajpur", "Dakshin Dinajpur"], "Andaman and Nicobar Islands": ["Nicobar", "North and Middle Andaman", "South Andaman"], "Chandigarh": ["Chandigarh"], "Dadra and Nagar Haveli and Daman and Diu": ["Dadra and Nagar Haveli", "Daman", "Diu"], "Delhi": ["Central Delhi", "East Delhi", "New Delhi", "North Delhi", "North East Delhi", "North West Delhi", "Shahdara", "South Delhi", "South East Delhi", "South West Delhi", "West Delhi"], "Jammu and Kashmir": ["Anantnag", "Bandipora", "Baramulla", "Budgam", "Doda", "Ganderbal", "Jammu", "Kathua", "Kishtwar", "Kulgam", "Kupwara", "Poonch", "Pulwama", "Rajouri", "Ramban", "Reasi", "Samba", "Shopian", "Srinagar", "Udhampur"], "Ladakh": ["Kargil", "Leh"], "Lakshadweep": ["Agatti", "Amini", "Andrott", "Bitra", "Chetlat", "Kavaratti", "Kalpeni", "Kiltan", "Minicoy"], "Puducherry": ["Karaikal", "Mahe", "Puducherry", "Yanam"]};
+function ugGetNodes(){try{return JSON.parse(localStorage.getItem(UG_NODE_STORAGE)||'[]')}catch(e){return[]}}
+function ugSaveNodes(nodes){localStorage.setItem(UG_NODE_STORAGE,JSON.stringify(nodes));localStorage.setItem(UG_NODE_SYNC,String(Date.now()))}
+function populateNodeStates(){const s=document.getElementById('nodeState');if(!s)return;s.innerHTML='<option value="">Select state</option>'+UG_STATES.map(x=>`<option value="${x}">${x}</option>`).join('')}
+function populateNodeDistricts(){const state=document.getElementById('nodeState').value,d=document.getElementById('nodeDistrict'),list=UG_DISTRICTS[state]||[];d.disabled=!state;d.innerHTML=(state?'<option value="">Select district</option>':'<option value="">Select state first</option>')+list.map(x=>`<option value="${x}">${x}</option>`).join('')}
+function resetNodeForm(){document.getElementById('nodeForm').reset();populateNodeDistricts();document.getElementById('nodeInstallDate').value=new Date().toISOString().slice(0,10)}
+function saveUrbanGuardNode(e){e.preventDefault();const node={id:document.getElementById('nodeNumber').value.trim(),state:document.getElementById('nodeState').value,district:document.getElementById('nodeDistrict').value,lat:Number(document.getElementById('nodeLatitude').value),lng:Number(document.getElementById('nodeLongitude').value),channelId:document.getElementById('nodeChannel').value.trim(),installed:document.getElementById('nodeInstallDate').value,installer:document.getElementById('nodeInstaller').value.trim(),workerId:document.getElementById('nodeWorkerId').value.trim(),status:'active',createdAt:new Date().toISOString(),createdBy:'Administrator'};if(!node.id||!node.state||!node.district||!node.channelId||!node.installer||!node.workerId||!Number.isFinite(node.lat)||!Number.isFinite(node.lng)){toast('Please fill all required node details','err');return}if(ugGetNodes().some(n=>n.id.toLowerCase()===node.id.toLowerCase())){toast('Node number already exists','warn');return}const nodes=ugGetNodes();nodes.unshift(node);ugSaveNodes(nodes);if(typeof addAudit==='function')addAudit('Node added',`${node.id} installed in ${node.district}, ${node.state} by ${node.installer} (${node.workerId})`);renderNodeAdmin();resetNodeForm();toast(`📡 ${node.id} added and synced to portals`,'success')}
+function deleteUrbanGuardNode(id){if(!confirm(`Remove node ${id} from the registry?`))return;ugSaveNodes(ugGetNodes().filter(n=>n.id!==id));if(typeof addAudit==='function')addAudit('Node removed',`${id} removed from node registry`);renderNodeAdmin();toast('Node removed','warn')}
+function renderNodeAdmin(){const nodes=ugGetNodes(),badge=document.getElementById('nodeAdminCount'),body=document.getElementById('nodeAdminTable');if(badge)badge.textContent=nodes.length;if(!body)return;if(!nodes.length){body.innerHTML='<tr><td colspan="9"><div class="node-empty">📡<br>No registered nodes yet.</div></td></tr>';return}body.innerHTML=nodes.map(n=>`<tr><td><b>${escapeHtml(n.id)}</b></td><td>${escapeHtml(n.state)}</td><td>${escapeHtml(n.district)}</td><td>${Number(n.lat).toFixed(5)}, ${Number(n.lng).toFixed(5)}</td><td>${escapeHtml(n.channelId)}</td><td>${escapeHtml(n.installed)}</td><td>${escapeHtml(n.installer)}<div style="font-size:10px;color:var(--muted)">${escapeHtml(n.workerId)}</div></td><td><span class="node-live">${escapeHtml(n.status||'active')}</span></td><td><button class="action-btn danger" onclick="deleteUrbanGuardNode('${escapeHtml(n.id)}')">Remove</button></td></tr>`).join('')}
+window.addEventListener('storage',e=>{if(e.key===UG_NODE_STORAGE||e.key===UG_NODE_SYNC){renderNodeAdmin();updateStats()}});
+window.addEventListener('load',()=>{populateNodeStates();document.getElementById('nodeInstallDate').value=new Date().toISOString().slice(0,10);renderNodeAdmin()});
+window.saveUrbanGuardNode=saveUrbanGuardNode;window.populateNodeDistricts=populateNodeDistricts;window.resetNodeForm=resetNodeForm;window.deleteUrbanGuardNode=deleteUrbanGuardNode;
+
+</script>
+</body>
+</html>

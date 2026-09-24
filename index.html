@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>URBANGUARD — Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@700;900&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Telugu:wght@400;600&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Malayalam:wght@400;600&family=Noto+Sans+Gujarati:wght@400;600&family=Noto+Sans+Gurmukhi:wght@400;600&family=Noto+Sans+Oriya:wght@400;600&family=Noto+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --sidebar-bg-1:#dbeafe;
+  --sidebar-bg-2:#eff6ff;
+  --ink:#1e3a5f;
+  --ink-2:#3b5a7a;
+  --muted:#7c95b3;
+  --btn-border:#dbe7f3;
+  --btn-shadow:0 2px 6px rgba(30,58,95,.06);
+  --btn-shadow-hover:0 6px 18px rgba(37,99,235,.15);
+  --accent:#2563eb;
+}
+
+html,body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  background:#f5faff;
+  min-height:100vh;
+  color:var(--ink);
+  overflow-x:hidden;
+}
+
+/* ══════════════════════════════════════════
+   FULL PAGE
+   ══════════════════════════════════════════ */
+.page{
+  display:grid;
+  grid-template-columns:380px 1fr;
+  gap:24px;
+  padding:24px;
+  min-height:100vh;
+  max-width:1600px;
+  margin:0 auto;
+}
+@media(max-width:960px){
+  .page{grid-template-columns:1fr;padding:16px}
+}
+
+/* ══════════════════════════════════════════
+   LEFT SIDEBAR
+   ══════════════════════════════════════════ */
+.sidebar{
+  background:linear-gradient(180deg,var(--sidebar-bg-1) 0%,var(--sidebar-bg-2) 100%);
+  border-radius:22px;
+  padding:38px 32px;
+  display:flex;
+  flex-direction:column;
+  box-shadow:
+    0 1px 2px rgba(30,58,95,.04),
+    0 8px 24px rgba(30,58,95,.06);
+  position:relative;
+  overflow:hidden;
+}
+.sidebar::before{
+  content:"";
+  position:absolute;
+  top:-40px; right:-40px;
+  width:180px; height:180px;
+  background:radial-gradient(circle,rgba(37,99,235,.08),transparent 70%);
+  border-radius:50%;
+  pointer-events:none;
+}
+
+/* Logo */
+.brand{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  margin-bottom:38px;
+  position:relative;
+  z-index:1;
+}
+.brand-icon{
+  width:64px;
+  height:64px;
+  border-radius:16px;
+  background:#fff;
+  display:grid;
+  place-items:center;
+  font-size:34px;
+  box-shadow:0 6px 18px rgba(30,58,95,.10);
+  border:1.5px solid #dbe7f3;
+  flex-shrink:0;
+}
+.brand-text{
+  font-family:'Orbitron',sans-serif;
+  font-size:23px;
+  font-weight:900;
+  letter-spacing:1.6px;
+  color:var(--ink);
+  line-height:1.1;
+  text-transform:uppercase;
+}
+.brand-text small{
+  display:block;
+  font-family:'Inter',sans-serif;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1.4px;
+  color:var(--ink-2);
+  margin-top:5px;
+  opacity:.75;
+}
+
+/* Role buttons */
+.roles{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  flex:1;
+  position:relative;
+  z-index:1;
+}
+.role-btn{
+  width:100%;
+  padding:18px 20px;
+  background:#ffffff;
+  border:1px solid var(--btn-border);
+  border-radius:14px;
+  font-family:inherit;
+  font-size:14px;
+  font-weight:700;
+  color:var(--ink);
+  letter-spacing:.2px;
+  cursor:pointer;
+  text-align:center;
+  line-height:1.35;
+  transition:all .22s cubic-bezier(.4,0,.2,1);
+  box-shadow:var(--btn-shadow);
+}
+.role-btn:hover{
+  transform:translateY(-2px);
+  border-color:#a7c5e8;
+  box-shadow:var(--btn-shadow-hover);
+  color:var(--accent);
+  background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%);
+}
+.role-btn:active{transform:translateY(0);box-shadow:var(--btn-shadow)}
+
+/* Language section */
+.lang-section{
+  margin-top:28px;
+  padding-top:24px;
+  border-top:1.5px solid rgba(30,58,95,.08);
+  position:relative;
+  z-index:1;
+}
+.lang-label{
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:1.4px;
+  color:var(--ink);
+  text-transform:uppercase;
+  text-align:center;
+  margin-bottom:12px;
+}
+.lang-select{
+  width:100%;
+  padding:13px 38px 13px 16px;
+  border:1.5px solid var(--btn-border);
+  border-radius:12px;
+  background:#fff;
+  font-family:inherit;
+  font-size:13px;
+  font-weight:600;
+  color:var(--ink);
+  cursor:pointer;
+  outline:none;
+  transition:all .2s ease;
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%233b5a7a' stroke-width='2.5' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 14px center;
+  box-shadow:var(--btn-shadow);
+}
+.lang-select:hover{border-color:#a7c5e8}
+.lang-select:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 4px rgba(37,99,235,.1);
+}
+.powered{
+  margin-top:16px;
+  font-size:10.5px;
+  color:var(--muted);
+  letter-spacing:.6px;
+  font-weight:600;
+  text-align:center;
+}
+
+/* ══════════════════════════════════════════
+   RIGHT HERO — illustration shifted slightly right
+   ══════════════════════════════════════════ */
+.hero{
+  border-radius:22px;
+  background:linear-gradient(135deg,#a78bfa 0%,#8b5cf6 45%,#6366f1 100%);
+  position:relative;
+  overflow:hidden;
+  box-shadow:
+    0 1px 2px rgba(30,58,95,.04),
+    0 8px 24px rgba(30,58,95,.08);
+  min-height:600px;
+  display:flex;
+  align-items:center;
+  /* SHIFTED RIGHT — not middle, not corner */
+  justify-content:flex-end;
+  padding:40px 60px 40px 40px;
+}
+
+/* Dotted pattern */
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:radial-gradient(circle,rgba(255,255,255,.16) 1.5px,transparent 1.6px);
+  background-size:34px 34px;
+  opacity:.55;
+  pointer-events:none;
+}
+
+/* Bottom waves */
+.hero-wave{
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:180px;
+  pointer-events:none;
+  z-index:1;
+}
+
+/* Soft light blob top-right */
+.hero::after{
+  content:"";
+  position:absolute;
+  top:-120px;
+  right:-120px;
+  width:420px;
+  height:420px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.22),transparent 65%);
+  pointer-events:none;
+}
+
+/* Illustration container — shifted right */
+.illustration{
+  position:relative;
+  z-index:2;
+  width:100%;
+  max-width:760px;
+  height:auto;
+  /* Extra push to the right */
+  margin-right:2%;
+}
+.illustration svg{
+  width:100%;
+  height:auto;
+  display:block;
+  filter:drop-shadow(0 20px 40px rgba(0,0,0,.15));
+}
+
+/* ══════════════════════════════════════════
+   Non-Latin font classes
+   ══════════════════════════════════════════ */
+[lang="hi"] .role-btn,[lang="hi"] .lang-select,[lang="hi"] .lang-label,
+[lang="mr"] .role-btn,[lang="mr"] .lang-select,[lang="mr"] .lang-label,
+[lang="sa"] .role-btn,[lang="sa"] .lang-select,[lang="sa"] .lang-label,
+[lang="ne"] .role-btn,[lang="ne"] .lang-select,[lang="ne"] .lang-label,
+[lang="mai"] .role-btn,[lang="mai"] .lang-select,[lang="mai"] .lang-label,
+[lang="kok"] .role-btn,[lang="kok"] .lang-select,[lang="kok"] .lang-label
+{font-family:'Noto Sans Devanagari','Inter',sans-serif}
+
+[lang="ta"] .role-btn,[lang="ta"] .lang-select,[lang="ta"] .lang-label
+{font-family:'Noto Sans Tamil','Inter',sans-serif}
+
+[lang="bn"] .role-btn,[lang="bn"] .lang-select,[lang="bn"] .lang-label,
+[lang="as"] .role-btn,[lang="as"] .lang-select,[lang="as"] .lang-label
+{font-family:'Noto Sans Bengali','Inter',sans-serif}
+
+[lang="te"] .role-btn,[lang="te"] .lang-select,[lang="te"] .lang-label
+{font-family:'Noto Sans Telugu','Inter',sans-serif}
+
+[lang="kn"] .role-btn,[lang="kn"] .lang-select,[lang="kn"] .lang-label
+{font-family:'Noto Sans Kannada','Inter',sans-serif}
+
+[lang="ml"] .role-btn,[lang="ml"] .lang-select,[lang="ml"] .lang-label
+{font-family:'Noto Sans Malayalam','Inter',sans-serif}
+
+[lang="gu"] .role-btn,[lang="gu"] .lang-select,[lang="gu"] .lang-label
+{font-family:'Noto Sans Gujarati','Inter',sans-serif}
+
+[lang="pa"] .role-btn,[lang="pa"] .lang-select,[lang="pa"] .lang-label
+{font-family:'Noto Sans Gurmukhi','Inter',sans-serif}
+
+[lang="or"] .role-btn,[lang="or"] .lang-select,[lang="or"] .lang-label
+{font-family:'Noto Sans Oriya','Inter',sans-serif}
+
+[lang="ur"] .role-btn,[lang="ur"] .lang-select,[lang="ur"] .lang-label
+{font-family:'Noto Sans Arabic','Inter',sans-serif}
+
+/* ══════════════════════════════════════════
+   Responsive
+   ══════════════════════════════════════════ */
+@media(max-width:1200px){
+  .hero{padding:40px 40px 40px 30px}
+  .illustration{max-width:660px}
+}
+
+@media(max-width:1100px){
+  .page{grid-template-columns:340px 1fr;gap:18px;padding:18px}
+  .sidebar{padding:30px 26px}
+  .brand-icon{width:56px;height:56px;font-size:28px}
+  .brand-text{font-size:20px}
+  .role-btn{padding:16px 18px;font-size:13.5px}
+  .hero{padding:30px;justify-content:center}
+  .illustration{margin-right:0}
+}
+
+@media(max-width:960px){
+  .hero{min-height:420px;padding:30px}
+  .illustration{max-width:100%}
+}
+
+@media(max-width:600px){
+  .page{padding:12px;gap:12px}
+  .sidebar{padding:26px 22px;border-radius:18px}
+  .brand-icon{width:52px;height:52px;font-size:26px;border-radius:14px}
+  .brand-text{font-size:18px;letter-spacing:1.2px}
+  .brand{margin-bottom:26px}
+  .role-btn{padding:15px 16px;font-size:13px;border-radius:12px}
+  .hero{border-radius:18px;min-height:320px;padding:20px}
+  .lang-label{font-size:11px;letter-spacing:1.2px}
+  .lang-select{padding:12px 34px 12px 14px;font-size:12.5px}
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ═══════════ LEFT SIDEBAR ═══════════ -->
+  <aside class="sidebar">
+
+    <div class="brand">
+      <div class="brand-icon">🌊</div>
+      <div class="brand-text">
+        URBAN<br>GUARD
+        <small data-i18n="brand.sub">Flood Intelligence</small>
+      </div>
+    </div>
+
+    <div class="roles">
+      <button class="role-btn" onclick="enter('citizen')" data-i18n="role.citizen">Citizen Login</button>
+      <button class="role-btn" onclick="enter('authority')" data-i18n="role.authority">Authority Login</button>
+      <button class="role-btn" onclick="enter('government')" data-i18n="role.government">Government Login</button>
+      <button class="role-btn" onclick="enter('administrator')" data-i18n="role.admin">Administrator Login</button>
+    </div>
+
+    <div class="lang-section">
+      <div class="lang-label" data-i18n="lang.label">If Not English</div>
+      <select class="lang-select" id="langSelect" onchange="changeLang(this.value)">
+        <option value="en">Select Language</option>
+        <option value="en">🇬🇧 English</option>
+        <option value="hi">🇮🇳 हिन्दी (Hindi)</option>
+        <option value="bn">🇮🇳 বাংলা (Bengali)</option>
+        <option value="te">🇮🇳 తెలుగు (Telugu)</option>
+        <option value="mr">🇮🇳 मराठी (Marathi)</option>
+        <option value="ta">🇮🇳 தமிழ் (Tamil)</option>
+        <option value="gu">🇮🇳 ગુજરાતી (Gujarati)</option>
+        <option value="kn">🇮🇳 ಕನ್ನಡ (Kannada)</option>
+        <option value="ml">🇮🇳 മലയാളം (Malayalam)</option>
+        <option value="or">🇮🇳 ଓଡ଼ିଆ (Odia)</option>
+        <option value="pa">🇮🇳 ਪੰਜਾਬੀ (Punjabi)</option>
+        <option value="as">🇮🇳 অসমীয়া (Assamese)</option>
+        <option value="ur">🇵🇰 اردو (Urdu)</option>
+        <option value="sa">🇮🇳 संस्कृतम् (Sanskrit)</option>
+        <option value="ne">🇳🇵 नेपाली (Nepali)</option>
+        <option value="mai">🇮🇳 मैथिली (Maithili)</option>
+        <option value="kok">🇮🇳 कोंकणी (Konkani)</option>
+      </select>
+      <div class="powered" data-i18n="powered">Powered by UrbanGuard AI</div>
+    </div>
+
+  </aside>
+
+  <!-- ═══════════ RIGHT HERO ═══════════ -->
+  <main class="hero">
+
+    <!-- Purple waves at bottom -->
+    <svg class="hero-wave" viewBox="0 0 1200 180" preserveAspectRatio="none" fill="none">
+      <path d="M0,80 C300,180 500,20 800,100 C1000,150 1150,50 1200,90 L1200,180 L0,180 Z"
+            fill="rgba(99,102,241,0.35)"/>
+      <path d="M0,120 C250,60 500,160 750,100 C950,60 1100,140 1200,110 L1200,180 L0,180 Z"
+            fill="rgba(139,92,246,0.45)"/>
+    </svg>
+
+    <!-- ═══════ FLOOD MONITORING ILLUSTRATION ═══════ -->
+    <div class="illustration">
+      <svg viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+
+        <!-- ═══ Decorative background icons ═══ -->
+        <g opacity="0.20" fill="#ffffff">
+          <!-- Cloud top left -->
+          <path d="M80 80 Q60 80 60 100 Q60 120 80 120 L180 120 Q200 120 200 100 Q200 80 180 80 Q175 60 155 60 Q140 60 135 72 Q125 68 115 68 Q95 68 90 82 Z"/>
+          <!-- Lightning bolt -->
+          <path d="M760 90 L730 140 L755 140 L725 190 L775 130 L750 130 Z"/>
+          <!-- Rain drops -->
+          <ellipse cx="680" cy="60" rx="4" ry="8"/>
+          <ellipse cx="700" cy="75" rx="4" ry="8"/>
+          <ellipse cx="665" cy="80" rx="4" ry="8"/>
+        </g>
+
+        <!-- ═══ MONITORING SCREEN (main display) ═══ -->
+        <g transform="translate(150,140)">
+          <!-- Screen frame -->
+          <rect x="0" y="0" width="520" height="340" rx="14" fill="#ffffff" stroke="#1e40af" stroke-width="6"/>
+          <!-- Screen inner -->
+          <rect x="16" y="16" width="488" height="290" rx="6" fill="#f8fafc"/>
+
+          <!-- Top bar of the screen -->
+          <rect x="16" y="16" width="488" height="34" rx="6" fill="#1e40af"/>
+          <circle cx="36" cy="33" r="5" fill="#ef4444"/>
+          <circle cx="52" cy="33" r="5" fill="#fbbf24"/>
+          <circle cx="68" cy="33" r="5" fill="#10b981"/>
+          <rect x="180" y="26" width="160" height="6" rx="3" fill="#ffffff" opacity="0.85"/>
+          <rect x="180" y="38" width="100" height="4" rx="2" fill="#ffffff" opacity="0.5"/>
+
+          <!-- Left: Water level gauge -->
+          <g transform="translate(40,80)">
+            <rect x="0" y="0" width="120" height="200" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+            <!-- Gauge label -->
+            <rect x="12" y="12" width="96" height="6" rx="2" fill="#1e40af"/>
+            <rect x="12" y="24" width="60" height="4" rx="2" fill="#cbd5e1"/>
+
+            <!-- Gauge tube -->
+            <rect x="46" y="42" width="28" height="140" rx="14" fill="#e0e7ff"/>
+            <rect x="46" y="42" width="28" height="140" rx="14" fill="url(#gaugeGrad)"/>
+
+            <!-- Water fill (animated wave) -->
+            <defs>
+              <linearGradient id="gaugeGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#60a5fa"/>
+                <stop offset="100%" stop-color="#1e40af"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Water surface with ripple -->
+            <path d="M60 110 Q68 104 74 110 Q80 116 88 110 L88 175 L60 175 Z" fill="#2563eb"/>
+            <path d="M46 110 Q54 104 60 110 Q68 116 74 110 L74 175 L46 175 Z" fill="#3b82f6"/>
+
+            <!-- Water surface line -->
+            <path d="M46 110 Q52 105 60 110 Q68 115 74 110 Q80 105 86 110" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.9"/>
+
+            <!-- Warning line -->
+            <line x1="40" y1="100" x2="80" y2="100" stroke="#ef4444" stroke-width="2" stroke-dasharray="4 3"/>
+            <text x="88" y="104" font-family="Inter,sans-serif" font-size="9" font-weight="800" fill="#ef4444">MAX</text>
+
+            <!-- Gauge tick marks -->
+            <g fill="#94a3b8">
+              <rect x="30" y="60" width="10" height="2"/>
+              <rect x="30" y="90" width="10" height="2"/>
+              <rect x="30" y="120" width="10" height="2"/>
+              <rect x="30" y="150" width="10" height="2"/>
+            </g>
+
+            <!-- Current level value -->
+            <rect x="12" y="190" width="96" height="6" rx="2" fill="#cbd5e1"/>
+            <rect x="12" y="190" width="70" height="6" rx="2" fill="#ef4444"/>
+          </g>
+
+          <!-- Right: Live chart -->
+          <g transform="translate(180,80)">
+            <rect x="0" y="0" width="320" height="120" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+            <!-- Chart header -->
+            <rect x="12" y="12" width="120" height="6" rx="2" fill="#1e40af"/>
+            <rect x="12" y="24" width="80" height="4" rx="2" fill="#cbd5e1"/>
+            <!-- Chart bars -->
+            <rect x="20" y="70" width="18" height="34" fill="#60a5fa"/>
+            <rect x="44" y="55" width="18" height="49" fill="#3b82f6"/>
+            <rect x="68" y="40" width="18" height="64" fill="#1e40af"/>
+            <rect x="92" y="62" width="18" height="42" fill="#60a5fa"/>
+            <rect x="116" y="30" width="18" height="74" fill="#ef4444"/>
+            <rect x="140" y="48" width="18" height="56" fill="#3b82f6"/>
+            <rect x="164" y="25" width="18" height="79" fill="#ef4444"/>
+            <rect x="188" y="52" width="18" height="52" fill="#3b82f6"/>
+            <rect x="212" y="35" width="18" height="69" fill="#1e40af"/>
+            <rect x="236" y="60" width="18" height="44" fill="#60a5fa"/>
+            <rect x="260" y="42" width="18" height="62" fill="#3b82f6"/>
+            <rect x="284" y="28" width="18" height="76" fill="#ef4444"/>
+            <!-- Axis line -->
+            <line x1="12" y1="104" x2="308" y2="104" stroke="#cbd5e1" stroke-width="1.5"/>
+          </g>
+
+          <!-- Bottom: Alert panel -->
+          <g transform="translate(180,215)">
+            <rect x="0" y="0" width="320" height="72" rx="8" fill="#fff5f5" stroke="#fca5a5" stroke-width="2"/>
+            <!-- Alert triangle -->
+            <path d="M24 36 L40 12 L56 36 Z" fill="#fbbf24" stroke="#d97706" stroke-width="2"/>
+            <text x="36" y="33" font-family="Inter,sans-serif" font-size="18" font-weight="900" fill="#ffffff" text-anchor="middle">!</text>
+            <!-- Alert text -->
+            <rect x="76" y="16" width="180" height="8" rx="2" fill="#dc2626"/>
+            <rect x="76" y="32" width="230" height="6" rx="2" fill="#cbd5e1"/>
+            <rect x="76" y="44" width="160" height="6" rx="2" fill="#cbd5e1"/>
+          </g>
+        </g>
+
+        <!-- ═══ IoT SENSOR TOWER (right side) ═══ -->
+        <g transform="translate(740,180)">
+          <!-- Signal waves emanating -->
+          <g opacity="0.55">
+            <circle cx="0" cy="-80" r="20" fill="none" stroke="#ffffff" stroke-width="2.5"/>
+            <circle cx="0" cy="-80" r="38" fill="none" stroke="#ffffff" stroke-width="2"/>
+            <circle cx="0" cy="-80" r="58" fill="none" stroke="#ffffff" stroke-width="1.5"/>
+          </g>
+
+          <!-- Antenna -->
+          <rect x="-4" y="-110" width="8" height="60" fill="#1e40af"/>
+          <circle cx="0" cy="-116" r="8" fill="#ef4444"/>
+          <circle cx="0" cy="-116" r="4" fill="#fbbf24"/>
+
+          <!-- Tower body (pole) -->
+          <rect x="-10" y="-50" width="20" height="200" fill="#1e40af"/>
+          <!-- Solar panel -->
+          <rect x="-50" y="-40" width="100" height="20" rx="3" fill="#1e293b" transform="rotate(-15 0 -30)"/>
+          <rect x="-46" y="-37" width="30" height="12" fill="#3b82f6" transform="rotate(-15 0 -30)"/>
+          <rect x="-14" y="-37" width="30" height="12" fill="#3b82f6" transform="rotate(-15 0 -30)"/>
+          <rect x="18" y="-37" width="30" height="12" fill="#3b82f6" transform="rotate(-15 0 -30)"/>
+
+          <!-- Sensor box -->
+          <rect x="-30" y="10" width="60" height="50" rx="6" fill="#ffffff" stroke="#1e40af" stroke-width="3"/>
+          <rect x="-20" y="20" width="40" height="6" rx="2" fill="#3b82f6"/>
+          <rect x="-20" y="32" width="28" height="4" rx="2" fill="#cbd5e1"/>
+          <circle cx="18" cy="22" r="3" fill="#10b981"/>
+          <!-- Water level sensor -->
+          <rect x="-15" y="60" width="30" height="80" rx="8" fill="#e0e7ff"/>
+          <rect x="-15" y="90" width="30" height="50" rx="8" fill="#3b82f6"/>
+          <path d="M-15 90 Q-5 85 0 90 Q5 95 15 90 L15 140 L-15 140 Z" fill="#2563eb"/>
+        </g>
+
+        <!-- ═══ Warning beacon (top-left of hero) ═══ -->
+        <g transform="translate(130,90)">
+          <circle cx="0" cy="0" r="26" fill="#fef3c7" stroke="#f59e0b" stroke-width="3"/>
+          <text x="0" y="8" font-family="Inter,sans-serif" font-size="26" font-weight="900" fill="#d97706" text-anchor="middle">!</text>
+          <circle cx="0" cy="0" r="40" fill="none" stroke="#f59e0b" stroke-width="2" opacity="0.5"/>
+          <circle cx="0" cy="0" r="54" fill="none" stroke="#f59e0b" stroke-width="1.5" opacity="0.3"/>
+        </g>
+
+        <!-- ═══ Smartphone app mockup (bottom left) ═══ -->
+        <g transform="translate(180,480)">
+          <rect x="0" y="0" width="90" height="130" rx="12" fill="#ffffff" stroke="#1e40af" stroke-width="3"/>
+          <rect x="30" y="5" width="30" height="4" rx="2" fill="#1e40af"/>
+          <!-- Screen -->
+          <rect x="6" y="14" width="78" height="110" rx="4" fill="#eff6ff"/>
+          <!-- App header -->
+          <rect x="6" y="14" width="78" height="20" rx="4" fill="#1e40af"/>
+          <rect x="14" y="21" width="30" height="6" rx="2" fill="#ffffff" opacity="0.9"/>
+          <!-- Alert row -->
+          <rect x="12" y="42" width="66" height="18" rx="4" fill="#fee2e2"/>
+          <circle cx="22" cy="51" r="4" fill="#dc2626"/>
+          <rect x="30" y="48" width="40" height="3" rx="1.5" fill="#dc2626"/>
+          <rect x="30" y="54" width="28" height="3" rx="1.5" fill="#94a3b8"/>
+          <!-- Alert row 2 -->
+          <rect x="12" y="66" width="66" height="18" rx="4" fill="#fef3c7"/>
+          <circle cx="22" cy="75" r="4" fill="#d97706"/>
+          <rect x="30" y="72" width="40" height="3" rx="1.5" fill="#d97706"/>
+          <rect x="30" y="78" width="30" height="3" rx="1.5" fill="#94a3b8"/>
+          <!-- Alert row 3 -->
+          <rect x="12" y="90" width="66" height="18" rx="4" fill="#dcfce7"/>
+          <circle cx="22" cy="99" r="4" fill="#16a34a"/>
+          <rect x="30" y="96" width="40" height="3" rx="1.5" fill="#16a34a"/>
+          <rect x="30" y="102" width="24" height="3" rx="1.5" fill="#94a3b8"/>
+        </g>
+
+        <!-- ═══ Water waves at bottom of illustration ═══ -->
+        <g opacity="0.5">
+          <path d="M0 560 Q150 530 300 560 T600 560 T900 560 L900 620 L0 620 Z" fill="#ffffff" opacity="0.15"/>
+          <path d="M0 580 Q150 555 300 580 T600 580 T900 580 L900 620 L0 620 Z" fill="#ffffff" opacity="0.25"/>
+          <path d="M0 598 Q150 578 300 598 T600 598 T900 598 L900 620 L0 620 Z" fill="#ffffff" opacity="0.35"/>
+        </g>
+
+      </svg>
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════
+   URBANGUARD — 17-Language Translation Engine
+   ══════════════════════════════════════════════════════ */
+
+const TRANSLATIONS = {
+
+  en: {
+    "brand.sub":"Flood Intelligence",
+    "role.citizen":"Citizen Login",
+    "role.authority":"Authority Login",
+    "role.government":"Government Login",
+    "role.admin":"Administrator Login",
+    "lang.label":"If Not English",
+    "powered":"Powered by UrbanGuard AI"
+  },
+
+  hi: {
+    "brand.sub":"बाढ़ सूचना प्रणाली",
+    "role.citizen":"नागरिक लॉगिन",
+    "role.authority":"प्राधिकरण लॉगिन",
+    "role.government":"सरकार लॉगिन",
+    "role.admin":"प्रशासक लॉगिन",
+    "lang.label":"यदि अंग्रेज़ी नहीं",
+    "powered":"UrbanGuard AI द्वारा संचालित"
+  },
+
+  bn: {
+    "brand.sub":"বন্যা বুদ্ধিমত্তা",
+    "role.citizen":"নাগরিক লগইন",
+    "role.authority":"কর্তৃপক্ষ লগইন",
+    "role.government":"সরকার লগইন",
+    "role.admin":"প্রশাসক লগইন",
+    "lang.label":"যদি ইংরেজি না হয়",
+    "powered":"UrbanGuard AI দ্বারা পরিচালিত"
+  },
+
+  te: {
+    "brand.sub":"వరద తెలివి",
+    "role.citizen":"పౌరుల లాగిన్",
+    "role.authority":"అధికారుల లాగిన్",
+    "role.government":"ప్రభుత్వ లాగిన్",
+    "role.admin":"నిర్వాహక లాగిన్",
+    "lang.label":"ఆంగ్లం కాకపోతే",
+    "powered":"UrbanGuard AI ద్వారా"
+  },
+
+  mr: {
+    "brand.sub":"पूर बुद्धिमत्ता",
+    "role.citizen":"नागरिक लॉगिन",
+    "role.authority":"प्राधिकरण लॉगिन",
+    "role.government":"शासन लॉगिन",
+    "role.admin":"प्रशासक लॉगिन",
+    "lang.label":"इंग्रजी नसल्यास",
+    "powered":"UrbanGuard AI द्वारे"
+  },
+
+  ta: {
+    "brand.sub":"வெள்ள நுண்ணறிவு",
+    "role.citizen":"குடிமகன் உள்நுழைவு",
+    "role.authority":"அதிகாரி உள்நுழைவு",
+    "role.government":"அரசு உள்நுழைவு",
+    "role.admin":"நிர்வாகி உள்நுழைவு",
+    "lang.label":"ஆங்கிலம் இல்லை என்றால்",
+    "powered":"UrbanGuard AI மூலம்"
+  },
+
+  gu: {
+    "brand.sub":"પૂર બુદ્ધિ",
+    "role.citizen":"નાગરિક લોગિન",
+    "role.authority":"સત્તાધિકારી લોગિન",
+    "role.government":"સરકાર લોગિન",
+    "role.admin":"વ્યવસ્થાપક લોગિન",
+    "lang.label":"જો અંગ્રેજી નથી",
+    "powered":"UrbanGuard AI દ્વારા"
+  },
+
+  kn: {
+    "brand.sub":"ಪ್ರವಾಹ ಬುದ್ಧಿಮತ್ತೆ",
+    "role.citizen":"ನಾಗರಿಕ ಲಾಗಿನ್",
+    "role.authority":"ಅಧಿಕಾರಿ ಲಾಗಿನ್",
+    "role.government":"ಸರ್ಕಾರ ಲಾಗಿನ್",
+    "role.admin":"ನಿರ್ವಾಹಕ ಲಾಗಿನ್",
+    "lang.label":"ಇಂಗ್ಲಿಷ್ ಅಲ್ಲದಿದ್ದರೆ",
+    "powered":"UrbanGuard AI ಮೂಲಕ"
+  },
+
+  ml: {
+    "brand.sub":"വെള്ളപ്പൊക്ക ബുദ്ധി",
+    "role.citizen":"പൗര ലോഗിൻ",
+    "role.authority":"അതോറിറ്റി ലോഗിൻ",
+    "role.government":"സർക്കാർ ലോഗിൻ",
+    "role.admin":"അഡ്മിൻ ലോഗിൻ",
+    "lang.label":"ഇംഗ്ലീഷ് അല്ലെങ്കിൽ",
+    "powered":"UrbanGuard AI നൽകുന്നത്"
+  },
+
+  or: {
+    "brand.sub":"ବନ୍ୟା ବୁଦ୍ଧିମତା",
+    "role.citizen":"ନାଗରିକ ଲଗଇନ",
+    "role.authority":"ପ୍ରାଧିକରଣ ଲଗଇନ",
+    "role.government":"ସରକାର ଲଗଇନ",
+    "role.admin":"ପ୍ରଶାସକ ଲଗଇନ",
+    "lang.label":"ଯଦି ଇଂରାଜୀ ନୁହେଁ",
+    "powered":"UrbanGuard AI ଦ୍ୱାରା"
+  },
+
+  pa: {
+    "brand.sub":"ਹੜ੍ਹ ਸਮਝ",
+    "role.citizen":"ਨਾਗਰਿਕ ਲੌਗਿਨ",
+    "role.authority":"ਅਧਿਕਾਰੀ ਲੌਗਿਨ",
+    "role.government":"ਸਰਕਾਰ ਲੌਗਿਨ",
+    "role.admin":"ਪ੍ਰਬੰਧਕ ਲੌਗਿਨ",
+    "lang.label":"ਜੇ ਅੰਗਰੇਜ਼ੀ ਨਹੀਂ",
+    "powered":"UrbanGuard AI ਦੁਆਰਾ"
+  },
+
+  as: {
+    "brand.sub":"বানপানী বুদ্ধিমত্তা",
+    "role.citizen":"নাগৰিক লগইন",
+    "role.authority":"কৰ্তৃপক্ষ লগইন",
+    "role.government":"চৰকাৰ লগইন",
+    "role.admin":"প্ৰশাসক লগইন",
+    "lang.label":"যদি ইংৰাজী নহয়",
+    "powered":"UrbanGuard AI ৰ দ্বাৰা"
+  },
+
+  ur: {
+    "brand.sub":"سیلاب کی ذہانت",
+    "role.citizen":"شہری لاگ ان",
+    "role.authority":"اتھارٹی لاگ ان",
+    "role.government":"حکومت لاگ ان",
+    "role.admin":"منتظم لاگ ان",
+    "lang.label":"اگر انگریزی نہیں",
+    "powered":"UrbanGuard AI کی جانب سے"
+  },
+
+  sa: {
+    "brand.sub":"जलप्रलयबुद्धिः",
+    "role.citizen":"नागरिकप्रवेशः",
+    "role.authority":"प्राधिकरणप्रवेशः",
+    "role.government":"शासनप्रवेशः",
+    "role.admin":"प्रशासकप्रवेशः",
+    "lang.label":"यदि आङ्ग्लभाषा नास्ति",
+    "powered":"UrbanGuard AI द्वारा"
+  },
+
+  ne: {
+    "brand.sub":"बाढी बुद्धिमत्ता",
+    "role.citizen":"नागरिक लगइन",
+    "role.authority":"अधिकार लगइन",
+    "role.government":"सरकार लगइन",
+    "role.admin":"प्रशासक लगइन",
+    "lang.label":"यदि अंग्रेजी होइन",
+    "powered":"UrbanGuard AI द्वारा"
+  },
+
+  mai: {
+    "brand.sub":"बाढ़ बुद्धि",
+    "role.citizen":"नागरिक लॉगिन",
+    "role.authority":"प्राधिकरण लॉगिन",
+    "role.government":"सरकार लॉगिन",
+    "role.admin":"प्रशासक लॉगिन",
+    "lang.label":"जँ अंग्रेजी नहि",
+    "powered":"UrbanGuard AI द्वारा"
+  },
+
+  kok: {
+    "brand.sub":"पूर बुद्धी",
+    "role.citizen":"नागरिक लॉगिन",
+    "role.authority":"प्राधिकरण लॉगिन",
+    "role.government":"सरकार लॉगिन",
+    "role.admin":"प्रशासक लॉगिन",
+    "lang.label":"इंग्लीश ना जाल्यार",
+    "powered":"UrbanGuard AI वरवीं"
+  }
+
+};
+
+function changeLang(lang){
+  const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
+  document.documentElement.setAttribute('lang', lang);
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if(t[key]) el.textContent = t[key];
+  });
+  localStorage.setItem('ug_lang', lang);
+}
+
+function enter(role){
+  localStorage.setItem('ug_demo_role', role);
+  const routes = {
+    citizen: 'citizen.html',
+    authority: 'authority.html',
+    government: 'government.html',
+    administrator: 'administrator.html'
+  };
+  window.location.href = routes[role] || 'citizen.html';
+}
+
+(function init(){
+  const saved = localStorage.getItem('ug_lang') || 'en';
+  const sel = document.getElementById('langSelect');
+  if(sel) sel.value = saved;
+  changeLang(saved);
+})();
+</script>
+
+</body>
+</html>

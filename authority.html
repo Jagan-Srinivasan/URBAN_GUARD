@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NFMS PRO · Authority View · Tamil Nadu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   DESIGN SYSTEM (matches NFMS PRO)
+============================================================ */
+:root{
+  --bg:#f8fafc; --card:#ffffff;
+  --primary:#0f4c81; --primary-light:#1565a0; --primary-dark:#0a3559;
+  --accent:#c9a227;
+  --success:#0d7c4e; --success-bg:#e6f7ee;
+  --warning:#b45309; --warning-bg:#fef3c7;
+  --danger:#b91c1c; --danger-bg:#fee2e2;
+  --info:#0369a1; --info-bg:#e0f2fe;
+  --text:#0f172a; --text2:#475569; --text3:#94a3b8;
+  --border:#e2e8f0; --border2:#cbd5e1;
+  --shadow-sm:0 1px 2px rgba(15,23,42,.05);
+  --shadow:0 4px 12px rgba(15,23,42,.08);
+  --shadow-lg:0 12px 32px rgba(15,23,42,.12);
+  --radius:12px; --radius-lg:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  background:var(--bg); color:var(--text);
+  font-size:14px; line-height:1.5;
+  -webkit-font-smoothing:antialiased; min-height:100vh;
+}
+.hidden{display:none!important}
+a{color:inherit;text-decoration:none}
+
+/* ============================================================
+   APP HEADER
+============================================================ */
+.header{
+  background:#fff;border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 1px 3px rgba(15,23,42,.04);
+}
+.header::before{
+  content:'';display:block;height:3px;
+  background:linear-gradient(90deg,var(--accent) 33%,#fff 33% 66%,var(--primary) 66%);
+}
+.header-inner{
+  max-width:1500px;margin:0 auto;padding:14px 32px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+}
+.hdr-brand{display:flex;align-items:center;gap:14px}
+.hdr-emblem{
+  width:44px;height:44px;border-radius:12px;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;color:#fff;box-shadow:0 4px 12px rgba(15,76,129,.25);
+}
+.hdr-text b{display:block;font-size:16px;font-weight:800;letter-spacing:-.2px}
+.hdr-text span{font-size:11.5px;color:var(--text2);letter-spacing:.3px;font-weight:500}
+.hdr-right{display:flex;align-items:center;gap:12px}
+.hdr-status{
+  display:flex;align-items:center;gap:8px;padding:8px 14px;
+  background:var(--success-bg);border-radius:20px;
+  font-size:12px;font-weight:600;color:var(--success);
+}
+.hdr-status .pulse{
+  width:8px;height:8px;border-radius:50%;background:var(--success);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.5;transform:scale(.85)}
+}
+.hdr-readonly{
+  display:flex;align-items:center;gap:6px;padding:8px 14px;
+  background:#f1f5f9;border:1px solid var(--border);
+  border-radius:20px;font-size:11px;font-weight:800;
+  letter-spacing:.5px;text-transform:uppercase;color:var(--text2);
+}
+.hdr-user{
+  display:flex;align-items:center;gap:10px;padding:8px 14px;
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:20px;font-size:12.5px;font-weight:600;
+}
+.hdr-user .avatar{
+  width:26px;height:26px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),#a8841b);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:#fff;font-weight:700;
+}
+.hdr-logout{
+  padding:8px 16px;background:transparent;
+  border:1px solid var(--border2);border-radius:20px;
+  font-size:12.5px;font-weight:600;color:var(--text2);
+  cursor:pointer;font-family:inherit;transition:.2s;
+}
+.hdr-logout:hover{border-color:var(--danger);color:var(--danger);background:var(--danger-bg)}
+
+/* Read-only banner */
+.ro-banner{
+  background:linear-gradient(90deg,#eef2ff,#e0e7ff);
+  border-bottom:1px solid #c7d2fe;
+  padding:10px 32px;font-size:12px;font-weight:700;
+  color:#3730a3;letter-spacing:.3px;
+  display:flex;align-items:center;gap:8px;
+}
+.ro-banner svg{width:14px;height:14px}
+
+/* ============================================================
+   MAIN
+============================================================ */
+.main{max-width:1500px;margin:0 auto;padding:28px 32px 60px}
+.content-grid{display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start}
+.content-grid.full{grid-template-columns:1fr}
+@media(max-width:1100px){.content-grid{grid-template-columns:1fr}}
+.crumb{display:flex;align-items:center;gap:8px;margin-bottom:18px;font-size:13px;color:var(--text2);flex-wrap:wrap}
+.crumb-item{
+  padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:600;
+  transition:.15s;display:inline-flex;align-items:center;gap:6px;
+}
+.crumb-item:hover{background:#fff;color:var(--primary);box-shadow:var(--shadow-sm)}
+.crumb-sep{color:var(--text3);font-size:11px}
+
+.page-head{margin-bottom:24px}
+.page-head .eyebrow{
+  font-size:11px;font-weight:700;letter-spacing:1.5px;
+  color:var(--accent);text-transform:uppercase;margin-bottom:6px;
+  display:flex;align-items:center;gap:8px;
+}
+.page-head .eyebrow::before{content:'';width:20px;height:2px;background:var(--accent);border-radius:2px}
+.page-head h1{font-size:28px;font-weight:800;letter-spacing:-.7px;margin-bottom:4px}
+.page-head p{font-size:14px;color:var(--text2)}
+
+/* KPI cards */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:28px}
+.kpi{
+  background:#fff;border:1px solid var(--border);border-radius:var(--radius);
+  padding:20px;position:relative;overflow:hidden;
+  box-shadow:var(--shadow-sm);transition:.2s;
+}
+.kpi:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.kpi::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--kpi-color,var(--primary));
+}
+.kpi-label{
+  font-size:11px;font-weight:700;letter-spacing:.8px;
+  text-transform:uppercase;color:var(--text3);margin-bottom:10px;
+}
+.kpi-value{
+  font-size:32px;font-weight:800;letter-spacing:-1px;line-height:1;
+  color:var(--kpi-color,var(--primary));font-variant-numeric:tabular-nums;
+}
+.kpi-unit{font-size:11px;color:var(--text3);margin-top:6px;font-weight:500}
+.kpi-icon{position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:36px;opacity:.08}
+
+/* Rivers grid */
+.rivers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.river-card{
+  background:#fff;border:1px solid var(--border);border-radius:var(--radius);
+  padding:22px;cursor:pointer;transition:.25s;
+  box-shadow:var(--shadow-sm);position:relative;overflow:hidden;
+}
+.river-card::after{
+  content:'→';position:absolute;bottom:22px;right:22px;
+  font-size:20px;color:var(--text3);transition:.25s;
+}
+.river-card:hover{
+  border-color:var(--primary);
+  box-shadow:0 8px 24px rgba(15,76,129,.12);
+  transform:translateY(-3px);
+}
+.river-card:hover::after{color:var(--primary);transform:translateX(4px)}
+.river-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:12px}
+.river-name{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:800;letter-spacing:-.3px}
+.river-name .wave{
+  width:32px;height:32px;border-radius:9px;background:var(--info-bg);color:var(--info);
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+}
+.river-meta{font-size:12px;color:var(--text2);margin-top:4px;font-weight:500}
+.river-badge{
+  padding:5px 11px;border-radius:20px;font-size:10.5px;font-weight:800;
+  letter-spacing:.8px;text-transform:uppercase;white-space:nowrap;
+}
+.river-stats{display:flex;gap:20px;padding-top:16px;border-top:1px solid var(--border);margin-top:4px}
+.river-stat{display:flex;flex-direction:column;gap:2px}
+.river-stat b{font-size:18px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
+.river-stat span{font-size:10.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+
+/* Live sidebar */
+.live-sidebar{
+  background:#fff;border:1px solid var(--border);
+  border-radius:var(--radius);padding:20px;
+  box-shadow:var(--shadow-sm);position:sticky;top:110px;
+}
+.live-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border);
+}
+.live-title{font-size:13px;font-weight:800;letter-spacing:-.2px;display:flex;align-items:center;gap:8px}
+.live-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--success);
+  animation:pulse 2s infinite;
+}
+.live-meta{font-size:10.5px;color:var(--text3);font-weight:600;letter-spacing:.5px}
+.live-section{margin-bottom:18px}
+.live-section-title{
+  font-size:10.5px;font-weight:800;letter-spacing:.8px;
+  text-transform:uppercase;color:var(--text3);
+  margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;
+}
+.live-section-title .count{
+  background:var(--bg);color:var(--text2);padding:2px 8px;
+  border-radius:10px;font-size:10px;
+}
+.live-section-title .count.danger{background:var(--danger-bg);color:var(--danger)}
+.live-section-title .count.warn{background:var(--warning-bg);color:var(--warning)}
+
+.live-item{
+  padding:10px 12px;background:var(--bg);border:1px solid var(--border);
+  border-radius:10px;margin-bottom:8px;font-size:12px;line-height:1.5;
+}
+.live-item:last-child{margin-bottom:0}
+.live-item.urgent{background:#fef2f2;border-color:#fecaca}
+.live-item.warn{background:#fffbeb;border-color:#fde68a}
+.live-item .head{
+  font-weight:800;font-size:11.5px;letter-spacing:-.1px;
+  color:var(--text);margin-bottom:3px;display:flex;
+  justify-content:space-between;align-items:center;gap:6px;
+}
+.live-item .body{color:var(--text2);font-size:11.5px}
+.live-item .meta{font-size:10px;color:var(--text3);margin-top:5px;font-weight:600;letter-spacing:.3px}
+
+/* Alert level pill */
+.alert-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 12px;border-radius:20px;
+  font-size:10.5px;font-weight:800;letter-spacing:.8px;
+  text-transform:uppercase;
+}
+.alert-pill.normal{background:var(--success-bg);color:var(--success)}
+.alert-pill.watch{background:var(--warning-bg);color:var(--warning)}
+.alert-pill.alert{background:#ffedd5;color:#9a3412}
+.alert-pill.danger{background:var(--danger-bg);color:var(--danger)}
+.alert-pill.critical{background:#7f1d1d;color:#fff}
+
+/* Cards / tables */
+.card{
+  background:#fff;border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px;box-shadow:var(--shadow-sm);margin-bottom:20px;
+}
+.card-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:18px;gap:12px;flex-wrap:wrap;
+}
+.card-title{
+  font-size:15px;font-weight:800;letter-spacing:-.2px;
+  display:flex;align-items:center;gap:10px;
+}
+.card-title .icon{
+  width:30px;height:30px;border-radius:8px;
+  background:var(--info-bg);color:var(--info);
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{
+  text-align:left;padding:10px 14px;font-size:10.5px;font-weight:700;
+  letter-spacing:.7px;color:var(--text3);text-transform:uppercase;
+  border-bottom:2px solid var(--border);background:var(--bg);
+}
+td{padding:12px 14px;border-bottom:1px solid var(--border);color:var(--text2)}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--bg)}
+.pill{
+  display:inline-block;padding:3px 10px;border-radius:20px;
+  font-size:10.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;
+}
+.pill.ok{background:var(--success-bg);color:var(--success)}
+.pill.warn{background:var(--warning-bg);color:var(--warning)}
+.pill.crit{background:var(--danger-bg);color:var(--danger)}
+
+/* Node list */
+.node-list{display:flex;flex-direction:column;gap:10px}
+.node-row{
+  display:flex;align-items:center;gap:16px;padding:16px 20px;
+  background:#fff;border:1px solid var(--border);border-radius:var(--radius);
+  cursor:pointer;transition:.2s;
+}
+.node-row:hover{border-color:var(--primary);background:#fafcfd;box-shadow:0 4px 14px rgba(15,76,129,.06)}
+.node-dot-wrap{position:relative;width:22px;height:22px;flex-shrink:0}
+.node-dot{width:14px;height:14px;border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+.node-dot.active{background:var(--success);box-shadow:0 0 0 4px rgba(13,124,78,.15)}
+.node-dot.delayed{background:#d97706;box-shadow:0 0 0 4px rgba(217,119,6,.15)}
+.node-dot.weak{background:#ea580c;box-shadow:0 0 0 4px rgba(234,88,12,.15)}
+.node-dot.offline{background:var(--danger);box-shadow:0 0 0 4px rgba(185,28,28,.15)}
+.node-dot.disabled{background:#94a3b8;box-shadow:0 0 0 4px rgba(148,163,184,.15)}
+.node-dot.active::before{
+  content:'';position:absolute;inset:-4px;border-radius:50%;
+  border:2px solid var(--success);opacity:.4;animation:ripple 2s infinite;
+}
+@keyframes ripple{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.8);opacity:0}}
+.node-info{flex:1;min-width:0}
+.node-id{
+  font-size:14px;font-weight:800;letter-spacing:-.2px;
+  font-family:'SF Mono',Monaco,Consolas,monospace;
+}
+.node-loc{font-size:12px;color:var(--text2);margin-top:2px;display:flex;align-items:center;gap:6px}
+.node-meta{display:flex;gap:24px;align-items:center;font-size:12px;color:var(--text2)}
+.node-meta .m-item{display:flex;flex-direction:column;gap:2px;text-align:right;min-width:70px}
+.node-meta .m-item b{font-size:13px;font-weight:800;font-variant-numeric:tabular-nums}
+.node-meta .m-item span{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+
+/* Tabs */
+.tabs{
+  display:flex;gap:4px;border-bottom:2px solid var(--border);
+  margin-bottom:20px;overflow-x:auto;
+}
+.tab{
+  padding:12px 20px;background:transparent;border:none;
+  border-bottom:3px solid transparent;font-size:13px;font-weight:700;
+  color:var(--text2);cursor:pointer;font-family:inherit;
+  white-space:nowrap;transition:.2s;margin-bottom:-2px;
+}
+.tab:hover{color:var(--primary)}
+.tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+.tab-content{display:none}
+.tab-content.active{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* Map */
+.map{
+  position:relative;height:340px;border-radius:var(--radius);
+  background:linear-gradient(135deg,#e0f2fe,#f0f9ff);
+  border:1px solid var(--border);overflow:hidden;
+}
+.map-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(15,76,129,.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(15,76,129,.06) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+.map-marker{
+  position:absolute;transform:translate(-50%,-50%);
+  display:flex;flex-direction:column;align-items:center;
+  cursor:pointer;transition:.2s;z-index:2;
+}
+.map-marker:hover{transform:translate(-50%,-50%) scale(1.15);z-index:5}
+.map-marker .pin{width:18px;height:18px;border-radius:50%;border:3px solid #fff;box-shadow:0 3px 10px rgba(0,0,0,.2)}
+.map-marker .pin.active{background:var(--success)}
+.map-marker .pin.delayed{background:#d97706}
+.map-marker .pin.weak{background:#ea580c}
+.map-marker .pin.offline{background:var(--danger)}
+.map-marker .pin.disabled{background:#94a3b8}
+.map-marker .lbl{
+  font-size:9.5px;font-weight:700;color:var(--text);
+  background:rgba(255,255,255,.95);padding:2px 7px;border-radius:4px;
+  margin-top:4px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.08);
+}
+.map-legend{
+  position:absolute;bottom:14px;right:14px;
+  background:rgba(255,255,255,.95);padding:10px 14px;border-radius:10px;
+  font-size:11px;box-shadow:var(--shadow-sm);
+  display:flex;flex-direction:column;gap:6px;backdrop-filter:blur(10px);
+}
+.legend-row{display:flex;align-items:center;gap:8px;font-weight:600;color:var(--text2)}
+.legend-dot{width:10px;height:10px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.08)}
+
+/* Sensors */
+.sensors{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px}
+.sensor{
+  padding:18px;border:1px solid var(--border);border-radius:var(--radius);
+  background:var(--bg);transition:.2s;
+}
+.sensor:hover{background:#fff;box-shadow:var(--shadow-sm)}
+.sensor-label{
+  font-size:11px;font-weight:700;letter-spacing:.6px;
+  color:var(--text3);text-transform:uppercase;margin-bottom:8px;
+}
+.sensor-value{
+  font-size:24px;font-weight:800;letter-spacing:-.5px;
+  font-variant-numeric:tabular-nums;line-height:1;
+}
+.sensor-value.warn{color:var(--warning)}
+.sensor-value.crit{color:var(--danger)}
+.sensor-value.ok{color:var(--success)}
+.sensor-live{
+  margin-top:10px;font-size:10.5px;font-weight:700;
+  color:var(--success);letter-spacing:.4px;
+  display:flex;align-items:center;gap:5px;text-transform:uppercase;
+}
+.sensor-live::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--success);animation:pulse 2s infinite;
+}
+
+/* Info grid */
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.info-item{padding:14px 16px;background:var(--bg);border:1px solid var(--border);border-radius:10px}
+.info-item .k{font-size:10.5px;font-weight:700;letter-spacing:.6px;color:var(--text3);text-transform:uppercase;margin-bottom:4px}
+.info-item .v{font-size:14px;font-weight:700;letter-spacing:-.1px}
+
+/* Chart */
+.chart{height:160px;display:flex;align-items:flex-end;gap:4px;padding:16px 0 0;position:relative}
+.chart::before{content:'';position:absolute;left:0;right:0;bottom:0;border-bottom:1px dashed var(--border2)}
+.chart-bar{
+  flex:1;border-radius:4px 4px 0 0;
+  background:linear-gradient(180deg,var(--primary-light),var(--primary));
+  transition:.2s;min-height:4px;
+}
+.chart-bar:hover{opacity:.85;transform:scaleY(1.02)}
+.chart-labels{display:flex;justify-content:space-between;font-size:10.5px;color:var(--text3);margin-top:8px;font-weight:600}
+
+/* Spinner */
+.spinner{
+  width:40px;height:40px;border:3px solid var(--border);
+  border-top-color:var(--primary);border-radius:50%;
+  animation:spin .8s linear infinite;margin:60px auto;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Toast */
+#toast{
+  position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--text);color:#fff;padding:14px 24px;border-radius:12px;
+  font-size:13.5px;font-weight:600;box-shadow:var(--shadow-lg);
+  opacity:0;pointer-events:none;transition:.3s;z-index:9999;max-width:90%;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Responsive */
+@media(max-width:900px){
+  .header-inner{padding:12px 18px;flex-wrap:wrap}
+  .hdr-text span{display:none}
+  .hdr-readonly{display:none}
+  .main{padding:20px 18px 40px}
+  .page-head h1{font-size:22px}
+  .node-meta .m-item:nth-child(n+3){display:none}
+}
+@media(max-width:600px){
+  .hdr-user span:not(.avatar){display:none}
+  .kpis{grid-template-columns:1fr 1fr;gap:10px}
+  .kpi{padding:14px}
+  .kpi-value{font-size:24px}
+  .rivers-grid{grid-template-columns:1fr}
+  .node-row{padding:12px 14px;gap:10px}
+  .node-meta{display:none}
+  .live-sidebar{position:static}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     APP SHELL (Opens Immediately)
+============================================================ -->
+<div id="app">
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="hdr-brand">
+        <div class="hdr-emblem">🛡️</div>
+        <div class="hdr-text">
+          <b>NFMS PRO · Authority</b>
+          <span>Read-Only Situational View</span>
+        </div>
+      </div>
+      <div class="hdr-right">
+        <div class="hdr-readonly">👁️ Read-Only</div>
+        <div class="hdr-status">
+          <span class="pulse"></span>
+          Live Sync
+        </div>
+        <div class="hdr-user">
+          <span class="avatar">A</span>
+          <span>Authority Officer</span>
+        </div>
+        <button class="hdr-logout" onclick="logout()">Exit</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="ro-banner">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="11" width="18" height="11" rx="2"/>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    </svg>
+    READ-ONLY MODE — You are viewing live conditions. Data modification is restricted to Government & Administrator.
+  </div>
+
+  <main class="main">
+    <div class="crumb" id="crumb"></div>
+    <div class="content-grid" id="contentGrid">
+      <div id="viewContainer"></div>
+      <aside class="live-sidebar" id="liveSidebar"></aside>
+    </div>
+  </main>
+
+</div>
+
+<div id="toast"></div>
+
+<style>
+.ug-node-panel{background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px;margin:0 0 24px;box-shadow:var(--shadow-sm)}.ug-node-panel h2{font-size:17px;margin-bottom:5px}.ug-node-panel .sub{font-size:12px;color:var(--text2);margin-bottom:15px}.ug-node-filters{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}.ug-node-filters select{padding:10px;border:1px solid var(--border2);border-radius:9px;background:#fff;font:inherit}.ug-node-table{overflow:auto}.ug-node-table table{min-width:850px}.ug-node-table th{font-size:10px;text-transform:uppercase;color:var(--text3);padding:9px;border-bottom:2px solid var(--border);text-align:left}.ug-node-table td{padding:10px 9px;border-bottom:1px solid var(--border);font-size:12px}.ug-node-pill{display:inline-block;padding:3px 8px;border-radius:999px;background:var(--success-bg);color:var(--success);font-size:10px;font-weight:800;text-transform:uppercase}.ug-node-empty{text-align:center;padding:24px;color:var(--text3)}@media(max-width:600px){.ug-node-filters{grid-template-columns:1fr}}
+</style>
+<div class="ug-node-panel"><h2>📡 Registered Sensor Nodes</h2><div class="sub">Nodes registered by the system administrator. This view updates automatically when a new node is added.</div><div class="ug-node-filters"><select id="authorityNodeState" onchange="ugAuthorityFilterDistricts()"><option value="">All States</option></select><select id="authorityNodeDistrict" onchange="renderAuthorityNodes()"><option value="">All Districts</option></select></div><div class="ug-node-table"><table><thead><tr><th>Node</th><th>State</th><th>District</th><th>Coordinates</th><th>ThingSpeak</th><th>Installed</th><th>Installer</th><th>Status</th></tr></thead><tbody id="authorityNodeRows"></tbody></table></div></div>
+<script>
+/* ============================================================
+   CONFIG
+============================================================ */
+const API = 'http://localhost:5000/api';
+const STORAGE_KEYS = {
+  alertLevel: 'nfms_alert_level',
+  broadcasts: 'nfms_broadcasts',
+  reports: 'nfms_public_reports',
+  panic: 'nfms_panic_signal'
+};
+const STATUS_NAMES = ['Normal', 'Watch', 'Alert', 'Danger', 'Critical'];
+const STATUS_CLASSES = ['normal', 'watch', 'alert', 'danger', 'critical'];
+
+/* ============================================================
+   STATE
+============================================================ */
+let STATE = {
+  rivers: [],
+  currentRiver: null,
+  currentNode: null,
+  currentTab: 'nodes',
+  view: 'rivers'
+};
+
+/* ============================================================
+   LOGOUT → Back to Portal
+============================================================ */
+function logout(){
+  window.location.href = 'index.html';
+}
+
+/* ============================================================
+   RIVERS
+============================================================ */
+async function loadRivers(){
+  showLoading();
+  try{
+    const res = await fetch(`${API}/rivers`);
+    if(!res.ok) throw new Error('Failed');
+    STATE.rivers = await res.json();
+  }catch(e){
+    // Fallback demo data so the page still works offline
+    STATE.rivers = getFallbackRivers();
+    toast('⚠️ Using demo data (backend offline)');
+  }
+  renderRivers();
+}
+
+function getFallbackRivers(){
+  return [
+    { id:'cauvery', name:'Cauvery', length:805, basin:'Cauvery Basin', origin:'Talakaveri, Karnataka',
+      districts:'Coorg → Salem → Erode → Trichy → Thanjavur',
+      totalNodes:12, activeNodes:11, offlineNodes:1,
+      nodes:[
+        {id:'CBR-001', location:'Mettur Dam', status:'active', battery:92, rssi:-72, lastSeen:'2 min ago'},
+        {id:'CBR-002', location:'Bhavani Sangam', status:'active', battery:88, rssi:-68, lastSeen:'1 min ago'},
+        {id:'CBR-003', location:'Erode', status:'active', battery:76, rssi:-81, lastSeen:'3 min ago'},
+        {id:'CBR-004', location:'Karur', status:'delayed', battery:54, rssi:-89, lastSeen:'12 min ago'},
+        {id:'CBR-005', location:'Trichy Upper', status:'active', battery:91, rssi:-70, lastSeen:'Just now'},
+        {id:'CBR-006', location:'Trichy Lower', status:'offline', battery:18, rssi:-110, lastSeen:'2 hr ago'},
+        {id:'CBR-007', location:'Thanjavur', status:'active', battery:85, rssi:-75, lastSeen:'2 min ago'}
+      ]
+    },
+    { id:'bhavani', name:'Bhavani', length:215, basin:'Cauvery Tributary', origin:'Silent Valley',
+      districts:'Nilgiris → Coimbatore → Erode',
+      totalNodes:6, activeNodes:6, offlineNodes:0,
+      nodes:[
+        {id:'BHV-001', location:'Mettupalayam', status:'active', battery:88, rssi:-70, lastSeen:'1 min ago'},
+        {id:'BHV-002', location:'Sathyamangalam', status:'active', battery:82, rssi:-74, lastSeen:'2 min ago'},
+        {id:'BHV-003', location:'Bhavani Town', status:'active', battery:79, rssi:-78, lastSeen:'3 min ago'}
+      ]
+    },
+    { id:'vaigai', name:'Vaigai', length:258, basin:'Vaigai Basin', origin:'Varusanadu Hills',
+      districts:'Theni → Madurai → Ramanathapuram',
+      totalNodes:7, activeNodes:5, offlineNodes:2,
+      nodes:[
+        {id:'VAI-001', location:'Theni Dam', status:'active', battery:91, rssi:-68, lastSeen:'1 min ago'},
+        {id:'VAI-002', location:'Madurai City', status:'active', battery:86, rssi:-72, lastSeen:'2 min ago'},
+        {id:'VAI-003', location:'Ramanathapuram', status:'weak', battery:34, rssi:-98, lastSeen:'25 min ago'},
+        {id:'VAI-004', location:'Peranai', status:'offline', battery:8, rssi:-120, lastSeen:'4 hr ago'}
+      ]
+    },
+    { id:'thamirabarani', name:'Thamirabarani', length:128, basin:'South TN Basin', origin:'Agasthyamalai',
+      districts:'Tirunelveli → Thoothukudi',
+      totalNodes:5, activeNodes:5, offlineNodes:0,
+      nodes:[
+        {id:'TMB-001', location:'Papanasam', status:'active', battery:90, rssi:-69, lastSeen:'1 min ago'},
+        {id:'TMB-002', location:'Ambasamudram', status:'active', battery:87, rssi:-71, lastSeen:'2 min ago'}
+      ]
+    },
+    { id:'palar', name:'Palar', length:348, basin:'Palar Basin', origin:'Kolar, Karnataka',
+      districts:'Vellore → Kanchipuram',
+      totalNodes:4, activeNodes:4, offlineNodes:0,
+      nodes:[
+        {id:'PLR-001', location:'Vaniyambadi', status:'active', battery:84, rssi:-74, lastSeen:'3 min ago'},
+        {id:'PLR-002', location:'Vellore', status:'active', battery:88, rssi:-71, lastSeen:'2 min ago'}
+      ]
+    },
+    { id:'ponnaiyar', name:'Ponnaiyar', length:415, basin:'Ponnaiyar Basin', origin:'Nandi Hills',
+      districts:'Krishnagiri → Cuddalore',
+      totalNodes:5, activeNodes:4, offlineNodes:1,
+      nodes:[
+        {id:'PON-001', location:'Krishnagiri', status:'active', battery:80, rssi:-76, lastSeen:'4 min ago'},
+        {id:'PON-002', location:'Cuddalore', status:'delayed', battery:45, rssi:-92, lastSeen:'18 min ago'}
+      ]
+    }
+  ];
+}
+
+/* ============================================================
+   RENDER: RIVERS GRID
+============================================================ */
+function renderRivers(){
+  STATE.view = 'rivers';
+  STATE.currentRiver = null;
+  STATE.currentNode = null;
+  STATE.currentTab = 'nodes';
+
+  // Restore sidebar (river detail hides it)
+  const grid = document.getElementById('contentGrid');
+  grid.classList.remove('full');
+  document.getElementById('liveSidebar').classList.remove('hidden');
+
+  document.getElementById('crumb').innerHTML = '';
+
+  const totalNodes = STATE.rivers.reduce((s,r)=>s+r.totalNodes,0);
+  const activeNodes = STATE.rivers.reduce((s,r)=>s+r.activeNodes,0);
+  const offlineNodes = STATE.rivers.reduce((s,r)=>s+r.offlineNodes,0);
+  const reports = JSON.parse(localStorage.getItem(STORAGE_KEYS.reports) || '[]');
+  const panic = localStorage.getItem(STORAGE_KEYS.panic);
+
+  document.getElementById('viewContainer').innerHTML = `
+    <div class="page-head">
+      <div class="eyebrow">Authority · State Overview</div>
+      <h1>Rivers of Tamil Nadu</h1>
+      <p>Live read-only view of the flood monitoring network. Select a river to inspect its sensor network and impact data.</p>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi" style="--kpi-color:var(--primary)">
+        <div class="kpi-label">Total Rivers</div>
+        <div class="kpi-value">${STATE.rivers.length}</div>
+        <div class="kpi-unit">Monitored Basins</div>
+        <div class="kpi-icon">🌊</div>
+      </div>
+      <div class="kpi" style="--kpi-color:var(--info)">
+        <div class="kpi-label">Total Nodes</div>
+        <div class="kpi-value">${totalNodes}</div>
+        <div class="kpi-unit">IoT Sensors Deployed</div>
+        <div class="kpi-icon">📡</div>
+      </div>
+      <div class="kpi" style="--kpi-color:var(--success)">
+        <div class="kpi-label">Active Nodes</div>
+        <div class="kpi-value">${activeNodes}</div>
+        <div class="kpi-unit">Reporting Live</div>
+        <div class="kpi-icon">✅</div>
+      </div>
+      <div class="kpi" style="--kpi-color:var(--danger)">
+        <div class="kpi-label">Offline Nodes</div>
+        <div class="kpi-value">${offlineNodes}</div>
+        <div class="kpi-unit">Requires Attention</div>
+        <div class="kpi-icon">⚠️</div>
+      </div>
+      <div class="kpi" style="--kpi-color:#ea580c">
+        <div class="kpi-label">Citizen Reports</div>
+        <div class="kpi-value">${reports.length}</div>
+        <div class="kpi-unit">Community Submissions</div>
+        <div class="kpi-icon">📥</div>
+      </div>
+      <div class="kpi" style="--kpi-color:var(--danger)">
+        <div class="kpi-label">Panic Signals</div>
+        <div class="kpi-value">${panic ? 1 : 0}</div>
+        <div class="kpi-unit">Active SOS</div>
+        <div class="kpi-icon">🚨</div>
+      </div>
+    </div>
+
+    <div class="rivers-grid">
+      ${STATE.rivers.map(r => {
+        const alert = r.offlineNodes > 1 ? 'CRITICAL' : r.offlineNodes > 0 ? 'WARNING' : 'SAFE';
+        const color = alert === 'CRITICAL' ? 'var(--danger)' : alert === 'WARNING' ? 'var(--warning)' : 'var(--success)';
+        const bg = alert === 'CRITICAL' ? 'var(--danger-bg)' : alert === 'WARNING' ? 'var(--warning-bg)' : 'var(--success-bg)';
+        return `
+          <div class="river-card" onclick="showRiver('${r.id}')">
+            <div class="river-top">
+              <div>
+                <div class="river-name"><span class="wave">🌊</span> ${r.name}</div>
+                <div class="river-meta">${r.length} km · ${r.basin}</div>
+              </div>
+              <span class="river-badge" style="background:${bg};color:${color}">${alert}</span>
+            </div>
+            <div class="river-stats">
+              <div class="river-stat"><b>${r.totalNodes}</b><span>Nodes</span></div>
+              <div class="river-stat"><b style="color:var(--success)">${r.activeNodes}</b><span>Active</span></div>
+              <div class="river-stat"><b style="color:var(--danger)">${r.offlineNodes}</b><span>Offline</span></div>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+/* ============================================================
+   RIVER DETAIL (integrated from river.js)
+============================================================ */
+async function showRiver(riverId){
+  showLoading();
+  try{
+    const res = await fetch(`${API}/rivers/${riverId}`);
+    if(!res.ok) throw new Error();
+    STATE.currentRiver = await res.json();
+  }catch(e){
+    STATE.currentRiver = STATE.rivers.find(r => r.id === riverId) || STATE.rivers[0];
+  }
+  STATE.currentNode = null;
+  STATE.currentTab = 'nodes';
+  STATE.view = 'river';
+
+  // Hide sidebar & make full width for river detail
+  document.getElementById('contentGrid').classList.add('full');
+  document.getElementById('liveSidebar').classList.add('hidden');
+
+  renderRiverPage(STATE.currentRiver);
+}
+
+function renderRiverPage(r){
+  const active = r.nodes.filter(n => n.status === 'active').length;
+  const offline = r.nodes.filter(n => n.status === 'offline').length;
+  const affected = getAffectedAreas(r.id);
+
+  document.getElementById('crumb').innerHTML = `
+    <span class="crumb-item" onclick="renderRivers()">← All Rivers</span>
+    <span class="crumb-sep">/</span>
+    <span style="font-weight:700;color:var(--text)">${r.name}</span>
+  `;
+
+  document.getElementById('viewContainer').innerHTML = `
+    <div class="page-head">
+      <div class="eyebrow">River Basin</div>
+      <h1>🌊 ${r.name}</h1>
+      <p>${r.length} km · Origin: ${r.origin} · ${r.districts}</p>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi" style="--kpi-color:var(--primary)">
+        <div class="kpi-label">Total Nodes</div>
+        <div class="kpi-value">${r.nodes.length}</div>
+        <div class="kpi-unit">On ${r.name}</div>
+        <div class="kpi-icon">📡</div>
+      </div>
+      <div class="kpi" style="--kpi-color:var(--success)">
+        <div class="kpi-label">Active</div>
+        <div class="kpi-value">${active}</div>
+        <div class="kpi-unit">Reporting Live</div>
+        <div class="kpi-icon">✅</div>
+      </div>
+      <div class="kpi" style="--kpi-color:var(--danger)">
+        <div class="kpi-label">Offline</div>
+        <div class="kpi-value">${offline}</div>
+        <div class="kpi-unit">Not Responding</div>
+        <div class="kpi-icon">⚠️</div>
+      </div>
+      <div class="kpi" style="--kpi-color:var(--warning)">
+        <div class="kpi-label">Affected Areas</div>
+        <div class="kpi-value">${affected.filter(a=>a.risk!=='safe').length}</div>
+        <div class="kpi-unit">At Risk / Flooded</div>
+        <div class="kpi-icon">🌊</div>
+      </div>
+    </div>
+
+    <div class="tabs" id="riverTabs">
+      <button class="tab active" data-tab="nodes"    onclick="switchRiverTab('nodes', this)">📡 Live Nodes</button>
+      <button class="tab"        data-tab="affected" onclick="switchRiverTab('affected', this)">⚠️ Affected Areas</button>
+      <button class="tab"        data-tab="history"  onclick="switchRiverTab('history', this)">📅 Historical Events</button>
+      <button class="tab"        data-tab="map"      onclick="switchRiverTab('map', this)">🗺️ Impact Map</button>
+    </div>
+
+    <div id="riverTabBody"></div>
+  `;
+
+  renderRiverTab('nodes');
+}
+
+function switchRiverTab(tabName, btnEl){
+  STATE.currentTab = tabName;
+  document.querySelectorAll('#riverTabs .tab').forEach(t => t.classList.remove('active'));
+  if(btnEl) btnEl.classList.add('active');
+  renderRiverTab(tabName);
+}
+
+function renderRiverTab(tabName){
+  const r = STATE.currentRiver;
+  if(!r) return;
+  const body = document.getElementById('riverTabBody');
+  if(!body) return;
+  body.className = 'tab-content active';
+
+  switch(tabName){
+    case 'nodes':    body.innerHTML = renderNodesTab(r); break;
+    case 'affected': body.innerHTML = renderAffectedTab(r); break;
+    case 'history':  body.innerHTML = renderHistoryTab(r); break;
+    case 'map':      body.innerHTML = renderImpactMapTab(r); break;
+    default:         body.innerHTML = renderNodesTab(r);
+  }
+}
+
+/* ---------- TAB 1: Nodes ---------- */
+function renderNodesTab(r){
+  return `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="icon">🗺️</span> Node Locations on ${r.name}</div>
+        <span style="font-size:12px;color:var(--text2);font-weight:600">${r.nodes.length} sensors</span>
+      </div>
+      <div class="map">
+        <div class="map-grid"></div>
+        ${r.nodes.map((n, i) => {
+          const left = 12 + (i * 76 / Math.max(1, r.nodes.length - 1));
+          const top = 25 + (i % 3) * 22 + Math.sin(i) * 8;
+          return `
+            <div class="map-marker" style="left:${left}%;top:${top}%" onclick="showNode('${n.id}')">
+              <div class="pin ${n.status}"></div>
+              <div class="lbl">${n.id}</div>
+            </div>`;
+        }).join('')}
+        <div class="map-legend">
+          <div class="legend-row"><span class="legend-dot" style="background:var(--success)"></span>Active</div>
+          <div class="legend-row"><span class="legend-dot" style="background:#d97706"></span>Delayed</div>
+          <div class="legend-row"><span class="legend-dot" style="background:#ea580c"></span>Weak</div>
+          <div class="legend-row"><span class="legend-dot" style="background:var(--danger)"></span>Offline</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="icon">📡</span> All Sensor Nodes</div>
+      </div>
+      <div class="node-list">
+        ${r.nodes.map(n => `
+          <div class="node-row" onclick="showNode('${n.id}')">
+            <div class="node-dot-wrap"><div class="node-dot ${n.status}"></div></div>
+            <div class="node-info">
+              <div class="node-id">${n.id}</div>
+              <div class="node-loc">📍 ${n.location}</div>
+            </div>
+            <div class="node-meta">
+              <div class="m-item">
+                <b style="color:${n.battery > 50 ? 'var(--success)' : n.battery > 20 ? 'var(--warning)' : 'var(--danger)'}">${n.battery}%</b>
+                <span>Battery</span>
+              </div>
+              <div class="m-item"><b>${n.rssi} dBm</b><span>Signal</span></div>
+              <div class="m-item"><b>${n.lastSeen}</b><span>Last Seen</span></div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+/* ---------- TAB 2: Affected Areas ---------- */
+function renderAffectedTab(r){
+  const affected = getAffectedAreas(r.id);
+  const totalPop = affected.reduce((s, a) => s + a.pop, 0);
+  const atRiskPop = affected.filter(a => a.risk !== 'safe').reduce((s, a) => s + a.pop, 0);
+  const totalEvac = affected.reduce((s, a) => s + a.evac, 0);
+  const criticalCount = affected.filter(a => a.risk === 'critical').length;
+  const evacRate = totalPop ? Math.round((totalEvac / totalPop) * 100) : 0;
+
+  return `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="icon">⚠️</span> Currently Affected / At Risk Areas</div>
+        <span style="font-size:12px;color:var(--text2);font-weight:600">${affected.length} zones monitored</span>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Area</th><th>District</th><th>Population</th><th>Water Level</th><th>Risk Level</th><th>Evacuated</th><th>Action Taken</th></tr>
+        </thead>
+        <tbody>
+          ${affected.map(a => {
+            const color = riskColor(a.risk);
+            const bg = riskBg(a.risk);
+            return `
+              <tr>
+                <td><b>${a.area}</b></td>
+                <td>${a.district}</td>
+                <td>${a.pop.toLocaleString('en-IN')}</td>
+                <td><b>${a.wl} cm</b></td>
+                <td><span class="pill" style="background:${bg};color:${color}">${a.risk.toUpperCase()}</span></td>
+                <td>${a.evac.toLocaleString('en-IN')}</td>
+                <td>${a.action}</td>
+              </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title"><span class="icon">📊</span> Impact Summary</div></div>
+      <div class="kpis">
+        <div class="kpi" style="--kpi-color:var(--danger)">
+          <div class="kpi-label">Population at Risk</div>
+          <div class="kpi-value">${atRiskPop.toLocaleString('en-IN')}</div>
+          <div class="kpi-unit">People</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--success)">
+          <div class="kpi-label">Total Evacuated</div>
+          <div class="kpi-value">${totalEvac.toLocaleString('en-IN')}</div>
+          <div class="kpi-unit">People Safe</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--warning)">
+          <div class="kpi-label">Critical Zones</div>
+          <div class="kpi-value">${criticalCount}</div>
+          <div class="kpi-unit">Immediate Action</div>
+        </div>
+        <div class="kpi" style="--kpi-color:var(--info)">
+          <div class="kpi-label">Evacuation Rate</div>
+          <div class="kpi-value">${evacRate}<span style="font-size:16px">%</span></div>
+          <div class="kpi-unit">Completion</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ---------- TAB 3: History ---------- */
+function renderHistoryTab(r){
+  const history = getHistory(r.id);
+  return `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="icon">📅</span> Historical Flood Events — ${r.name}</div>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Year</th><th>Date</th><th>Severity</th><th>Areas Affected</th><th>Deaths</th><th>Economic Damage</th></tr>
+        </thead>
+        <tbody>
+          ${history.map(h => {
+            const color = h.sev === 'CRITICAL' ? 'var(--danger)' :
+                          h.sev === 'HIGH'     ? '#ea580c' :
+                          h.sev === 'MODERATE' ? 'var(--warning)' : 'var(--info)';
+            const bg = h.sev === 'CRITICAL' ? 'var(--danger-bg)' :
+                       h.sev === 'HIGH'     ? '#ffedd5' :
+                       h.sev === 'MODERATE' ? 'var(--warning-bg)' : 'var(--info-bg)';
+            return `
+              <tr>
+                <td><b>${h.year}</b></td>
+                <td>${h.date}</td>
+                <td><span class="pill" style="background:${bg};color:${color}">${h.sev}</span></td>
+                <td>${h.area}</td>
+                <td>${h.deaths}</td>
+                <td>${h.damage}</td>
+              </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="icon">📈</span> Severity Trend (Last 5 Years)</div>
+      </div>
+      <div class="chart">
+        ${history.slice(0, 5).reverse().map(h => {
+          const h2 = h.sev === 'CRITICAL' ? 90 : h.sev === 'HIGH' ? 70 : h.sev === 'MODERATE' ? 50 : 30;
+          return `<div class="chart-bar" style="height:${h2}%"></div>`;
+        }).join('')}
+      </div>
+      <div class="chart-labels">
+        ${history.slice(0, 5).reverse().map(h => `<span>${h.year}</span>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+/* ---------- TAB 4: Impact Map ---------- */
+function renderImpactMapTab(r){
+  const affected = getAffectedAreas(r.id);
+  return `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="icon">🗺️</span> Flood Impact Map — ${r.name}</div>
+        <span style="font-size:12px;color:var(--text2);font-weight:600">Live flood zones</span>
+      </div>
+      <div class="map" style="height:460px">
+        <div class="map-grid"></div>
+
+        ${affected.map((a, i) => {
+          const left = 15 + i * 16;
+          const top = 20 + (i % 3) * 25;
+          const size = a.risk === 'critical' ? 20 : a.risk === 'danger' ? 17 : a.risk === 'warning' ? 14 : 11;
+          const opacity = a.risk === 'critical' ? 0.35 : a.risk === 'danger' ? 0.28 : a.risk === 'warning' ? 0.2 : 0.15;
+          return `
+            <div style="position:absolute;left:${left}%;top:${top}%;width:${size}%;height:${size}%;background:${riskFill(a.risk,opacity)};border:2px solid ${riskBorder(a.risk)};border-radius:50%"></div>
+            <div class="map-marker" style="left:${left + size/2}%;top:${top + size/2}%">
+              <div class="pin ${pinClass(a.risk)}"></div>
+              <div class="lbl">${a.area}</div>
+            </div>`;
+        }).join('')}
+
+        ${[
+          { x: 30, y: 72, name: 'Shelter A' },
+          { x: 65, y: 35, name: 'Shelter B' },
+          { x: 45, y: 82, name: 'Shelter C' }
+        ].map(s => `
+          <div class="map-marker" style="left:${s.x}%;top:${s.y}%">
+            <div style="background:#fff;border:2px solid var(--success);border-radius:6px;padding:3px 6px;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,.1)">🏠</div>
+            <div class="lbl">${s.name}</div>
+          </div>
+        `).join('')}
+
+        ${[
+          { x: 55, y: 55, name: 'District Hospital' },
+          { x: 20, y: 45, name: 'PHC Center' }
+        ].map(h => `
+          <div class="map-marker" style="left:${h.x}%;top:${h.y}%">
+            <div style="background:#fff;border:2px solid var(--info);border-radius:6px;padding:3px 6px;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,.1)">🏥</div>
+            <div class="lbl">${h.name}</div>
+          </div>
+        `).join('')}
+
+        <div class="map-legend">
+          <div class="legend-row"><span class="legend-dot" style="background:var(--danger)"></span>Flooded</div>
+          <div class="legend-row"><span class="legend-dot" style="background:#ea580c"></span>High Risk</div>
+          <div class="legend-row"><span class="legend-dot" style="background:var(--warning)"></span>Watch</div>
+          <div class="legend-row"><span style="font-size:12px">🏠</span>Shelter</div>
+          <div class="legend-row"><span style="font-size:12px">🏥</span>Hospital</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ============================================================
+   NODE DETAIL
+============================================================ */
+function showNode(nodeId){
+  const river = STATE.currentRiver;
+  if(!river) return;
+  const n = river.nodes.find(x => x.id === nodeId);
+  if(!n) return;
+
+  STATE.currentNode = n;
+  STATE.view = 'node';
+
+  // Node detail also full width
+  document.getElementById('contentGrid').classList.add('full');
+  document.getElementById('liveSidebar').classList.add('hidden');
+
+  // Fill in extra demo fields if not present
+  const node = {
+    ...n,
+    river: river.id,
+    lat: 10.79 + Math.random() * 2,
+    lng: 78.0 + Math.random() * 2,
+    installed: '2024-08-15',
+    firmware: 'v2.3.1',
+    waterLevel: Math.floor(20 + Math.random() * 60),
+    floatState: Math.random() > 0.7 ? 'TRIGGERED' : 'NORMAL',
+    temperature: (24 + Math.random() * 8).toFixed(1),
+    humidity: Math.floor(60 + Math.random() * 30),
+    airQuality: Math.floor(30 + Math.random() * 50)
+  };
+
+  const statusColor = {active:'var(--success)',delayed:'#d97706',weak:'#ea580c',offline:'var(--danger)',disabled:'#94a3b8'}[node.status];
+  const statusLabel = node.status.toUpperCase();
+
+  document.getElementById('crumb').innerHTML = `
+    <span class="crumb-item" onclick="renderRivers()">← All Rivers</span>
+    <span class="crumb-sep">/</span>
+    <span class="crumb-item" onclick="showRiver('${river.id}')">${river.name}</span>
+    <span class="crumb-sep">/</span>
+    <span style="font-weight:700;color:var(--text);font-family:monospace">${node.id}</span>
+  `;
+
+  document.getElementById('viewContainer').innerHTML = `
+    <div class="page-head">
+      <div class="eyebrow">Sensor Node Details</div>
+      <h1>📡 ${node.id}</h1>
+      <p>${node.location} · ${river.name} Basin</p>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi" style="--kpi-color:${statusColor}">
+        <div class="kpi-label">Status</div>
+        <div class="kpi-value" style="font-size:22px">${statusLabel}</div>
+        <div class="kpi-unit">Node Health</div>
+        <div class="kpi-icon">📡</div>
+      </div>
+      <div class="kpi" style="--kpi-color:${node.battery>50?'var(--success)':node.battery>20?'var(--warning)':'var(--danger)'}">
+        <div class="kpi-label">Battery</div>
+        <div class="kpi-value">${node.battery}<span style="font-size:16px">%</span></div>
+        <div class="kpi-unit">12V DC System</div>
+        <div class="kpi-icon">🔋</div>
+      </div>
+      <div class="kpi" style="--kpi-color:var(--info)">
+        <div class="kpi-label">Signal Strength</div>
+        <div class="kpi-value" style="font-size:20px">${node.rssi}<span style="font-size:14px"> dBm</span></div>
+        <div class="kpi-unit">LoRa RSSI</div>
+        <div class="kpi-icon">📶</div>
+      </div>
+      <div class="kpi" style="--kpi-color:var(--primary)">
+        <div class="kpi-label">Last Heartbeat</div>
+        <div class="kpi-value" style="font-size:18px">${node.lastSeen}</div>
+        <div class="kpi-unit">Ago</div>
+        <div class="kpi-icon">⏱️</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="icon">📊</span> Live Sensor Readings</div>
+        <span class="pill ok">● LIVE</span>
+      </div>
+      <div class="sensors">
+        <div class="sensor">
+          <div class="sensor-label">💧 Water Level</div>
+          <div class="sensor-value ${node.waterLevel>70?'crit':node.waterLevel>40?'warn':'ok'}">${node.waterLevel} cm</div>
+          <div class="sensor-live">Reporting</div>
+        </div>
+        <div class="sensor">
+          <div class="sensor-label">🔘 Float Switch</div>
+          <div class="sensor-value ${node.floatState==='TRIGGERED'?'crit':'ok'}">${node.floatState}</div>
+          <div class="sensor-live">Reporting</div>
+        </div>
+        <div class="sensor">
+          <div class="sensor-label">🌡️ Temperature</div>
+          <div class="sensor-value">${node.temperature}°C</div>
+          <div class="sensor-live">Reporting</div>
+        </div>
+        <div class="sensor">
+          <div class="sensor-label">💨 Humidity</div>
+          <div class="sensor-value">${node.humidity}%</div>
+          <div class="sensor-live">Reporting</div>
+        </div>
+        <div class="sensor">
+          <div class="sensor-label">🌫️ Air Quality</div>
+          <div class="sensor-value">${node.airQuality}</div>
+          <div class="sensor-live">Reporting</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title"><span class="icon">⚙️</span> Node Information</div></div>
+      <div class="info-grid">
+        <div class="info-item"><div class="k">Node ID</div><div class="v">${node.id}</div></div>
+        <div class="info-item"><div class="k">River Basin</div><div class="v">${river.name}</div></div>
+        <div class="info-item"><div class="k">Location</div><div class="v">${node.location}</div></div>
+        <div class="info-item"><div class="k">Coordinates</div><div class="v">${node.lat.toFixed(4)}° N, ${node.lng.toFixed(4)}° E</div></div>
+        <div class="info-item"><div class="k">Installed</div><div class="v">${node.installed}</div></div>
+        <div class="info-item"><div class="k">Firmware</div><div class="v">${node.firmware}</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title"><span class="icon">📋</span> Recent Heartbeat Packets</div></div>
+      <table>
+        <thead><tr><th>Time</th><th>Type</th><th>RSSI</th><th>Battery</th><th>Status</th></tr></thead>
+        <tbody>
+          ${Array.from({length:6},(_,i)=>`
+            <tr>
+              <td style="font-family:monospace">${new Date(Date.now()-i*30000).toLocaleTimeString('en-IN')}</td>
+              <td>HEARTBEAT</td>
+              <td>${-(60+Math.floor(Math.random()*30))} dBm</td>
+              <td>${node.battery}%</td>
+              <td><span class="pill ok">OK</span></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+
+    <div style="text-align:center;margin-top:12px">
+      <button onclick="showRiver('${river.id}')" style="padding:10px 20px;background:#fff;border:1px solid var(--border2);border-radius:10px;font-family:inherit;font-weight:700;font-size:13px;cursor:pointer;color:var(--text2)">
+        ← Back to ${river.name}
+      </button>
+    </div>
+  `;
+}
+
+/* ============================================================
+   DATA PROVIDERS
+============================================================ */
+function getAffectedAreas(riverId){
+  const dataset = {
+    cauvery: [
+      { area:'Mettur',      district:'Salem',   pop:45200,  wl:78, risk:'critical', evac:32000, action:'NDRF deployed' },
+      { area:'Bhavani',     district:'Erode',   pop:28500,  wl:62, risk:'danger',   evac:18500, action:'Alert sent' },
+      { area:'Erode City',  district:'Erode',   pop:120000, wl:55, risk:'warning',  evac:8000,  action:'Alert sent' },
+      { area:'Karur',       district:'Karur',   pop:230000, wl:42, risk:'watch',    evac:0,     action:'Monitoring' },
+      { area:'Trichy',      district:'Trichy',  pop:950000, wl:38, risk:'safe',     evac:0,     action:'Normal' }
+    ],
+    bhavani: [
+      { area:'Sathyamangalam', district:'Erode',      pop:38000, wl:48, risk:'warning', evac:4000, action:'Alert sent' },
+      { area:'Mettupalayam',   district:'Coimbatore', pop:52000, wl:42, risk:'watch',   evac:0,    action:'Monitoring' }
+    ],
+    thamirabarani: [
+      { area:'Ambasamudram', district:'Tirunelveli', pop:41000,  wl:55, risk:'warning', evac:6000, action:'Alert sent' },
+      { area:'Tirunelveli',  district:'Tirunelveli', pop:210000, wl:40, risk:'watch',   evac:0,    action:'Monitoring' }
+    ],
+    vaigai: [
+      { area:'Theni',          district:'Theni',          pop:62000,  wl:82, risk:'critical', evac:45000, action:'NDRF deployed' },
+      { area:'Madurai',        district:'Madurai',        pop:480000, wl:58, risk:'danger',   evac:20000, action:'Alert sent' },
+      { area:'Ramanathapuram', district:'Ramanathapuram', pop:90000,  wl:45, risk:'warning',  evac:5000,  action:'Alert sent' }
+    ],
+    palar: [
+      { area:'Vellore',      district:'Vellore',      pop:185000, wl:45, risk:'watch', evac:0, action:'Monitoring' },
+      { area:'Kanchipuram',  district:'Kanchipuram',  pop:165000, wl:38, risk:'safe',  evac:0, action:'Normal' }
+    ],
+    ponnaivyar: [
+      { area:'Krishnagiri', district:'Krishnagiri', pop:78000,  wl:52, risk:'warning', evac:3500, action:'Alert sent' },
+      { area:'Cuddalore',   district:'Cuddalore',   pop:190000, wl:42, risk:'watch',   evac:0,    action:'Monitoring' }
+    ]
+  };
+  return dataset[riverId] || [
+    { area:'Upper Reach', district:'—', pop:25000, wl:45, risk:'watch', evac:0, action:'Monitoring' },
+    { area:'Mid Reach',   district:'—', pop:35000, wl:38, risk:'safe',  evac:0, action:'Normal' }
+  ];
+}
+
+function getHistory(){
+  return [
+    { year: 2024, date: '15 Nov', sev: 'CRITICAL', area: 'Mettur, Bhavani',  deaths: 12, damage: '₹450 Cr' },
+    { year: 2023, date: '22 Oct', sev: 'HIGH',     area: 'Erode, Karur',     deaths: 8,  damage: '₹280 Cr' },
+    { year: 2022, date: '08 Sep', sev: 'MODERATE', area: 'Mettur',           deaths: 3,  damage: '₹95 Cr'  },
+    { year: 2021, date: '30 Nov', sev: 'CRITICAL', area: 'Full basin',       deaths: 24, damage: '₹820 Cr' },
+    { year: 2020, date: '12 Aug', sev: 'LOW',      area: 'Lower delta',      deaths: 1,  damage: '₹35 Cr'  }
+  ];
+}
+
+/* ============================================================
+   LIVE SIDEBAR
+============================================================ */
+function renderLiveSidebar(){
+  const sidebar = document.getElementById('liveSidebar');
+  if(!sidebar) return;
+
+  const alertLevel = parseInt(localStorage.getItem(STORAGE_KEYS.alertLevel) || '0');
+  const broadcasts = JSON.parse(localStorage.getItem(STORAGE_KEYS.broadcasts) || '[]');
+  const reports = JSON.parse(localStorage.getItem(STORAGE_KEYS.reports) || '[]');
+  const panic = localStorage.getItem(STORAGE_KEYS.panic);
+
+  const statusName = STATUS_NAMES[alertLevel] || 'Normal';
+  const statusClass = STATUS_CLASSES[alertLevel] || 'normal';
+
+  sidebar.innerHTML = `
+    <div class="live-header">
+      <div class="live-title">
+        <span class="live-dot"></span>
+        Live Sync
+      </div>
+      <div class="live-meta">auto · realtime</div>
+    </div>
+
+    <!-- Alert level -->
+    <div class="live-section">
+      <div class="live-section-title">Emergency Level</div>
+      <div style="text-align:center;padding:12px 0">
+        <span class="alert-pill ${statusClass}" style="font-size:12px;padding:10px 18px">● ${statusName.toUpperCase()}</span>
+        <div style="font-size:11px;color:var(--text3);margin-top:8px;font-weight:600">From Government Command Center</div>
+      </div>
+    </div>
+
+    <!-- Panic signal -->
+    ${panic ? (() => {
+      const p = JSON.parse(panic);
+      return `
+        <div class="live-section">
+          <div class="live-section-title">
+            Panic Signals <span class="count danger">1</span>
+          </div>
+          <div class="live-item urgent">
+            <div class="head">🚨 SOS SIGNAL</div>
+            <div class="body">
+              <strong>${escapeHtml(p.location || 'Unknown')}</strong><br>
+              Phone: ${escapeHtml(p.phone || 'N/A')}
+            </div>
+            <div class="meta">${p.time || 'Just now'}</div>
+          </div>
+        </div>`;
+    })() : `
+      <div class="live-section">
+        <div class="live-section-title">Panic Signals <span class="count">0</span></div>
+        <div class="live-item" style="text-align:center;color:var(--text3);font-size:11.5px">
+          ✅ No active SOS signals
+        </div>
+      </div>
+    `}
+
+    <!-- Citizen reports -->
+    <div class="live-section">
+      <div class="live-section-title">
+        Citizen Reports <span class="count ${reports.length > 0 ? 'warn' : ''}">${reports.length}</span>
+      </div>
+      ${reports.length === 0 ? `
+        <div class="live-item" style="text-align:center;color:var(--text3);font-size:11.5px">
+          Waiting for community reports...
+        </div>
+      ` : reports.slice(0, 4).map(r => `
+        <div class="live-item ${r.urgent ? 'urgent' : ''}">
+          <div class="head">
+            <span>${r.urgent ? '⚠️ ' : ''}${escapeHtml(r.location || 'Unknown')}</span>
+            <span style="font-size:10px;color:var(--text3);font-weight:600">${r.time || ''}</span>
+          </div>
+          <div class="body">${escapeHtml((r.message || '').substring(0, 90))}${(r.message || '').length > 90 ? '...' : ''}</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <!-- Broadcasts -->
+    <div class="live-section">
+      <div class="live-section-title">
+        Official Broadcasts <span class="count">${broadcasts.length}</span>
+      </div>
+      ${broadcasts.length === 0 ? `
+        <div class="live-item" style="text-align:center;color:var(--text3);font-size:11.5px">
+          No broadcasts from Command Center
+        </div>
+      ` : broadcasts.slice(0, 3).map(b => `
+        <div class="live-item">
+          <div class="head">
+            <span>${(b.type || 'general').toUpperCase()}</span>
+            <span style="font-size:10px;color:var(--text3);font-weight:600">${b.time || ''}</span>
+          </div>
+          <div class="body">${escapeHtml((b.text || '').substring(0, 100))}${(b.text || '').length > 100 ? '...' : ''}</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <!-- Read-only footer note -->
+    <div style="text-align:center;padding-top:14px;border-top:1px solid var(--border);font-size:10.5px;color:var(--text3);font-weight:600;letter-spacing:.3px">
+      👁️ VIEW ONLY · NO EDIT ACCESS
+    </div>
+  `;
+}
+
+/* ============================================================
+   LIVE SYNC (listen for cross-tab changes)
+============================================================ */
+function startLiveSync(){
+  // Refresh sidebar every 5 seconds (in case storage event doesn't fire)
+  setInterval(() => {
+    if(STATE.view === 'rivers') renderLiveSidebar();
+  }, 5000);
+
+  // Listen to actual storage changes across tabs
+  window.addEventListener('storage', (e) => {
+    if([STORAGE_KEYS.alertLevel, 'nfms_alert_sync', 'nfms_broadcast_sync', 'nfms_broadcasts',
+        'nfms_public_report_sync', STORAGE_KEYS.reports, 'nfms_panic_signal', 'nfms_panic_sync'
+      ].includes(e.key)){
+      if(STATE.view === 'rivers'){
+        renderLiveSidebar();
+        // Also refresh KPI counters on main page
+        renderRivers();
+      }
+    }
+  });
+}
+
+/* ============================================================
+   HELPERS
+============================================================ */
+function riskColor(risk){
+  return { critical:'#b91c1c', danger:'#ea580c', warning:'#b45309', watch:'#0369a1', safe:'#0d7c4e' }[risk] || '#475569';
+}
+function riskBg(risk){
+  return { critical:'#fee2e2', danger:'#ffedd5', warning:'#fef3c7', watch:'#e0f2fe', safe:'#e6f7ee' }[risk] || '#f1f5f9';
+}
+function riskFill(risk, opacity){
+  const rgb = {
+    critical:[185,28,28], danger:[234,88,12], warning:[180,83,9], watch:[3,105,161], safe:[13,124,78]
+  }[risk] || [100,116,139];
+  return `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${opacity})`;
+}
+function riskBorder(risk){
+  return { critical:'#b91c1c', danger:'#ea580c', warning:'#b45309', watch:'#0369a1', safe:'#0d7c4e' }[risk] || '#64748b';
+}
+function pinClass(risk){
+  return { critical:'offline', danger:'weak', warning:'delayed', watch:'delayed', safe:'active' }[risk] || 'disabled';
+}
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str || '';
+  return d.innerHTML;
+}
+function showLoading(){
+  document.getElementById('viewContainer').innerHTML = '<div class="spinner"></div>';
+}
+let toastT;
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+/* ============================================================
+   BOOT (Auto-loads immediately — no login)
+============================================================ */
+(async function init(){
+  await loadRivers();
+  renderLiveSidebar();
+  startLiveSync();
+})();
+const UG_NODE_STORAGE_A='urbanguard_nodes_v1',UG_NODE_SYNC_A='urbanguard_nodes_sync',UG_STATES_A=["Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal", "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Jammu and Kashmir", "Ladakh", "Lakshadweep", "Puducherry"],UG_DISTRICTS_A={"Andhra Pradesh": ["Alluri Sitharama Raju", "Anakapalli", "Ananthapuramu", "Annamayya", "Bapatla", "Chittoor", "Dr. B.R. Ambedkar Konaseema", "East Godavari", "Eluru", "Guntur", "Kakinada", "Krishna", "Kurnool", "Nandyal", "NTR", "Palnadu", "Parvathipuram Manyam", "Prakasam", "Srikakulam", "Sri Potti Sriramulu Nellore", "Sri Sathya Sai", "Tirupati", "Visakhapatnam", "Vizianagaram", "West Godavari", "YSR Kadapa"], "Arunachal Pradesh": ["Anjaw", "Changlang", "Dibang Valley", "East Kameng", "East Siang", "Kamle", "Kra Daadi", "Kurung Kumey", "Lepa Rada", "Lohit", "Longding", "Lower Dibang Valley", "Lower Siang", "Lower Subansiri", "Namsai", "Pakke-Kessang", "Papum Pare", "Shi-Yomi", "Siang", "Tawang", "Tirap", "Upper Siang", "Upper Subansiri", "West Kameng", "West Siang"], "Assam": ["Baksa", "Bajali", "Barpeta", "Biswanath", "Bongaigaon", "Cachar", "Charaideo", "Chirang", "Darrang", "Dhemaji", "Dhubri", "Dibrugarh", "Dima Hasao", "Goalpara", "Golaghat", "Hailakandi", "Hojai", "Jorhat", "Kamrup", "Kamrup Metropolitan", "Karbi Anglong", "Kokrajhar", "Lakhimpur", "Majuli", "Morigaon", "Nagaon", "Nalbari", "Sivasagar", "Sonitpur", "South Salmara-Mankachar", "Tamulpur", "Tinsukia", "Udalguri", "West Karbi Anglong"], "Bihar": ["Araria", "Arwal", "Aurangabad", "Banka", "Begusarai", "Bhagalpur", "Bhojpur", "Buxar", "Darbhanga", "East Champaran", "Gaya", "Gopalganj", "Jamui", "Jehanabad", "Kaimur", "Katihar", "Khagaria", "Kishanganj", "Lakhisarai", "Madhepura", "Madhubani", "Munger", "Muzaffarpur", "Nalanda", "Nawada", "Patna", "Purnia", "Rohtas", "Saharsa", "Samastipur", "Saran", "Sheikhpura", "Sheohar", "Sitamarhi", "Siwan", "Supaul", "Vaishali", "West Champaran"], "Chhattisgarh": ["Balod", "Baloda Bazar", "Balrampur-Ramanujganj", "Bastar", "Bemetara", "Bijapur", "Bilaspur", "Dantewada", "Dhamtari", "Durg", "Gariaband", "Gaurela-Pendra-Marwahi", "Janjgir-Champa", "Jashpur", "Kabirdham", "Kanker", "Kondagaon", "Korba", "Korea", "Mahasamund", "Manendragarh-Chirmiri-Bharatpur", "Mungeli", "Narayanpur", "Raigarh", "Rajnandgaon", "Sakti", "Sarangarh-Bilaigarh", "Sukma", "Surajpur", "Surguja"], "Goa": ["North Goa", "South Goa"], "Gujarat": ["Ahmedabad", "Amreli", "Anand", "Aravalli", "Banaskantha", "Bharuch", "Bhavnagar", "Botad", "Chhota Udaipur", "Dahod", "Dang", "Devbhumi Dwarka", "Gandhinagar", "Gir Somnath", "Jamnagar", "Junagadh", "Kachchh", "Kheda", "Mahisagar", "Mehsana", "Morbi", "Narmada", "Navsari", "Panchmahal", "Patan", "Porbandar", "Rajkot", "Sabarkantha", "Surat", "Surendranagar", "Tapi", "Vadodara", "Valsad"], "Haryana": ["Ambala", "Bhiwani", "Charkhi Dadri", "Faridabad", "Fatehabad", "Gurugram", "Hisar", "Jhajjar", "Jind", "Kaithal", "Karnal", "Kurukshetra", "Mahendragarh", "Nuh", "Palwal", "Panchkula", "Panipat", "Rewari", "Rohtak", "Sirsa", "Sonipat", "Yamunanagar"], "Himachal Pradesh": ["Bilaspur", "Chamba", "Hamirpur", "Kangra", "Kinnaur", "Kullu", "Lahaul and Spiti", "Mandi", "Shimla", "Sirmaur", "Solan", "Una"], "Jharkhand": ["Bokaro", "Chatra", "Deoghar", "Dhanbad", "Dumka", "East Singhbhum", "Garhwa", "Giridih", "Godda", "Gumla", "Hazaribagh", "Jamtara", "Khunti", "Koderma", "Latehar", "Lohardaga", "Pakur", "Palamu", "Ramgarh", "Ranchi", "Sahebganj", "Seraikela-Kharsawan", "Simdega", "West Singhbhum"], "Karnataka": ["Bagalkot", "Ballari", "Belagavi", "Bengaluru Rural", "Bengaluru Urban", "Bidar", "Chamarajanagar", "Chikkaballapur", "Chikkamagaluru", "Chitradurga", "Dakshina Kannada", "Davanagere", "Dharwad", "Gadag", "Hassan", "Haveri", "Kalaburagi", "Kodagu", "Kolar", "Koppal", "Mandya", "Mysuru", "Raichur", "Ramanagara", "Shivamogga", "Tumakuru", "Udupi", "Uttara Kannada", "Vijayapura", "Yadgir"], "Kerala": ["Alappuzha", "Ernakulam", "Idukki", "Kannur", "Kasaragod", "Kollam", "Kottayam", "Kozhikode", "Malappuram", "Palakkad", "Pathanamthitta", "Thiruvananthapuram", "Thrissur", "Wayanad"], "Madhya Pradesh": ["Agar Malwa", "Alirajpur", "Anuppur", "Ashoknagar", "Balaghat", "Barwani", "Betul", "Bhind", "Bhopal", "Burhanpur", "Chhatarpur", "Chhindwara", "Damoh", "Datia", "Dewas", "Dhar", "Dindori", "Guna", "Gwalior", "Harda", "Indore", "Jabalpur", "Jhabua", "Katni", "Khandwa", "Khargone", "Maihar", "Mandla", "Mandsaur", "Mauganj", "Morena", "Narmadapuram", "Narsinghpur", "Neemuch", "Panna", "Raisen", "Rajgarh", "Ratlam", "Rewa", "Sagar", "Satna", "Sehore", "Seoni", "Shahdol", "Shajapur", "Sheopur", "Shivpuri", "Sidhi", "Singrauli", "Tikamgarh", "Ujjain", "Umaria", "Vidisha"], "Maharashtra": ["Ahmednagar", "Akola", "Amravati", "Beed", "Bhandara", "Buldhana", "Chandrapur", "Dhule", "Gadchiroli", "Gondia", "Hingoli", "Jalgaon", "Jalna", "Kolhapur", "Latur", "Mumbai City", "Mumbai Suburban", "Nagpur", "Nanded", "Nandurbar", "Nashik", "Osmanabad", "Palghar", "Parbhani", "Pune", "Raigad", "Ratnagiri", "Sangli", "Satara", "Sindhudurg", "Solapur", "Thane", "Wardha", "Washim", "Yavatmal"], "Manipur": ["Bishnupur", "Chandel", "Churachandpur", "Imphal East", "Imphal West", "Jiribam", "Kakching", "Kamjong", "Kangpokpi", "Noney", "Pherzawl", "Senapati", "Tamenglong", "Tengnoupal", "Thoubal", "Ukhrul"], "Meghalaya": ["East Garo Hills", "East Jaintia Hills", "East Khasi Hills", "North Garo Hills", "Ri Bhoi", "South Garo Hills", "South West Garo Hills", "South West Khasi Hills", "West Garo Hills", "West Jaintia Hills", "West Khasi Hills"], "Mizoram": ["Aizawl", "Champhai", "Hnahthial", "Khawzawl", "Kolasib", "Lawngtlai", "Lunglei", "Mamit", "Saitual", "Serchhip"], "Nagaland": ["Chumoukedima", "Dimapur", "Kiphire", "Kohima", "Longleng", "Meluri", "Mokokchung", "Mon", "Niuland", "Noklak", "Peren", "Phek", "Shamator", "Tuensang", "Wokha", "Zunheboto"], "Odisha": ["Angul", "Balangir", "Balasore", "Bargarh", "Bhadrak", "Boudh", "Cuttack", "Deogarh", "Dhenkanal", "Gajapati", "Ganjam", "Jagatsinghpur", "Jajpur", "Jharsuguda", "Kalahandi", "Kandhamal", "Kendrapara", "Keonjhar", "Khordha", "Koraput", "Malkangiri", "Mayurbhanj", "Nabarangpur", "Nayagarh", "Nuapada", "Puri", "Rayagada", "Sambalpur", "Subarnapur", "Sundargarh"], "Punjab": ["Amritsar", "Barnala", "Bathinda", "Faridkot", "Fatehgarh Sahib", "Fazilka", "Ferozepur", "Gurdaspur", "Hoshiarpur", "Jalandhar", "Kapurthala", "Ludhiana", "Malerkotla", "Mansa", "Moga", "Pathankot", "Patiala", "Rupnagar", "Sahibzada Ajit Singh Nagar", "Sangrur", "Shahid Bhagat Singh Nagar", "Sri Muktsar Sahib", "Tarn Taran"], "Rajasthan": ["Ajmer", "Alwar", "Anupgarh", "Balotra", "Banswara", "Baran", "Barmer", "Beawar", "Bharatpur", "Bhilwara", "Bikaner", "Bundi", "Chittorgarh", "Churu", "Dausa", "Deeg", "Dholpur", "Didwana-Kuchamana", "Dungarpur", "Ganganagar", "Hanumangarh", "Jaipur", "Jaisalmer", "Jalore", "Jhalawar", "Jhunjhunu", "Jodhpur", "Karauli", "Kota", "Nagaur", "Pali", "Phalodi", "Pratapgarh", "Rajsamand", "Salumbar", "Sawai Madhopur", "Sikar", "Sirohi", "Tonk", "Udaipur"], "Sikkim": ["Gangtok", "Gyalshing", "Mangan", "Namchi", "Pakyong", "Soreng"], "Tamil Nadu": ["Ariyalur", "Chengalpattu", "Chennai", "Coimbatore", "Cuddalore", "Dharmapuri", "Dindigul", "Erode", "Kallakurichi", "Kancheepuram", "Karur", "Krishnagiri", "Madurai", "Mayiladuthurai", "Nagapattinam", "Kanniyakumari", "Namakkal", "Perambalur", "Pudukkottai", "Ramanathapuram", "Ranipet", "Salem", "Sivaganga", "Tenkasi", "Thanjavur", "Theni", "Thoothukudi", "Tiruchirappalli", "Tirunelveli", "Tirupathur", "Tiruppur", "Tiruvallur", "Tiruvarur", "Tiruvannamalai", "The Nilgiris", "Vellore", "Viluppuram", "Virudhunagar"], "Telangana": ["Adilabad", "Bhadradri Kothagudem", "Hanamkonda", "Hyderabad", "Jagtial", "Jangaon", "Jayashankar Bhupalpally", "Jogulamba Gadwal", "Kamareddy", "Karimnagar", "Khammam", "Komaram Bheem Asifabad", "Mahabubabad", "Mahabubnagar", "Mancherial", "Medak", "Medchal-Malkajgiri", "Mulugu", "Nagarkurnool", "Nalgonda", "Narayanpet", "Nirmal", "Nizamabad", "Peddapalli", "Rajanna Sircilla", "Rangareddy", "Sangareddy", "Siddipet", "Suryapet", "Vikarabad", "Wanaparthy", "Warangal", "Yadadri Bhuvanagiri"], "Tripura": ["Dhalai", "Gomati", "Khowai", "North Tripura", "Sepahijala", "South Tripura", "Unakoti", "West Tripura"], "Uttar Pradesh": ["Agra", "Aligarh", "Ambedkar Nagar", "Amethi", "Amroha", "Auraiya", "Ayodhya", "Azamgarh", "Baghpat", "Bahraich", "Ballia", "Balrampur", "Banda", "Barabanki", "Bareilly", "Basti", "Bhadohi", "Bijnor", "Budaun", "Bulandshahr", "Chandauli", "Chitrakoot", "Deoria", "Etah", "Etawah", "Farrukhabad", "Fatehpur", "Firozabad", "Gautam Buddha Nagar", "Ghaziabad", "Ghazipur", "Gonda", "Gorakhpur", "Hamirpur", "Hapur", "Hardoi", "Hathras", "Jalaun", "Jaunpur", "Jhansi", "Kannauj", "Kanpur Dehat", "Kanpur Nagar", "Kasganj", "Kaushambi", "Kushinagar", "Lakhimpur Kheri", "Lalitpur", "Lucknow", "Maharajganj", "Mahoba", "Mainpuri", "Mathura", "Mau", "Meerut", "Mirzapur", "Moradabad", "Muzaffarnagar", "Pilibhit", "Pratapgarh", "Prayagraj", "Raebareli", "Rampur", "Saharanpur", "Sambhal", "Sant Kabir Nagar", "Shahjahanpur", "Shamli", "Shravasti", "Siddharthnagar", "Sitapur", "Sonbhadra", "Sultanpur", "Unnao", "Varanasi"], "Uttarakhand": ["Almora", "Bageshwar", "Chamoli", "Champawat", "Dehradun", "Haridwar", "Nainital", "Pauri Garhwal", "Pithoragarh", "Rudraprayag", "Tehri Garhwal", "Udham Singh Nagar", "Uttarkashi"], "West Bengal": ["Alipurduar", "Bankura", "Paschim Bardhaman", "Purba Bardhaman", "Birbhum", "Cooch Behar", "Darjeeling", "Hooghly", "Howrah", "Jalpaiguri", "Jhargram", "Kalimpong", "Kolkata", "Maldah", "Murshidabad", "Nadia", "North 24 Parganas", "South 24 Parganas", "Paschim Medinipur", "Purba Medinipur", "Uttar Dinajpur", "Dakshin Dinajpur"], "Andaman and Nicobar Islands": ["Nicobar", "North and Middle Andaman", "South Andaman"], "Chandigarh": ["Chandigarh"], "Dadra and Nagar Haveli and Daman and Diu": ["Dadra and Nagar Haveli", "Daman", "Diu"], "Delhi": ["Central Delhi", "East Delhi", "New Delhi", "North Delhi", "North East Delhi", "North West Delhi", "Shahdara", "South Delhi", "South East Delhi", "South West Delhi", "West Delhi"], "Jammu and Kashmir": ["Anantnag", "Bandipora", "Baramulla", "Budgam", "Doda", "Ganderbal", "Jammu", "Kathua", "Kishtwar", "Kulgam", "Kupwara", "Poonch", "Pulwama", "Rajouri", "Ramban", "Reasi", "Samba", "Shopian", "Srinagar", "Udhampur"], "Ladakh": ["Kargil", "Leh"], "Lakshadweep": ["Agatti", "Amini", "Andrott", "Bitra", "Chetlat", "Kavaratti", "Kalpeni", "Kiltan", "Minicoy"], "Puducherry": ["Karaikal", "Mahe", "Puducherry", "Yanam"]};
+function ugAuthorityNodes(){try{return JSON.parse(localStorage.getItem(UG_NODE_STORAGE_A)||'[]')}catch(e){return[]}}
+function ugAuthorityInitNodes(){const s=document.getElementById('authorityNodeState');if(!s)return;s.innerHTML='<option value="">All States</option>'+UG_STATES_A.map(x=>`<option value="${x}">${x}</option>`).join('');ugAuthorityFilterDistricts()}
+function ugAuthorityFilterDistricts(){const state=document.getElementById('authorityNodeState').value,d=document.getElementById('authorityNodeDistrict'),list=UG_DISTRICTS_A[state]||[];d.innerHTML='<option value="">All Districts</option>'+list.map(x=>`<option value="${x}">${x}</option>`).join('');renderAuthorityNodes()}
+function renderAuthorityNodes(){const body=document.getElementById('authorityNodeRows');if(!body)return;const st=document.getElementById('authorityNodeState').value,di=document.getElementById('authorityNodeDistrict').value,rows=ugAuthorityNodes().filter(n=>(!st||n.state===st)&&(!di||n.district===di));if(!rows.length){body.innerHTML='<tr><td colspan="8"><div class="ug-node-empty">No registered nodes for the selected location.</div></td></tr>';return}body.innerHTML=rows.map(n=>`<tr><td><b>${escapeHtml(n.id)}</b></td><td>${escapeHtml(n.state)}</td><td>${escapeHtml(n.district)}</td><td>${Number(n.lat).toFixed(5)}, ${Number(n.lng).toFixed(5)}</td><td>${escapeHtml(n.channelId)}</td><td>${escapeHtml(n.installed)}</td><td>${escapeHtml(n.installer)}<br><span style="color:var(--text3);font-size:10px">${escapeHtml(n.workerId)}</span></td><td><span class="ug-node-pill">${escapeHtml(n.status||'active')}</span></td></tr>`).join('')}
+window.addEventListener('load',ugAuthorityInitNodes);window.addEventListener('storage',e=>{if(e.key===UG_NODE_STORAGE_A||e.key===UG_NODE_SYNC_A)renderAuthorityNodes()});window.ugAuthorityFilterDistricts=ugAuthorityFilterDistricts;window.renderAuthorityNodes=renderAuthorityNodes;
+
+</script>
+</body>
+</html>

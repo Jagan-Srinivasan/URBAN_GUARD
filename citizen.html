@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0066cc">
+<title>Jan Raksha Setu | जन रक्षा सेतु | Public Flood Alert</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+/* ═══════════════════════════════════════════
+   DESIGN SYSTEM
+   ═══════════════════════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --primary:#0066cc;--primary-dark:#004c99;--primary-light:#e6f0ff;
+  --secondary:#00aa88;--danger:#dc2626;--danger-light:#fee2e2;
+  --warning:#f59e0b;--warning-light:#fef3c7;
+  --success:#10b981;--success-light:#d1fae5;
+  --info:#3b82f6;--info-light:#dbeafe;
+  --gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;
+  --gray-300:#d1d5db;--gray-400:#9ca3af;--gray-500:#6b7280;
+  --gray-600:#4b5563;--gray-700:#374151;--gray-800:#1f2937;--gray-900:#111827;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.05);
+  --shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+  --shadow-md:0 4px 6px rgba(0,0,0,.08);
+  --shadow-lg:0 10px 20px rgba(0,0,0,.1);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--gray-100);color:var(--gray-900);
+  line-height:1.5;min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ═══════════════════════════════════════════
+   EMERGENCY BANNER
+   ═══════════════════════════════════════════ */
+.emergency-banner{
+  background:var(--success);color:#fff;padding:12px 16px;text-align:center;
+  font-weight:600;font-size:14px;transition:all .3s;position:sticky;top:0;z-index:50;
+  box-shadow:var(--shadow);
+}
+.emergency-banner.watch{background:var(--warning)}
+.emergency-banner.alert{background:#f97316}
+.emergency-banner.danger{background:var(--danger);animation:pulse 1.5s infinite}
+.emergency-banner.critical{background:#7f1d1d;animation:pulse-critical 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.9;background:#b91c1c}}
+@keyframes pulse-critical{0%,100%{opacity:1}50%{opacity:.9;background:#991b1b}}
+
+/* ═══════════════════════════════════════════
+   HEADER — Responsive
+   ═══════════════════════════════════════════ */
+.app-header{
+  background:#fff;padding:12px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;border-bottom:3px solid var(--primary);
+  box-shadow:var(--shadow-sm);position:sticky;top:0;z-index:40;
+  flex-wrap:wrap;
+}
+.logo-area{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo-icon{
+  width:44px;height:44px;background:var(--primary-light);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--primary);font-size:22px;flex-shrink:0;
+}
+.logo-text h1{font-size:16px;font-weight:700;color:var(--gray-800);line-height:1.1}
+.logo-text p{font-size:10px;color:var(--gray-500);letter-spacing:.2px}
+
+/* Desktop nav — hidden on mobile */
+.desktop-nav{display:none;gap:4px;flex:1;justify-content:center}
+.desktop-nav button{
+  padding:9px 16px;background:transparent;border:none;
+  border-radius:8px;font-size:13px;font-weight:600;
+  color:var(--gray-600);cursor:pointer;font-family:inherit;
+  transition:all .2s;display:flex;align-items:center;gap:6px;
+}
+.desktop-nav button:hover{background:var(--gray-100);color:var(--primary)}
+.desktop-nav button.active{background:var(--primary-light);color:var(--primary)}
+
+.header-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+
+/* Language selector */
+.lang-selector{
+  background:var(--gray-100);border:1px solid var(--gray-200);
+  border-radius:20px;padding:6px 12px;font-size:12px;font-weight:600;
+  color:var(--gray-700);cursor:pointer;font-family:inherit;outline:none;
+}
+.lang-selector:hover{background:var(--gray-200)}
+
+/* Download button */
+.download-btn{
+  background:linear-gradient(135deg,#34a853,#0f9d58);
+  color:#fff;border:none;border-radius:20px;padding:8px 14px;
+  font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;gap:6px;
+  box-shadow:0 2px 8px rgba(52,168,83,.3);
+  transition:all .2s;white-space:nowrap;
+}
+.download-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(52,168,83,.4)}
+.download-btn i{font-size:14px}
+
+/* Logout button */
+.logout-btn{
+  background:#fff;color:var(--danger);
+  border:1.5px solid #fecaca;border-radius:20px;padding:7px 14px;
+  font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;gap:6px;transition:all .2s;
+  white-space:nowrap;
+}
+.logout-btn:hover{background:var(--danger-light);border-color:var(--danger)}
+.logout-btn i{font-size:13px}
+
+/* Hide labels on small screens */
+@media(max-width:600px){
+  .download-btn .btn-text, .logout-btn .btn-text{display:none}
+  .download-btn, .logout-btn{padding:8px 10px}
+}
+
+/* ═══════════════════════════════════════════
+   MAIN CONTAINER — Responsive
+   ═══════════════════════════════════════════ */
+.main-wrapper{
+  max-width:500px;
+  margin:0 auto;
+  padding:16px 16px 90px;
+  transition:max-width .3s ease;
+}
+
+/* Panic Button */
+.panic-btn{
+  background:var(--danger);color:#fff;border:none;border-radius:40px;
+  padding:14px 24px;font-weight:700;font-size:16px;
+  display:flex;align-items:center;gap:10px;justify-content:center;
+  box-shadow:var(--shadow-lg);cursor:pointer;transition:all .2s;
+  width:100%;font-family:inherit;margin-bottom:16px;
+}
+.panic-btn:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(220,38,38,.35)}
+.panic-btn:active{transform:scale(.98)}
+
+/* Zone selector card */
+.zone-selector{
+  background:#fff;padding:18px;border-radius:16px;
+  box-shadow:var(--shadow);margin-bottom:16px;
+}
+.zone-label{
+  font-size:13px;color:var(--gray-600);margin-bottom:8px;
+  display:flex;align-items:center;gap:6px;font-weight:600;
+}
+.zone-dropdown{
+  width:100%;padding:12px 14px;border:2px solid var(--gray-200);
+  border-radius:12px;font-size:15px;color:var(--gray-800);
+  background:#fff;margin-bottom:14px;font-family:inherit;font-weight:500;
+}
+.zone-dropdown:focus{border-color:var(--primary);outline:none}
+
+/* Status card */
+.status-card{
+  background:#fff;border-radius:14px;padding:18px;
+  border-left:4px solid var(--success);
+}
+.status-card.watch{border-left-color:var(--warning)}
+.status-card.alert{border-left-color:#f97316}
+.status-card.danger{border-left-color:var(--danger)}
+.status-card.critical{border-left-color:#7f1d1d}
+.status-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.status-badge{
+  padding:5px 12px;border-radius:20px;font-size:11px;
+  font-weight:700;text-transform:uppercase;letter-spacing:.5px;
+}
+.status-badge.normal{background:var(--success-light);color:#065f46}
+.status-badge.watch{background:var(--warning-light);color:#92400e}
+.status-badge.alert{background:#ffedd5;color:#9a3412}
+.status-badge.danger{background:var(--danger-light);color:#991b1b}
+.status-badge.critical{background:#fee2e2;color:#7f1d1d}
+.water-level{font-size:36px;font-weight:800;color:var(--gray-800);line-height:1;margin:6px 0}
+.water-level small{font-size:15px;font-weight:400;color:var(--gray-500)}
+
+/* Stats grid */
+.stats-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+  margin-bottom:20px;
+}
+.stat-card{
+  background:#fff;padding:14px 8px;border-radius:12px;
+  text-align:center;box-shadow:var(--shadow-sm);
+}
+.stat-card i{font-size:20px;color:var(--primary);margin-bottom:6px}
+.stat-value{font-size:18px;font-weight:800;color:var(--gray-800);line-height:1}
+.stat-label{
+  font-size:10px;color:var(--gray-500);text-transform:uppercase;
+  letter-spacing:.5px;font-weight:600;margin-top:4px;
+}
+
+/* Section headers */
+.section-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin:22px 0 12px;
+}
+.section-header h2{
+  font-size:17px;font-weight:800;color:var(--gray-800);
+  display:flex;align-items:center;gap:8px;
+}
+.section-header h2 i{color:var(--primary)}
+.section-header a{color:var(--primary);font-size:13px;text-decoration:none;font-weight:600}
+
+/* Broadcasts list */
+.broadcasts-list{
+  background:#fff;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);
+}
+.broadcast-item{
+  padding:16px;border-bottom:1px solid var(--gray-100);
+  display:flex;align-items:flex-start;gap:12px;
+}
+.broadcast-item:last-child{border-bottom:none}
+.broadcast-tag{
+  font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:5px;
+  background:var(--gray-100);color:var(--gray-600);
+  margin-bottom:6px;display:inline-block;letter-spacing:.5px;
+}
+.broadcast-tag.evac{background:var(--danger-light);color:var(--danger)}
+.broadcast-tag.shelter{background:var(--success-light);color:#065f46}
+.broadcast-tag.road{background:var(--warning-light);color:#92400e}
+.broadcast-content{flex:1;min-width:0}
+.broadcast-title{font-weight:700;margin-bottom:4px;color:var(--gray-800);font-size:14px}
+.broadcast-time{font-size:11px;color:var(--gray-500);margin-top:6px}
+
+/* Report form */
+.report-form{
+  background:#fff;padding:20px;border-radius:16px;box-shadow:var(--shadow);
+}
+.form-group{margin-bottom:14px}
+.form-group label{
+  display:block;font-size:13px;font-weight:600;
+  color:var(--gray-700);margin-bottom:6px;
+}
+.form-control{
+  width:100%;padding:12px 14px;border:2px solid var(--gray-200);
+  border-radius:11px;font-size:14px;font-family:inherit;
+  transition:border-color .2s;background:#fff;
+}
+.form-control:focus{border-color:var(--primary);outline:none}
+textarea.form-control{resize:vertical;min-height:70px}
+.urgent-checkbox{display:flex;align-items:center;gap:8px;margin:12px 0}
+.urgent-checkbox input{width:18px;height:18px;accent-color:var(--danger)}
+.photo-attach{
+  background:var(--gray-100);border:2px dashed var(--gray-300);
+  border-radius:12px;padding:14px;text-align:center;
+  color:var(--gray-500);cursor:pointer;transition:background .2s;
+  font-size:13px;
+}
+.photo-attach:hover{background:var(--gray-200)}
+.submit-report{
+  background:var(--primary);color:#fff;border:none;border-radius:12px;
+  padding:14px;font-size:15px;font-weight:700;width:100%;
+  cursor:pointer;transition:background .2s;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.submit-report:hover{background:var(--primary-dark)}
+
+/* Community feed */
+.feed-list{background:#fff;border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+.feed-item{padding:16px;border-bottom:1px solid var(--gray-100);display:flex;gap:12px}
+.feed-item:last-child{border-bottom:none}
+.feed-item.urgent{background:#fff5f5}
+.feed-icon{
+  width:40px;height:40px;background:var(--gray-100);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gray-600);flex-shrink:0;font-size:16px;
+}
+.feed-icon.urgent{background:var(--danger-light);color:var(--danger)}
+.feed-content{flex:1;min-width:0}
+.feed-header{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+.feed-location{font-weight:700;color:var(--gray-800);font-size:14px}
+.feed-badge{
+  font-size:10px;padding:2px 7px;border-radius:5px;
+  background:var(--gray-100);color:var(--gray-600);font-weight:800;
+}
+.feed-badge.urgent{background:var(--danger);color:#fff}
+.feed-time{font-size:11px;color:var(--gray-500)}
+.feed-desc{font-size:13.5px;color:var(--gray-700);margin:4px 0;line-height:1.5}
+
+/* Pages */
+.page{display:none}
+.page.active{display:block}
+
+/* Map */
+.map-container{
+  height:300px;border-radius:16px;overflow:hidden;
+  box-shadow:var(--shadow);border:1px solid var(--gray-200);
+}
+#public-map{height:100%;width:100%}
+.map-legend{
+  display:flex;flex-wrap:wrap;gap:14px;padding:12px;
+  background:#fff;border-radius:12px;box-shadow:var(--shadow-sm);
+  font-size:12px;margin:12px 0;font-weight:600;
+}
+.legend-item{display:flex;align-items:center;gap:6px}
+.legend-dot{width:12px;height:12px;border-radius:50%}
+.find-shelter-btn{
+  background:var(--secondary);color:#fff;border:none;border-radius:30px;
+  padding:12px 20px;font-weight:700;display:flex;align-items:center;
+  gap:8px;justify-content:center;width:100%;cursor:pointer;
+  font-family:inherit;margin-bottom:16px;font-size:14px;
+}
+
+/* Contacts */
+.contacts-accordion{background:#fff;border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+.contact-item{border-bottom:1px solid var(--gray-100)}
+.contact-item:last-child{border-bottom:none}
+.contact-header{
+  padding:16px;display:flex;align-items:center;gap:12px;
+  cursor:pointer;background:#fff;transition:background .2s;
+}
+.contact-header:hover{background:var(--gray-50)}
+.contact-icon{
+  width:40px;height:40px;background:var(--primary-light);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--primary);font-size:16px;flex-shrink:0;
+}
+.contact-info{flex:1;min-width:0}
+.contact-name{font-weight:700;color:var(--gray-800);font-size:14px}
+.contact-number{font-size:17px;font-weight:800;color:var(--primary)}
+
+/* Bottom nav */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;background:#fff;
+  display:flex;justify-content:space-around;padding:8px 0 calc(8px + env(safe-area-inset-bottom));
+  box-shadow:0 -2px 12px rgba(0,0,0,.08);
+  border-top:1px solid var(--gray-200);z-index:40;
+}
+.nav-item{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  color:var(--gray-500);font-size:10.5px;cursor:pointer;
+  flex:1;padding:4px 0;transition:color .2s;font-weight:600;
+  background:none;border:none;font-family:inherit;
+}
+.nav-item i{font-size:19px}
+.nav-item.active{color:var(--primary)}
+
+/* Chatbot */
+.chatbot-container{position:fixed;bottom:90px;right:16px;z-index:100}
+.chat-window{
+  display:none;background:#fff;border-radius:20px;
+  box-shadow:var(--shadow-lg);width:340px;
+  max-width:calc(100vw - 32px);margin-bottom:10px;overflow:hidden;
+  border:1px solid var(--gray-200);
+}
+.chat-window.open{display:block;animation:slideUp .3s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.chat-header{
+  background:var(--primary);color:#fff;padding:14px 16px;
+  display:flex;align-items:center;gap:10px;
+}
+.chat-avatar{
+  width:36px;height:36px;background:rgba(255,255,255,.2);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+}
+.chat-header h4{font-size:15px;font-weight:700}
+.chat-header p{font-size:11px;opacity:.85}
+.chat-messages{height:300px;overflow-y:auto;padding:14px;background:var(--gray-50)}
+.message{margin-bottom:12px;max-width:85%}
+.message.bot{align-self:flex-start}
+.message.user{align-self:flex-end;margin-left:auto}
+.message-content{padding:10px 14px;border-radius:16px;font-size:13px;line-height:1.45}
+.bot .message-content{background:#fff;border:1px solid var(--gray-200);border-bottom-left-radius:4px}
+.user .message-content{background:var(--primary);color:#fff;border-bottom-right-radius:4px}
+.quick-replies{display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px;border-top:1px solid var(--gray-200)}
+.quick-reply-btn{
+  background:var(--gray-100);border:1px solid var(--gray-200);
+  border-radius:16px;padding:6px 12px;font-size:11.5px;
+  cursor:pointer;transition:all .2s;font-family:inherit;font-weight:600;
+  color:var(--gray-700);
+}
+.quick-reply-btn:hover{background:var(--primary-light);border-color:var(--primary);color:var(--primary)}
+.chat-input-area{display:flex;padding:10px;border-top:1px solid var(--gray-200);background:#fff}
+.chat-input{
+  flex:1;padding:10px 14px;border:1px solid var(--gray-200);
+  border-radius:20px;font-size:13px;outline:none;font-family:inherit;
+}
+.chat-input:focus{border-color:var(--primary)}
+.chat-send{
+  background:var(--primary);color:#fff;border:none;border-radius:50%;
+  width:40px;height:40px;margin-left:8px;cursor:pointer;flex-shrink:0;
+}
+.chat-fab{
+  width:56px;height:56px;background:var(--primary);color:#fff;
+  border:none;border-radius:50%;font-size:22px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:var(--shadow-lg);cursor:pointer;
+}
+.chat-notif{
+  position:absolute;top:-4px;right:-4px;background:var(--danger);
+  color:#fff;font-size:10px;width:20px;height:20px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  border:2px solid #fff;font-weight:800;
+}
+
+/* Modal */
+.modal{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);
+  display:none;align-items:center;justify-content:center;
+  z-index:200;padding:16px;
+}
+.modal.open{display:flex}
+.modal-content{
+  background:#fff;border-radius:20px;padding:24px;
+  max-width:420px;width:100%;position:relative;
+  max-height:90vh;overflow-y:auto;
+}
+.modal-close{
+  position:absolute;top:14px;right:14px;background:var(--gray-100);
+  border:none;width:34px;height:34px;border-radius:50%;
+  cursor:pointer;font-size:16px;color:var(--gray-600);
+  display:flex;align-items:center;justify-content:center;
+}
+.modal-close:hover{background:var(--gray-200)}
+.modal-icon{font-size:44px;text-align:center;margin-bottom:12px}
+.modal-title{font-size:20px;font-weight:800;text-align:center;margin-bottom:6px}
+.modal-number{font-size:36px;font-weight:800;color:var(--primary);text-align:center;margin:14px 0}
+.modal-btn{
+  background:var(--primary);color:#fff;border:none;border-radius:12px;
+  padding:14px;font-size:15px;font-weight:700;width:100%;
+  cursor:pointer;font-family:inherit;
+}
+
+/* Download modal */
+.download-modal-content{max-width:480px;text-align:center}
+.dl-hero{
+  padding:8px 0 20px;
+  border-bottom:1px solid var(--gray-100);margin-bottom:20px;
+}
+.dl-app-icon{
+  width:80px;height:80px;margin:0 auto 12px;
+  background:linear-gradient(135deg,#0066cc,#00aa88);
+  border-radius:22px;display:flex;align-items:center;justify-content:center;
+  font-size:42px;box-shadow:0 12px 30px rgba(0,102,204,.35);
+}
+.dl-app-name{
+  font-size:22px;font-weight:800;color:var(--gray-800);
+  margin-bottom:4px;
+}
+.dl-app-tag{
+  font-size:13px;color:var(--gray-500);font-weight:500;
+}
+.dl-features{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+  margin-bottom:20px;text-align:left;
+}
+.dl-feature{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 12px;background:var(--gray-50);
+  border-radius:10px;font-size:12.5px;font-weight:600;
+  color:var(--gray-700);
+}
+.dl-feature i{color:var(--success);font-size:14px}
+.dl-qr-wrap{
+  display:flex;flex-direction:column;align-items:center;
+  gap:12px;padding:20px;background:var(--gray-50);
+  border-radius:14px;margin-bottom:20px;
+}
+.dl-qr{
+  width:140px;height:140px;background:#fff;
+  padding:10px;border-radius:10px;
+  border:1px solid var(--gray-200);
+}
+.dl-qr-hint{font-size:12px;color:var(--gray-500);font-weight:600}
+.dl-apk-btn{
+  width:100%;padding:16px;background:linear-gradient(135deg,#34a853,#0f9d58);
+  color:#fff;border:none;border-radius:12px;
+  font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  box-shadow:0 6px 18px rgba(52,168,83,.35);
+  transition:all .2s;margin-bottom:12px;
+}
+.dl-apk-btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(52,168,83,.45)}
+.dl-apk-btn i{font-size:20px}
+.dl-play-hint{
+  font-size:12px;color:var(--gray-500);
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.dl-play-hint b{color:var(--gray-700)}
+
+/* Toast */
+#toastContainer{
+  position:fixed;bottom:100px;left:50%;transform:translateX(-50%);
+  z-index:1000;display:flex;flex-direction:column;align-items:center;
+  gap:8px;pointer-events:none;width:90%;max-width:340px;
+}
+.toast{
+  background:var(--gray-800);color:#fff;padding:12px 20px;
+  border-radius:30px;font-size:13.5px;font-weight:600;
+  text-align:center;animation:toastIn .3s ease;box-shadow:var(--shadow-lg);
+  max-width:100%;
+}
+@keyframes toastIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE — TABLET (768px+)
+   ═══════════════════════════════════════════ */
+@media(min-width:768px){
+  .app-header{padding:14px 24px;flex-wrap:nowrap}
+  .desktop-nav{display:flex}
+  .logo-text h1{font-size:17px}
+  .logo-text p{font-size:11px}
+
+  .main-wrapper{max-width:900px;padding:24px 24px 40px}
+  .bottom-nav{display:none}
+
+  /* 2-column grid for stats */
+  .stats-grid{grid-template-columns:repeat(3,1fr);gap:16px}
+  .stat-value{font-size:22px}
+  .stat-label{font-size:11px}
+
+  /* Panic + zone side by side */
+  .hero-row{
+    display:grid;grid-template-columns:1fr 1.4fr;gap:16px;
+    align-items:start;margin-bottom:20px;
+  }
+  .panic-btn{margin-bottom:0;height:100%;min-height:80px;font-size:15px}
+  .zone-selector{margin-bottom:0}
+
+  /* Two-column content grid for home page */
+  .content-grid{
+    display:grid;grid-template-columns:1.1fr 1fr;gap:20px;
+    align-items:start;
+  }
+
+  .section-header h2{font-size:18px}
+
+  .chatbot-container{bottom:24px;right:24px}
+  .chat-window{width:360px}
+
+  .emergency-banner{font-size:15px;padding:14px 24px}
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE — DESKTOP (1100px+)
+   ═══════════════════════════════════════════ */
+@media(min-width:1100px){
+  .app-header{padding:14px 40px}
+  .main-wrapper{max-width:1300px;padding:28px 40px 40px}
+
+  .desktop-nav button{padding:10px 18px;font-size:14px}
+
+  /* Bigger panic button on desktop */
+  .panic-btn{font-size:17px;padding:18px 28px}
+
+  .water-level{font-size:44px}
+  .status-card{padding:22px}
+
+  /* Wider grid */
+  .stats-grid{gap:20px}
+  .stat-card{padding:20px 12px}
+  .stat-value{font-size:26px}
+  .stat-label{font-size:11.5px}
+
+  /* Two-column home layout with sidebar feel */
+  .content-grid{grid-template-columns:1.3fr 1fr;gap:28px}
+
+  .section-header h2{font-size:20px}
+
+  /* Card paddings */
+  .broadcast-item, .feed-item{padding:18px 20px}
+  .report-form{padding:26px}
+  .zone-selector{padding:22px}
+
+  /* Bigger chat window */
+  .chat-window{width:380px}
+  .chat-messages{height:360px}
+}
+
+/* ═══════════════════════════════════════════
+   HERO ROW (mobile default)
+   ═══════════════════════════════════════════ */
+.hero-row{margin-bottom:16px}
+
+/* Content grid (mobile default) */
+.content-grid{display:block}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     EMERGENCY BANNER
+     ═══════════════════════════════════════ -->
+<div class="emergency-banner" id="emergencyBanner">
+  <i class="fas fa-shield-alt"></i>
+  <span id="bannerMessage">NORMAL: No immediate flood threat. Stay alert.</span>
+</div>
+
+<!-- ═══════════════════════════════════════
+     HEADER
+     ═══════════════════════════════════════ -->
+<header class="app-header">
+
+  <div class="logo-area">
+    <div class="logo-icon"><i class="fas fa-people-arrows"></i></div>
+    <div class="logo-text">
+      <h1>जन रक्षा सेतु</h1>
+      <p>Jan Raksha Setu · Public Flood Portal</p>
+    </div>
+  </div>
+
+  <!-- Desktop navigation -->
+  <nav class="desktop-nav">
+    <button data-page="home" onclick="showPage('home')" class="active">
+      <i class="fas fa-home"></i> <span>Home</span>
+    </button>
+    <button data-page="alerts" onclick="showPage('alerts')">
+      <i class="fas fa-bell"></i> <span>Alerts</span>
+    </button>
+    <button data-page="map" onclick="showPage('map')">
+      <i class="fas fa-map"></i> <span>Map</span>
+    </button>
+    <button data-page="support" onclick="showPage('support')">
+      <i class="fas fa-headset"></i> <span>Support</span>
+    </button>
+    <button data-page="contacts" onclick="showPage('contacts')">
+      <i class="fas fa-phone-alt"></i> <span>Contacts</span>
+    </button>
+  </nav>
+
+  <div class="header-right">
+
+    <!-- Download button -->
+    <button class="download-btn" onclick="openDownload()" title="Download Android App">
+      <i class="fab fa-android"></i>
+      <span class="btn-text">Get App</span>
+    </button>
+
+    <!-- Language selector -->
+    <select class="lang-selector" id="langSelector">
+      <option value="en">🇬🇧 EN</option>
+      <option value="hi">🇮🇳 हि</option>
+      <option value="ta">🇮🇳 த</option>
+    </select>
+
+    <!-- Logout button -->
+    <button class="logout-btn" onclick="logout()" title="Sign Out">
+      <i class="fas fa-sign-out-alt"></i>
+      <span class="btn-text">Logout</span>
+    </button>
+
+  </div>
+
+</header>
+
+<!-- ═══════════════════════════════════════
+     MAIN
+     ═══════════════════════════════════════ -->
+<div class="main-wrapper">
+
+  <!-- Hero row (Panic + Zone) -->
+  <div class="hero-row">
+
+    <button class="panic-btn" onclick="callEmergency()">
+      <i class="fas fa-exclamation-triangle"></i> SOS EMERGENCY · 112
+    </button>
+
+    <div class="zone-selector">
+      <div class="zone-label">
+        <i class="fas fa-map-marker-alt" style="color:var(--primary)"></i>
+        Select Your Zone for Live Updates
+      </div>
+      <select class="zone-dropdown" id="zoneSelect" onchange="updateZoneStatus()">
+        <option value="adyar">Adyar, Chennai</option>
+        <option value="velachery">Velachery, Chennai</option>
+        <option value="t-nagar">T Nagar, Chennai</option>
+        <option value="madipakkam">Madipakkam, Chennai</option>
+        <option value="guindy">Guindy, Chennai</option>
+        <option value="other">Other Area</option>
+      </select>
+
+      <div class="status-card" id="statusCard">
+        <div class="status-header">
+          <span class="status-badge normal" id="statusBadge">NORMAL</span>
+          <span style="color:var(--gray-500);font-size:12px">
+            <i class="fas fa-sync-alt fa-spin"></i> Live
+          </span>
+        </div>
+        <div class="water-level" id="waterLevel">2.4 <small>m</small></div>
+        <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--gray-600);flex-wrap:wrap;gap:6px">
+          <span><i class="fas fa-arrow-up" style="color:var(--warning)"></i> Rising slowly</span>
+          <span>Updated: <span id="updateTime">Just now</span></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Stats grid -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <i class="fas fa-home"></i>
+      <div class="stat-value" id="shelterCount">12</div>
+      <div class="stat-label">Open Shelters</div>
+    </div>
+    <div class="stat-card">
+      <i class="fas fa-people-arrows"></i>
+      <div class="stat-value" id="evacCount">2,845</div>
+      <div class="stat-label">Evacuated</div>
+    </div>
+    <div class="stat-card">
+      <i class="fas fa-tint"></i>
+      <div class="stat-value" id="rainfall">24.6</div>
+      <div class="stat-label">Rain (mm)</div>
+    </div>
+  </div>
+
+  <!-- ═══ PAGES ═══ -->
+  <div id="app">
+
+    <!-- HOME PAGE -->
+    <div class="page active" id="page-home">
+      <div class="content-grid">
+
+        <!-- Left column -->
+        <div>
+
+          <div class="section-header">
+            <h2><i class="fas fa-bullhorn"></i> Official Broadcasts</h2>
+            <a href="#" onclick="showPage('alerts');return false">View All →</a>
+          </div>
+          <div class="broadcasts-list" id="officialBroadcasts"></div>
+
+          <div class="section-header">
+            <h2><i class="fas fa-pen"></i> Report Ground Situation</h2>
+          </div>
+          <div class="report-form">
+            <div class="form-group">
+              <label>Your Location</label>
+              <input type="text" class="form-control" id="reportLocation" placeholder="e.g., Gandhi Street" value="Adyar">
+            </div>
+            <div class="form-group">
+              <label>Issue Type</label>
+              <select class="form-control" id="reportType">
+                <option value="water">💧 Waterlogged</option>
+                <option value="rescue">🆘 Need Rescue</option>
+                <option value="road">🚧 Road Blocked</option>
+                <option value="power">⚡ Electricity Outage</option>
+                <option value="other">📌 Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <textarea class="form-control" id="reportDesc" rows="2" placeholder="Brief description..."></textarea>
+            </div>
+            <div class="urgent-checkbox">
+              <input type="checkbox" id="urgentReport">
+              <label for="urgentReport" style="color:var(--danger);font-weight:700;margin:0">
+                ⚠️ This is URGENT / Emergency
+              </label>
+            </div>
+            <div class="photo-attach" onclick="simulatePhoto()">
+              <i class="fas fa-camera"></i> Attach Photo (Optional)
+            </div>
+            <button class="submit-report" onclick="submitReport()" style="margin-top:14px">
+              <i class="fas fa-paper-plane"></i> SEND REPORT
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Right column -->
+        <div>
+
+          <div class="section-header">
+            <h2><i class="fas fa-users"></i> Community Reports</h2>
+          </div>
+          <div class="feed-list" id="communityFeed"></div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ALERTS PAGE -->
+    <div class="page" id="page-alerts">
+      <div class="section-header"><h2>All Official Alerts</h2></div>
+      <div class="broadcasts-list" id="allAlertsList"></div>
+    </div>
+
+    <!-- MAP PAGE -->
+    <div class="page" id="page-map">
+      <div class="section-header">
+        <h2><i class="fas fa-map"></i> Emergency Map</h2>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+        <select class="form-control" id="state-select" onchange="onStateChange()" style="flex:1;min-width:140px">
+          <option value="">All States</option>
+        </select>
+        <select class="form-control" id="district-select" onchange="updatePublicMarkers()" style="flex:1;min-width:140px">
+          <option value="">All Districts</option>
+        </select>
+      </div>
+      <div class="map-container"><div id="public-map"></div></div>
+      <div class="map-legend">
+        <div class="legend-item"><span class="legend-dot" style="background:#0066cc"></span>You</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>Hospitals</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#10b981"></span>Relief Camps</div>
+      </div>
+      <button class="find-shelter-btn" onclick="findNearestShelter()">
+        <i class="fas fa-location-arrow"></i> Find Nearest Shelter
+      </button>
+      <div class="section-header"><h2>Open Relief Camps</h2></div>
+      <div class="broadcasts-list" id="shelterList"></div>
+    </div>
+
+    <!-- CONTACTS PAGE -->
+    <div class="page" id="page-contacts">
+      <div class="section-header">
+        <h2><i class="fas fa-phone-alt"></i> Emergency Contacts</h2>
+      </div>
+      <div class="contacts-accordion" id="contactsList"></div>
+      <div style="margin-top:24px;padding:16px;background:var(--primary-light);border-radius:16px;text-align:center">
+        <i class="fas fa-hospital" style="font-size:32px;color:var(--primary);margin-bottom:8px"></i>
+        <h3 style="margin-bottom:8px">Medical Emergencies</h3>
+        <p style="font-size:14px;margin-bottom:12px;color:var(--gray-600)">Ambulance services available 24/7</p>
+        <a href="tel:108" style="background:var(--primary);color:#fff;padding:12px 24px;border-radius:30px;text-decoration:none;display:inline-block;font-weight:700">📞 CALL 108</a>
+      </div>
+    </div>
+
+    <!-- SUPPORT PAGE -->
+    <div class="page" id="page-support">
+      <div class="section-header">
+        <h2><i class="fas fa-headset"></i> Customer Care</h2>
+      </div>
+      <div class="report-form">
+        <div class="form-group">
+          <label>Subject</label>
+          <select class="form-control" id="supportSubject">
+            <option value="general">General Inquiry</option>
+            <option value="shelter">Shelter Inquiry</option>
+            <option value="medical">Medical Assistance</option>
+            <option value="food">Food/Supplies</option>
+            <option value="complaint">Feedback/Complaint</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Your Message</label>
+          <textarea class="form-control" id="supportMessage" placeholder="How can we help you today?" style="min-height:100px"></textarea>
+        </div>
+        <button class="submit-report" onclick="sendSupportMessage()">
+          <i class="fas fa-paper-plane"></i> SUBMIT TO CUSTOMER CARE
+        </button>
+      </div>
+      <div class="section-header"><h2><i class="fas fa-inbox"></i> Official Replies</h2></div>
+      <div class="feed-list" id="supportRepliesList">
+        <div style="padding:30px;text-align:center;color:var(--gray-500)">
+          <i class="fas fa-envelope-open" style="font-size:32px;margin-bottom:12px;opacity:.3;display:block"></i>
+          <p>No messages from authorities yet</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════
+     BOTTOM NAV (mobile only)
+     ═══════════════════════════════════════ -->
+<nav class="bottom-nav">
+  <button class="nav-item active" data-page="home" onclick="showPage('home')">
+    <i class="fas fa-home"></i><span>Home</span>
+  </button>
+  <button class="nav-item" data-page="alerts" onclick="showPage('alerts')">
+    <i class="fas fa-bell"></i><span>Alerts</span>
+  </button>
+  <button class="nav-item" data-page="map" onclick="showPage('map')">
+    <i class="fas fa-map"></i><span>Map</span>
+  </button>
+  <button class="nav-item" data-page="support" onclick="showPage('support')">
+    <i class="fas fa-headset"></i><span>Support</span>
+  </button>
+  <button class="nav-item" data-page="contacts" onclick="showPage('contacts')">
+    <i class="fas fa-phone-alt"></i><span>Contacts</span>
+  </button>
+</nav>
+
+<!-- ═══════════════════════════════════════
+     CHATBOT
+     ═══════════════════════════════════════ -->
+<div class="chatbot-container">
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+      <div class="chat-avatar"><i class="fas fa-robot"></i></div>
+      <div>
+        <h4>Raksha Sahayak</h4>
+        <p>Flood Assistance Bot</p>
+      </div>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="message bot">
+        <div class="message-content">Namaste! 🙏 Ask me about shelters, evacuation, or safety tips.</div>
+      </div>
+    </div>
+    <div class="quick-replies">
+      <button class="quick-reply-btn" onclick="chatAsk('shelter')">🏕️ Shelter</button>
+      <button class="quick-reply-btn" onclick="chatAsk('evacuate')">🚨 Evacuate</button>
+      <button class="quick-reply-btn" onclick="chatAsk('safety')">🛡️ Safety</button>
+      <button class="quick-reply-btn" onclick="chatAsk('contacts')">📞 Contacts</button>
+    </div>
+    <div class="chat-input-area">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Type your question...">
+      <button class="chat-send" onclick="sendChat()"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+  <button class="chat-fab" onclick="toggleChat()">
+    <i class="fas fa-comment-dots"></i>
+    <span class="chat-notif" id="chatNotif">1</span>
+  </button>
+</div>
+
+<!-- ═══════════════════════════════════════
+     EMERGENCY MODAL
+     ═══════════════════════════════════════ -->
+<div class="modal" id="emergencyModal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    <div class="modal-icon">🚨</div>
+    <div class="modal-title">Emergency Services</div>
+    <div class="modal-number" id="emergencyNumber">112</div>
+    <button class="modal-btn" onclick="makeCall()">
+      <i class="fas fa-phone-alt"></i> CALL NOW
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     DOWNLOAD ANDROID MODAL
+     ═══════════════════════════════════════ -->
+<div class="modal" id="downloadModal">
+  <div class="modal-content download-modal-content">
+    <button class="modal-close" onclick="closeDownload()"><i class="fas fa-times"></i></button>
+
+    <div class="dl-hero">
+      <div class="dl-app-icon">🌊</div>
+      <div class="dl-app-name">URBANGUARD Mobile</div>
+      <div class="dl-app-tag">Flood alerts in your pocket</div>
+    </div>
+
+    <div class="dl-features">
+      <div class="dl-feature"><i class="fas fa-check-circle"></i> Real-time alerts</div>
+      <div class="dl-feature"><i class="fas fa-check-circle"></i> One-tap SOS</div>
+      <div class="dl-feature"><i class="fas fa-check-circle"></i> Offline contacts</div>
+      <div class="dl-feature"><i class="fas fa-check-circle"></i> Shelter finder</div>
+    </div>
+
+    <div class="dl-qr-wrap">
+      <svg class="dl-qr" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <!-- Fake QR code pattern -->
+        <rect width="100" height="100" fill="#fff"/>
+        <!-- Position markers -->
+        <rect x="5" y="5" width="22" height="22" fill="#111"/>
+        <rect x="9" y="9" width="14" height="14" fill="#fff"/>
+        <rect x="12" y="12" width="8" height="8" fill="#111"/>
+        <rect x="73" y="5" width="22" height="22" fill="#111"/>
+        <rect x="77" y="9" width="14" height="14" fill="#fff"/>
+        <rect x="80" y="12" width="8" height="8" fill="#111"/>
+        <rect x="5" y="73" width="22" height="22" fill="#111"/>
+        <rect x="9" y="77" width="14" height="14" fill="#fff"/>
+        <rect x="12" y="80" width="8" height="8" fill="#111"/>
+        <!-- Data pattern -->
+        <g fill="#111">
+          <rect x="32" y="6" width="4" height="4"/><rect x="40" y="6" width="4" height="4"/>
+          <rect x="48" y="6" width="4" height="4"/><rect x="60" y="6" width="4" height="4"/>
+          <rect x="32" y="14" width="4" height="4"/><rect x="52" y="14" width="4" height="4"/>
+          <rect x="36" y="22" width="4" height="4"/><rect x="44" y="22" width="4" height="4"/>
+          <rect x="56" y="22" width="4" height="4"/><rect x="64" y="22" width="4" height="4"/>
+          <rect x="6" y="32" width="4" height="4"/><rect x="14" y="32" width="4" height="4"/>
+          <rect x="22" y="32" width="4" height="4"/><rect x="30" y="32" width="4" height="4"/>
+          <rect x="42" y="32" width="4" height="4"/><rect x="50" y="32" width="4" height="4"/>
+          <rect x="62" y="32" width="4" height="4"/><rect x="70" y="32" width="4" height="4"/>
+          <rect x="82" y="32" width="4" height="4"/><rect x="90" y="32" width="4" height="4"/>
+          <rect x="10" y="40" width="4" height="4"/><rect x="24" y="40" width="4" height="4"/>
+          <rect x="36" y="40" width="4" height="4"/><rect x="48" y="40" width="4" height="4"/>
+          <rect x="58" y="40" width="4" height="4"/><rect x="72" y="40" width="4" height="4"/>
+          <rect x="86" y="40" width="4" height="4"/>
+          <rect x="6" y="48" width="4" height="4"/><rect x="18" y="48" width="4" height="4"/>
+          <rect x="30" y="48" width="4" height="4"/><rect x="44" y="48" width="4" height="4"/>
+          <rect x="56" y="48" width="4" height="4"/><rect x="68" y="48" width="4" height="4"/>
+          <rect x="80" y="48" width="4" height="4"/><rect x="92" y="48" width="4" height="4"/>
+          <rect x="14" y="56" width="4" height="4"/><rect x="26" y="56" width="4" height="4"/>
+          <rect x="40" y="56" width="4" height="4"/><rect x="52" y="56" width="4" height="4"/>
+          <rect x="64" y="56" width="4" height="4"/><rect x="76" y="56" width="4" height="4"/>
+          <rect x="88" y="56" width="4" height="4"/>
+          <rect x="10" y="64" width="4" height="4"/><rect x="22" y="64" width="4" height="4"/>
+          <rect x="34" y="64" width="4" height="4"/><rect x="46" y="64" width="4" height="4"/>
+          <rect x="58" y="64" width="4" height="4"/><rect x="70" y="64" width="4" height="4"/>
+          <rect x="82" y="64" width="4" height="4"/>
+          <rect x="32" y="72" width="4" height="4"/><rect x="42" y="72" width="4" height="4"/>
+          <rect x="52" y="72" width="4" height="4"/><rect x="62" y="72" width="4" height="4"/>
+          <rect x="72" y="72" width="4" height="4"/><rect x="82" y="72" width="4" height="4"/>
+          <rect x="92" y="72" width="4" height="4"/>
+          <rect x="32" y="80" width="4" height="4"/><rect x="44" y="80" width="4" height="4"/>
+          <rect x="56" y="80" width="4" height="4"/><rect x="68" y="80" width="4" height="4"/>
+          <rect x="80" y="80" width="4" height="4"/><rect x="90" y="80" width="4" height="4"/>
+          <rect x="36" y="88" width="4" height="4"/><rect x="48" y="88" width="4" height="4"/>
+          <rect x="60" y="88" width="4" height="4"/><rect x="72" y="88" width="4" height="4"/>
+          <rect x="84" y="88" width="4" height="4"/>
+        </g>
+      </svg>
+      <div class="dl-qr-hint">Scan to install on your phone</div>
+    </div>
+
+    <button class="dl-apk-btn" onclick="triggerApkDownload()">
+      <i class="fab fa-android"></i> Download APK (v1.0.0)
+    </button>
+
+    <div class="dl-play-hint">
+      <i class="fab fa-google-play" style="color:#34a853"></i>
+      Or find <b>UrbanGuard</b> on Google Play
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div id="toastContainer"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+/* ══════════════════════════════════════════════════════
+   URBANGUARD CITIZEN PORTAL — Full Logic
+   ══════════════════════════════════════════════════════ */
+
+let currentLang = 'en';
+let currentZone = 'adyar';
+let governmentData = {
+  status:'normal', waterLevel:2.4, waterLevelCm:240, code:0,
+  lastUpdate: new Date().toISOString(), alerts:[], shelters:[]
+};
+
+const GEODATA = {
+  "Tamil Nadu":{ "Chennai":["Adyar","Velachery","Madipakkam","T Nagar","Guindy"], "Coimbatore":["Gandhipuram","Peelamedu"] },
+  "Maharashtra":{ "Mumbai":["Colaba","Andheri","Bandra","Dadar"], "Pune":["Kothrud","Viman Nagar"] },
+  "Delhi":{ "New Delhi":["Connaught Place","Dwarka"], "South Delhi":["Saket","Hauz Khas"] },
+  "Karnataka":{ "Bangalore":["Indiranagar","Koramangala","Whitefield"] },
+  "Telangana":{ "Hyderabad":["Banjara Hills","Gachibowli","Hitech City"] },
+  "West Bengal":{ "Kolkata":["Salt Lake","Park Street","New Town"] },
+  "Kerala":{ "Kochi":["Ernakulam","Edappally"], "Thiruvananthapuram":["Vazhuthacaud","Pattom"] }
+};
+
+const HOSPITALS_DATA = [
+  { lat:12.8699, lng:80.2184, name:'Adyar Main Center', state:'Tamil Nadu', district:'Chennai', village:'Adyar', extra:'Primary Hub' },
+  { lat:13.0113, lng:80.2355, name:'Apollo Greams Road', state:'Tamil Nadu', district:'Chennai', village:'Adyar', extra:'Multispecialty' },
+  { lat:12.9249, lng:80.1277, name:'RGGH Madras Medical', state:'Tamil Nadu', district:'Chennai', village:'Guindy', extra:'Govt General' },
+  { lat:12.9815, lng:80.2185, name:'Velachery Rescue Hub', state:'Tamil Nadu', district:'Chennai', village:'Velachery', extra:'Boats: 15' },
+  { lat:18.9220, lng:72.8347, name:'Colaba Emergency', state:'Maharashtra', district:'Mumbai', village:'Colaba', extra:'Coastal Relief' },
+  { lat:28.5672, lng:77.2100, name:'AIIMS Delhi', state:'Delhi', district:'New Delhi', village:'Connaught Place', extra:'Premier Medical' },
+  { lat:12.9392, lng:77.5905, name:'NIMHANS Bangalore', state:'Karnataka', district:'Bangalore', village:'Jayanagar', extra:'Specialized' },
+  { lat:17.4123, lng:78.4324, name:'NIMS Hyderabad', state:'Telangana', district:'Hyderabad', village:'Banjara Hills', extra:'Tertiary Care' },
+  { lat:22.5401, lng:88.3516, name:'SSKM Kolkata', state:'West Bengal', district:'Kolkata', village:'Park Street', extra:'Premier Public' },
+  { lat:10.0261, lng:76.3086, name:'Amrita Kochi', state:'Kerala', district:'Kochi', village:'Edappally', extra:'Advanced Care' }
+];
+
+/* ══════════════════════════════════════════
+   HELPERS
+   ══════════════════════════════════════════ */
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str || '';
+  return d.innerHTML;
+}
+
+function showToast(msg, type='info'){
+  const colors = { success:'#10b981', warning:'#f59e0b', error:'#dc2626', info:'#1f2937' };
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.style.background = colors[type] || colors.info;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+function showPage(page){
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById(`page-${page}`);
+  if(target) target.classList.add('active');
+
+  document.querySelectorAll('[data-page]').forEach(n => {
+    n.classList.toggle('active', n.dataset.page === page);
+  });
+
+  if(page === 'map' && !map) setTimeout(initMap, 100);
+}
+
+/* ══════════════════════════════════════════
+   LOGOUT
+   ══════════════════════════════════════════ */
+function logout(){
+  if(!confirm('Sign out of Citizen Portal?')) return;
+  // Clear demo role from localStorage
+  localStorage.removeItem('ug_demo_role');
+  showToast('👋 Signing out...', 'info');
+  setTimeout(() => {
+    window.location.href = 'index.html';
+  }, 600);
+}
+
+/* ══════════════════════════════════════════
+   DOWNLOAD ANDROID
+   ══════════════════════════════════════════ */
+function openDownload(){
+  document.getElementById('downloadModal').classList.add('open');
+}
+function closeDownload(){
+  document.getElementById('downloadModal').classList.remove('open');
+}
+
+function triggerApkDownload(){
+  // Detect actual APK availability (demo: none)
+  showToast('📦 Preparing download...', 'info');
+
+  // Create a small placeholder file for demo (in production, link to real APK)
+  setTimeout(() => {
+    const blob = new Blob(
+      ['URBANGUARD Android App v1.0.0\n' +
+       'Demo package — install on Android 8.0+\n\n' +
+       'Note: This is a placeholder. Replace with the real APK.\n' +
+       'Real app will be available on Google Play soon.\n\n' +
+       'Package: in.urbanguard.app\n' +
+       'Version: 1.0.0 (build 100)\n' +
+       'Size: ~12 MB\n\n' +
+       'Website: https://urbanguard.in\n'],
+      { type: 'application/octet-stream' }
+    );
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'urbanguard-v1.0.0.apk.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    showToast('✅ Download started!', 'success');
+    setTimeout(closeDownload, 800);
+  }, 500);
+}
+
+/* ══════════════════════════════════════════
+   COMMAND CENTER SYNC
+   ══════════════════════════════════════════ */
+window.addEventListener('storage', (e) => {
+  if(e.key === 'nfms_alert_level'){
+    updateFromGovLevel(parseInt(e.newValue || '0'));
+  }
+  if(e.key === 'nfms_broadcast_sync' || e.key === 'nfms_broadcasts'){
+    loadGovBroadcasts();
+  }
+  if(e.key === 'nfms_support_reply_sync'){
+    loadSupportReplies();
+    showToast('📩 New reply from Customer Care', 'success');
+  }
+});
+
+function updateFromGovLevel(code){
+  const statuses = ['normal','watch','alert','danger','critical'];
+  const status = statuses[code] || 'normal';
+  const levels = [2.4, 3.5, 4.8, 5.9, 7.2];
+
+  governmentData.waterLevel = levels[code] || 2.4;
+  governmentData.status = status;
+  governmentData.code = code;
+  governmentData.lastUpdate = new Date().toISOString();
+
+  updateUIFromGovernment();
+  showToast(`⚠️ Command Center: ${status.toUpperCase()}`, 'info');
+}
+
+function loadGovBroadcasts(){
+  const broadcasts = JSON.parse(localStorage.getItem('nfms_broadcasts') || '[]');
+  const typeMap = { evac:'evac', shelter:'shelter', road:'road', official:'official' };
+
+  const broadcastAlerts = broadcasts.map(b => ({
+    type: typeMap[b.type] || 'official',
+    title: '📢 OFFICIAL BROADCAST',
+    message: b.text,
+    time: b.time,
+    sender: b.sender || 'COMMAND CENTER',
+    source: 'broadcast'
+  }));
+
+  const systemAlerts = governmentData.alerts.filter(a => a.source === 'system');
+  governmentData.alerts = [...broadcastAlerts, ...systemAlerts].slice(0, 15);
+
+  updateBroadcasts();
+  updateCommunityFeed();
+  updateShelterList();
+}
+
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('nfms_alert_level');
+  if(saved) updateFromGovLevel(parseInt(saved));
+  loadGovBroadcasts();
+  loadSupportReplies();
+});
+
+/* ══════════════════════════════════════════
+   SUPPORT MESSAGES
+   ══════════════════════════════════════════ */
+function sendSupportMessage(){
+  const subject = document.getElementById('supportSubject').value;
+  const message = document.getElementById('supportMessage').value;
+  if(!message.trim()){ showToast('Please enter a message', 'warning'); return; }
+
+  const newMsg = { id:Date.now(), subject, message, time:new Date().toLocaleTimeString(), status:'Unread' };
+  const messages = JSON.parse(localStorage.getItem('nfms_support_messages') || '[]');
+  messages.unshift(newMsg);
+  localStorage.setItem('nfms_support_messages', JSON.stringify(messages.slice(0, 50)));
+  localStorage.setItem('nfms_support_sync', Date.now());
+
+  document.getElementById('supportMessage').value = '';
+  showToast('✅ Message sent to Customer Care!', 'success');
+}
+
+function loadSupportReplies(){
+  const replies = JSON.parse(localStorage.getItem('nfms_support_replies') || '[]');
+  const container = document.getElementById('supportRepliesList');
+  if(!container) return;
+
+  if(replies.length === 0){
+    container.innerHTML = `<div style="padding:30px;text-align:center;color:var(--gray-500)">
+      <i class="fas fa-envelope-open" style="font-size:32px;margin-bottom:12px;opacity:.3;display:block"></i>
+      <p>No messages from authorities yet</p></div>`;
+    return;
+  }
+
+  container.innerHTML = replies.map(r => `
+    <div class="feed-item" style="border-left:4px solid var(--primary)">
+      <div class="feed-icon" style="background:var(--primary-light);color:var(--primary)">
+        <i class="fas fa-user-shield"></i>
+      </div>
+      <div class="feed-content">
+        <div class="feed-header">
+          <span class="feed-location">ADMIN REPLY: ${escapeHtml(r.subject).toUpperCase()}</span>
+          <span class="feed-time">${r.time}</span>
+        </div>
+        <div style="font-size:13.5px;color:var(--gray-700);line-height:1.5">${escapeHtml(r.reply)}</div>
+      </div>
+    </div>`).join('');
+}
+
+/* ══════════════════════════════════════════
+   TRANSLATIONS
+   ══════════════════════════════════════════ */
+const translations = {
+  en:{
+    banner:{
+      normal:'NORMAL: No immediate flood threat. Stay alert.',
+      watch:'⚠️ FLOOD WATCH: Water levels rising. Monitor updates.',
+      alert:'⚡ FLOOD ALERT: Warning threshold reached. Prepare.',
+      danger:'🚨 DANGER: Prepare for evacuation. Follow instructions.',
+      critical:'🚨🚨 CRITICAL: EVACUATE IMMEDIATELY! Call 112 now!'
+    },
+    status:['NORMAL','WATCH','ALERT','DANGER','CRITICAL']
+  },
+  hi:{
+    banner:{
+      normal:'सामान्य: कोई तत्काल बाढ़ खतरा नहीं। सतर्क रहें।',
+      watch:'⚠️ बाढ़ निगरानी: जल स्तर बढ़ रहा है। अपडेट देखें।',
+      alert:'⚡ बाढ़ चेतावनी: सीमा पार। तैयार रहें।',
+      danger:'🚨 खतरा: निकासी की तैयारी करें। निर्देश मानें।',
+      critical:'🚨🚨 गंभीर: तुरंत खाली करें! 112 पर कॉल करें!'
+    },
+    status:['सामान्य','निगरानी','चेतावनी','खतरा','गंभीर']
+  },
+  ta:{
+    banner:{
+      normal:'இயல்பு: உடனடி வெள்ள அச்சுறுத்தல் இல்லை.',
+      watch:'⚠️ வெள்ள கண்காணிப்பு: நீர் மட்டம் உயர்கிறது.',
+      alert:'⚡ வெள்ள எச்சரிக்கை: எச்சரிக்கை அளவு.',
+      danger:'🚨 ஆபத்து: வெளியேற்ற தயாராகுங்கள்.',
+      critical:'🚨🚨 மிகவும் ஆபத்தானது: உடனடியாக வெளியேறுங்கள்!'
+    },
+    status:['இயல்பு','கண்காணிப்பு','எச்சரிக்கை','ஆபத்து','மிகவும் ஆபத்தானது']
+  }
+};
+
+/* ══════════════════════════════════════════
+   ALERTS (generated alerts)
+   ══════════════════════════════════════════ */
+function generateAlerts(status, level){
+  const alerts = [];
+  const now = new Date();
+  if(status === 'critical' || status === 'danger'){
+    alerts.push({ type:'evac', title:'🚨 EVACUATION ORDER: Zone A, B, C', message:'Immediate evacuation required. Proceed to shelters.', time:new Date(now-5*60000).toLocaleTimeString(), source:'system' });
+  }
+  if(status === 'alert' || status === 'danger'){
+    alerts.push({ type:'shelter', title:'🏕️ New Shelters Opened', message:'Additional shelters opened at Velachery Govt School.', time:new Date(now-15*60000).toLocaleTimeString(), source:'system' });
+  }
+  alerts.push({ type:'road', title:'🚧 Road Closures', message:'OMR closed due to waterlogging.', time:new Date(now-32*60000).toLocaleTimeString(), source:'system' });
+  alerts.push({ type:'official', title:'🌊 Water Level Update', message:`Current water level at ${level.toFixed(1)}m.`, time:new Date(now-2*60000).toLocaleTimeString(), source:'system' });
+  return alerts;
+}
+
+function getSheltersForZone(zone){
+  const shelters = {
+    adyar:[
+      { name:'Adyar Community Hall', capacity:350, occupied:210, distance:'0.8 km' },
+      { name:'Adyar Govt School', capacity:500, occupied:380, distance:'1.2 km' }
+    ],
+    velachery:[
+      { name:'Velachery Govt School', capacity:600, occupied:520, distance:'0.5 km' },
+      { name:'Velachery Community Center', capacity:300, occupied:180, distance:'1.1 km' }
+    ],
+    't-nagar':[{ name:'T Nagar Town Hall', capacity:800, occupied:350, distance:'0.6 km' }],
+    madipakkam:[{ name:'Madipakkam Community Hall', capacity:400, occupied:220, distance:'0.9 km' }],
+    guindy:[{ name:'Guindy Engineering College', capacity:1200, occupied:540, distance:'1.5 km' }],
+    other:[{ name:'Central Relief Camp - Saidapet', capacity:2000, occupied:1200, distance:'3.2 km' }]
+  };
+  return shelters[zone] || shelters.adyar;
+}
+
+/* ══════════════════════════════════════════
+   UI UPDATES
+   ══════════════════════════════════════════ */
+function updateUIFromGovernment(){
+  const status = governmentData.status;
+  const code = governmentData.code;
+  const level = governmentData.waterLevel;
+
+  const banner = document.getElementById('emergencyBanner');
+  banner.className = 'emergency-banner';
+  if(status !== 'normal') banner.classList.add(status);
+  const langData = translations[currentLang] || translations.en;
+  document.getElementById('bannerMessage').textContent = langData.banner[status] || langData.banner.normal;
+
+  const statusCard = document.getElementById('statusCard');
+  statusCard.className = 'status-card';
+  if(status !== 'normal') statusCard.classList.add(status);
+
+  const badge = document.getElementById('statusBadge');
+  badge.textContent = langData.status[code] || langData.status[0];
+  badge.className = `status-badge ${status}`;
+
+  document.getElementById('waterLevel').innerHTML = `${level} <small>m</small>`;
+  document.getElementById('updateTime').textContent = new Date(governmentData.lastUpdate).toLocaleTimeString();
+  document.getElementById('shelterCount').textContent = governmentData.shelters.length;
+  document.getElementById('evacCount').textContent = Math.floor(1200 + Math.random() * 500);
+  document.getElementById('rainfall').textContent = (15 + Math.random() * 20).toFixed(1);
+
+  updateBroadcasts();
+  updateCommunityFeed();
+  updateShelterList();
+  updateContactsList();
+
+  if(code >= 3) speakAlert(`Alert! ${langData.status[code]} situation. ${langData.banner[status]}`);
+}
+
+function updateBroadcasts(){
+  const container = document.getElementById('officialBroadcasts');
+  if(!container) return;
+  const alerts = governmentData.alerts || [];
+  const tagStyles = {
+    evac:{ cls:'evac', icon:'🚨', label:'EVACUATION' },
+    shelter:{ cls:'shelter', icon:'🏕️', label:'SHELTER' },
+    road:{ cls:'road', icon:'🚧', label:'ROAD' },
+    official:{ cls:'', icon:'📢', label:'OFFICIAL' }
+  };
+
+  let html = '';
+  alerts.slice(0, 4).forEach(alert => {
+    const s = tagStyles[alert.type] || tagStyles.official;
+    html += `
+      <div class="broadcast-item">
+        <div class="broadcast-content">
+          <span class="broadcast-tag ${s.cls}">${s.icon} ${s.label}</span>
+          <div class="broadcast-title">${escapeHtml(alert.title)}</div>
+          <div style="font-size:13px;color:var(--gray-600);line-height:1.5">${escapeHtml(alert.message)}</div>
+          <div class="broadcast-time"><i class="far fa-clock"></i> ${alert.time}</div>
+        </div>
+      </div>`;
+  });
+
+  container.innerHTML = html || '<div style="padding:20px;text-align:center;color:var(--gray-500)">No active alerts</div>';
+
+  const all = document.getElementById('allAlertsList');
+  if(all){
+    let allHtml = '';
+    alerts.forEach(a => {
+      const s = tagStyles[a.type] || tagStyles.official;
+      allHtml += `
+        <div class="broadcast-item">
+          <div class="broadcast-content">
+            <span class="broadcast-tag ${s.cls}">${s.icon} ${s.label}</span>
+            <div class="broadcast-title">${escapeHtml(a.title)}</div>
+            <div style="font-size:13px;color:var(--gray-600);line-height:1.5">${escapeHtml(a.message)}</div>
+            <div class="broadcast-time"><i class="far fa-clock"></i> ${a.time}</div>
+          </div>
+        </div>`;
+    });
+    all.innerHTML = allHtml || '<div style="padding:20px;text-align:center">No alerts</div>';
+  }
+}
+
+let communityReports = [
+  { location:'Velachery Main Road', type:'water', description:'Water logging near bus stop', urgent:false, time:new Date(Date.now()-15*60000), icon:'fa-tint' },
+  { location:'Adyar Signal', type:'road', description:'Traffic signal not working', urgent:true, time:new Date(Date.now()-32*60000), icon:'fa-road' },
+  { location:'Gandhi Street, T Nagar', type:'power', description:'Power outage 30 minutes', urgent:false, time:new Date(Date.now()-47*60000), icon:'fa-bolt' }
+];
+
+function updateCommunityFeed(){
+  const container = document.getElementById('communityFeed');
+  if(!container) return;
+  let html = '';
+  communityReports.slice(0, 6).forEach(r => {
+    const diff = Math.floor((Date.now() - r.time) / 60000);
+    const timeText = diff < 1 ? 'Just now' : diff < 60 ? `${diff} min ago` : `${Math.floor(diff/60)}h ago`;
+    html += `
+      <div class="feed-item ${r.urgent ? 'urgent' : ''}">
+        <div class="feed-icon ${r.urgent ? 'urgent' : ''}"><i class="fas ${r.icon || 'fa-map-pin'}"></i></div>
+        <div class="feed-content">
+          <div class="feed-header">
+            <span class="feed-location">${escapeHtml(r.location)}</span>
+            ${r.urgent ? '<span class="feed-badge urgent">URGENT</span>' : ''}
+          </div>
+          <div class="feed-desc">${escapeHtml(r.description)}</div>
+          <div class="feed-time"><i class="far fa-clock"></i> ${timeText}</div>
+        </div>
+      </div>`;
+  });
+  container.innerHTML = html;
+}
+
+function submitReport(){
+  const location = document.getElementById('reportLocation').value;
+  const type = document.getElementById('reportType').value;
+  const desc = document.getElementById('reportDesc').value;
+  const urgent = document.getElementById('urgentReport').checked;
+
+  if(!location || !desc){ showToast('Please fill all fields', 'warning'); return; }
+
+  const icons = { water:'fa-tint', rescue:'fa-life-ring', road:'fa-road', power:'fa-bolt', other:'fa-map-pin' };
+  communityReports.unshift({ location, type, description:desc, urgent, time:new Date(), icon:icons[type] || 'fa-map-pin' });
+  updateCommunityFeed();
+
+  const reports = JSON.parse(localStorage.getItem('nfms_public_reports') || '[]');
+  reports.unshift({ location, message:desc, time:new Date().toLocaleTimeString(), urgent, phone:'PUBLIC' });
+  localStorage.setItem('nfms_public_reports', JSON.stringify(reports.slice(0, 30)));
+  localStorage.setItem('nfms_public_report_sync', Date.now());
+
+  document.getElementById('reportDesc').value = '';
+  document.getElementById('urgentReport').checked = false;
+  showToast('✅ Report sent to authorities!', 'success');
+}
+
+function updateShelterList(){
+  const container = document.getElementById('shelterList');
+  if(!container) return;
+  let html = '';
+  governmentData.shelters.forEach(s => {
+    const pct = Math.round((s.occupied / s.capacity) * 100);
+    html += `
+      <div class="broadcast-item">
+        <div class="broadcast-content">
+          <div class="broadcast-title">🏕️ ${escapeHtml(s.name)}</div>
+          <div style="font-size:13px;color:var(--gray-600);margin:4px 0">
+            <i class="fas fa-users"></i> ${s.occupied}/${s.capacity} (${pct}%)
+          </div>
+          <div style="display:flex;gap:16px;margin-top:6px;font-size:12px">
+            <span><i class="fas fa-location-arrow" style="color:var(--primary)"></i> ${s.distance}</span>
+          </div>
+        </div>
+      </div>`;
+  });
+  container.innerHTML = html || '<div style="padding:20px;text-align:center">No shelters</div>';
+}
+
+function updateContactsList(){
+  const container = document.getElementById('contactsList');
+  if(!container) return;
+  const contacts = [
+    { name:'National Disaster Helpline', number:'1078', icon:'fa-phone-alt' },
+    { name:'Emergency Services', number:'112', icon:'fa-shield-alt' },
+    { name:'Ambulance Service', number:'108', icon:'fa-ambulance' },
+    { name:'Flood Control Room', number:'1070', icon:'fa-water' },
+    { name:'State Emergency', number:'044-28593990', icon:'fa-building' },
+    { name:'Power Failure Helpline', number:'1912', icon:'fa-bolt' }
+  ];
+  container.innerHTML = contacts.map(c => `
+    <div class="contact-item">
+      <div class="contact-header" onclick="toggleContact(this)">
+        <div class="contact-icon"><i class="fas ${c.icon}"></i></div>
+        <div class="contact-info">
+          <div class="contact-name">${c.name}</div>
+          <div class="contact-number">${c.number}</div>
+        </div>
+        <i class="fas fa-chevron-down" style="color:var(--gray-400)"></i>
+      </div>
+      <div style="display:none;padding:0 16px 16px 68px">
+        <a href="tel:${c.number}" style="background:var(--primary);color:#fff;padding:8px 16px;border-radius:30px;text-decoration:none;display:inline-block;font-size:13px;font-weight:700">
+          <i class="fas fa-phone-alt"></i> Call Now
+        </a>
+      </div>
+    </div>`).join('');
+}
+
+function toggleContact(header){
+  const content = header.nextElementSibling;
+  const icon = header.querySelector('.fa-chevron-down');
+  const open = content.style.display === 'none';
+  content.style.display = open ? 'block' : 'none';
+  icon.style.transform = open ? 'rotate(180deg)' : 'rotate(0deg)';
+}
+
+/* ══════════════════════════════════════════
+   MAP
+   ══════════════════════════════════════════ */
+let map, userMarker;
+let publicMarkers = [];
+
+function initMap(){
+  map = L.map('public-map').setView([12.8699, 80.2184], 12);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'OSM' }).addTo(map);
+
+  const stateSel = document.getElementById('state-select');
+  if(stateSel){
+    stateSel.innerHTML = '<option value="">All States</option>' +
+      Object.keys(GEODATA).map(s => `<option value="${s}">${s}</option>`).join('');
+  }
+
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        const lat = pos.coords.latitude, lng = pos.coords.longitude;
+        if(userMarker) map.removeLayer(userMarker);
+        userMarker = L.marker([lat, lng], {
+          icon: L.divIcon({
+            html:'<div style="width:20px;height:20px;background:#0066cc;border:3px solid #fff;border-radius:50%;box-shadow:0 0 20px #0066cc"></div>',
+            iconSize:[20,20], iconAnchor:[10,10]
+          })
+        }).addTo(map).bindPopup('Your Location');
+      },
+      () => {}
+    );
+  }
+  updatePublicMarkers(true);
+}
+
+function onStateChange(){
+  const st = document.getElementById('state-select').value;
+  const ds = document.getElementById('district-select');
+  ds.innerHTML = '<option value="">All Districts</option>';
+  if(st) ds.innerHTML += Object.keys(GEODATA[st]).map(d => `<option value="${d}">${d}</option>`).join('');
+  updatePublicMarkers();
+}
+
+function updatePublicMarkers(skipFit){
+  if(!map) return;
+  const st = document.getElementById('state-select').value;
+  const d = document.getElementById('district-select').value;
+  const v = document.getElementById('zoneSelect').value;
+
+  publicMarkers.forEach(m => map.removeLayer(m));
+  publicMarkers = [];
+
+  const filtered = HOSPITALS_DATA.filter(h => {
+    const locMatch = (!st || h.state === st) && (!d || h.district === d);
+    const villageMatch = (!v || v === 'other' || h.village.toLowerCase() === v.toLowerCase());
+    return (st || d) ? locMatch : villageMatch;
+  });
+
+  governmentData.shelters = filtered.map(h => ({
+    name:h.name, capacity:500,
+    occupied: Math.floor(Math.random() * 400),
+    distance:'Nearby',
+    type: h.name.toLowerCase().includes('hospital') ? 'hospital' : 'shelter'
+  }));
+  updateShelterList();
+
+  filtered.forEach(s => {
+    const isHosp = /hospital|clinic|medical|aiims|nims/i.test(s.name);
+    const color = isHosp ? '#ef4444' : '#10b981';
+    const m = L.marker([s.lat, s.lng], {
+      icon: L.divIcon({
+        html:`<div style="width:16px;height:16px;background:${color};border:2px solid #fff;border-radius:50%;box-shadow:0 0 8px ${color}"></div>`,
+        iconSize:[16,16], iconAnchor:[8,8]
+      })
+    }).addTo(map).bindPopup(`<b>${s.name}</b><br>${s.village}, ${s.district}<br><small>${s.extra}</small>`);
+    publicMarkers.push(m);
+  });
+
+  if(!skipFit && filtered.length > 0){
+    map.fitBounds(L.latLngBounds(filtered.map(h => [h.lat, h.lng])), { padding:[20,20] });
+  }
+}
+
+function findNearestShelter(){
+  if(!map) return;
+  showToast('🔍 Finding nearest shelter...', 'info');
+  if(userMarker){
+    map.setView(userMarker.getLatLng(), 15);
+    setTimeout(() => showToast('✅ Nearest: Velachery Govt School (0.8 km)', 'success'), 900);
+  }
+}
+
+/* ══════════════════════════════════════════
+   CHATBOT
+   ══════════════════════════════════════════ */
+function toggleChat(){
+  const w = document.getElementById('chatWindow');
+  w.classList.toggle('open');
+  document.getElementById('chatNotif').style.display = 'none';
+}
+
+function chatAsk(topic){
+  const w = document.getElementById('chatWindow');
+  if(!w.classList.contains('open')){ w.classList.add('open'); document.getElementById('chatNotif').style.display = 'none'; }
+  addMessage('user', getQText(topic));
+  setTimeout(() => addMessage('bot', getAText(topic)), 700);
+}
+
+function getQText(t){
+  return { shelter:'Where is the nearest shelter?', evacuate:'Do I need to evacuate?', safety:'Flood safety tips?', contacts:'Show emergency contacts' }[t] || t;
+}
+
+function getAText(t){
+  const answers = {
+    shelter:`🏕️ Nearest shelter is ${governmentData.shelters[0]?.name || 'Adyar Community Hall'}.`,
+    evacuate: governmentData.code >= 3
+      ? '🚨 YES — evacuate immediately to the nearest shelter.'
+      : 'ℹ️ No evacuation order for your zone. Stay alert.',
+    safety:'🛡️ Move to higher ground · Avoid floodwater · Keep emergency kit ready · Follow official instructions',
+    contacts:'📞 NDRF: 1078 · Emergency: 112 · Ambulance: 108 · Flood: 1070'
+  };
+  return answers[t] || 'Please use the quick buttons below.';
+}
+
+function addMessage(sender, text){
+  const c = document.getElementById('chatMessages');
+  const m = document.createElement('div');
+  m.className = `message ${sender}`;
+  m.innerHTML = `<div class="message-content">${text}</div>`;
+  c.appendChild(m);
+  c.scrollTop = c.scrollHeight;
+}
+
+function sendChat(){
+  const inp = document.getElementById('chatInput');
+  const text = inp.value.trim();
+  if(!text) return;
+  addMessage('user', text);
+  inp.value = '';
+  setTimeout(() => {
+    let r = 'Please use quick buttons for specific info.';
+    const l = text.toLowerCase();
+    if(l.includes('shelter')) r = getAText('shelter');
+    else if(l.includes('evacuat')) r = getAText('evacuate');
+    else if(l.includes('safety')) r = getAText('safety');
+    else if(l.includes('contact') || l.includes('number')) r = getAText('contacts');
+    addMessage('bot', r);
+  }, 900);
+}
+
+/* ══════════════════════════════════════════
+   EMERGENCY
+   ══════════════════════════════════════════ */
+function callEmergency(){
+  document.getElementById('emergencyNumber').textContent = '112';
+  document.getElementById('emergencyModal').classList.add('open');
+
+  const panicSignal = {
+    id: Date.now(),
+    time: new Date().toLocaleTimeString(),
+    location: currentZone.toUpperCase(),
+    phone: '9876543210'
+  };
+  localStorage.setItem('nfms_panic_signal', JSON.stringify(panicSignal));
+  localStorage.setItem('nfms_panic_sync', Date.now());
+  showToast('🚨 SOS sent to Control Room', 'error');
+}
+
+function makeCall(){
+  const n = document.getElementById('emergencyNumber').textContent;
+  window.location.href = `tel:${n}`;
+  closeModal();
+}
+
+function closeModal(){
+  document.getElementById('emergencyModal').classList.remove('open');
+}
+
+function simulatePhoto(){
+  showToast('📸 Camera would open here (demo)', 'info');
+}
+
+function updateZoneStatus(){
+  currentZone = document.getElementById('zoneSelect').value;
+  governmentData.shelters = getSheltersForZone(currentZone);
+  updateShelterList();
+  if(map) updatePublicMarkers();
+  showToast(`Zone updated to ${currentZone}`, 'success');
+}
+
+function speakAlert(msg){
+  if('speechSynthesis' in window){
+    const u = new SpeechSynthesisUtterance(msg);
+    u.lang = currentLang === 'hi' ? 'hi-IN' : currentLang === 'ta' ? 'ta-IN' : 'en-IN';
+    window.speechSynthesis.speak(u);
+  }
+}
+
+/* ══════════════════════════════════════════
+   LANGUAGE
+   ══════════════════════════════════════════ */
+document.getElementById('langSelector').addEventListener('change', (e) => {
+  currentLang = e.target.value;
+  updateUIFromGovernment();
+  showToast(`Language: ${e.target.options[e.target.selectedIndex].text}`, 'success');
+});
+
+/* ══════════════════════════════════════════
+   INIT
+   ══════════════════════════════════════════ */
+window.addEventListener('load', () => {
+  governmentData.shelters = getSheltersForZone(currentZone);
+  updateContactsList();
+  updateUIFromGovernment();
+  loadGovBroadcasts();
+  loadSupportReplies();
+});
+
+/* Expose to window */
+window.showPage = showPage;
+window.logout = logout;
+window.openDownload = openDownload;
+window.closeDownload = closeDownload;
+window.triggerApkDownload = triggerApkDownload;
+window.callEmergency = callEmergency;
+window.makeCall = makeCall;
+window.closeModal = closeModal;
+window.submitReport = submitReport;
+window.simulatePhoto = simulatePhoto;
+window.toggleChat = toggleChat;
+window.sendChat = sendChat;
+window.chatAsk = chatAsk;
+window.updateZoneStatus = updateZoneStatus;
+window.findNearestShelter = findNearestShelter;
+window.toggleContact = toggleContact;
+window.sendSupportMessage = sendSupportMessage;
+window.onStateChange = onStateChange;
+window.updatePublicMarkers = updatePublicMarkers;
+</script>
+</body>
+</html>

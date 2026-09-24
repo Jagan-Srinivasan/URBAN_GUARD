@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>URBANGUARD — Command Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--purple:#7c3aed;--purple-dark:#5b21b6;--danger:#dc2626;--warning:#f59e0b;--success:#10b981;--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--bg:#f8fafc;--card:#fff}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+.topbar{background:linear-gradient(90deg,#1e1b4b,#4c1d95);color:#fff;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;box-shadow:0 4px 20px rgba(30,27,75,0.2)}
+.brand{display:flex;align-items:center;gap:14px}
+.brand-icon{width:44px;height:44px;background:rgba(255,255,255,0.15);border-radius:12px;display:grid;place-items:center;font-size:20px}
+.brand-text{font-family:Orbitron,sans-serif;font-weight:900;letter-spacing:1px;line-height:1.1}
+.brand-text small{display:block;font-family:Inter,sans-serif;font-size:10px;font-weight:500;opacity:.75;letter-spacing:0.5px;margin-top:2px}
+.topbar-right{display:flex;align-items:center;gap:16px}
+.live-dot{display:inline-block;width:8px;height:8px;background:#10b981;border-radius:50%;box-shadow:0 0 0 0 rgba(16,185,129,.7);animation:pulse 2s infinite;margin-right:6px}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.7)}70%{box-shadow:0 0 0 10px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
+.clock{font-size:13px;font-weight:600;opacity:.9}
+.logout-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:8px 16px;border-radius:10px;font-weight:600;font-size:13px;cursor:pointer;transition:.2s}
+.logout-btn:hover{background:rgba(255,255,255,0.2)}
+
+.container{max-width:1400px;margin:0 auto;padding:28px}
+.section{margin-bottom:28px}
+.section-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-title i{color:var(--purple)}
+
+/* Alert Level Control */
+.alert-control{background:var(--card);border-radius:20px;padding:28px;box-shadow:0 4px 20px rgba(15,23,42,0.06);border:1px solid var(--line)}
+.alert-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.alert-title{font-size:18px;font-weight:800;color:var(--ink)}
+.alert-status{font-size:12px;font-weight:700;padding:6px 14px;border-radius:999px;text-transform:uppercase;letter-spacing:1px}
+.alert-levels{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+@media(max-width:700px){.alert-levels{grid-template-columns:repeat(2,1fr)}}
+.level-btn{padding:18px 12px;border-radius:14px;border:2px solid transparent;background:#f8fafc;cursor:pointer;transition:.2s;text-align:center;font-family:inherit;position:relative}
+.level-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,23,42,0.1)}
+.level-btn.active{border-color:currentColor;box-shadow:0 0 0 4px rgba(124,58,237,0.1);transform:translateY(-2px)}
+.level-btn .num{font-size:24px;font-weight:900;margin-bottom:4px}
+.level-btn .lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px}
+.lv-0{color:#10b981} .lv-1{color:#f59e0b} .lv-2{color:#f97316} .lv-3{color:#dc2626} .lv-4{color:#7f1d1d}
+.level-btn.active.lv-0{background:#d1fae5} .level-btn.active.lv-1{background:#fef3c7} .level-btn.active.lv-2{background:#ffedd5} .level-btn.active.lv-3{background:#fee2e2} .level-btn.active.lv-4{background:#fecaca}
+
+/* Grid layout */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:1000px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border-radius:20px;padding:24px;box-shadow:0 4px 20px rgba(15,23,42,0.06);border:1px solid var(--line)}
+.card h3{font-size:15px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.card h3 i{color:var(--purple)}
+.card h3 .count{background:var(--purple);color:#fff;font-size:11px;padding:2px 8px;border-radius:999px;margin-left:auto}
+
+/* Broadcast composer */
+.broadcast-form input,.broadcast-form select,.broadcast-form textarea{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;font-family:inherit;font-size:14px;margin-bottom:10px;outline:none;transition:.2s}
+.broadcast-form input:focus,.broadcast-form select:focus,.broadcast-form textarea:focus{border-color:var(--purple);box-shadow:0 0 0 4px rgba(124,58,237,0.1)}
+.broadcast-form textarea{resize:none;min-height:80px}
+.btn-primary{background:var(--purple);color:#fff;border:none;padding:14px 20px;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer;width:100%;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary:hover{background:var(--purple-dark);transform:translateY(-1px);box-shadow:0 8px 20px rgba(124,58,237,0.3)}
+
+/* List items */
+.list-item{padding:14px 0;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:flex-start}
+.list-item:last-child{border-bottom:none}
+.list-item .icon{width:36px;height:36px;border-radius:10px;background:#f1f5f9;display:grid;place-items:center;color:var(--purple);flex-shrink:0;font-size:14px}
+.list-item .body{flex:1;min-width:0}
+.list-item .title{font-weight:700;font-size:13px;color:var(--ink);margin-bottom:3px}
+.list-item .desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:4px;word-break:break-word}
+.list-item .time{font-size:10px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+.list-item.urgent{background:#fff5f5;margin:0 -12px;padding:14px 12px;border-radius:10px;border-bottom:none;margin-bottom:8px}
+.list-item.urgent .icon{background:#fee2e2;color:var(--danger)}
+
+.reply-btn{background:#f1f5f9;border:none;color:var(--purple);padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;margin-top:6px}
+.reply-btn:hover{background:#e0e7ff}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.6);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
+.modal-overlay.active{display:flex}
+.modal{background:#fff;border-radius:20px;padding:28px;max-width:480px;width:100%;position:relative}
+.modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border:none;background:#f1f5f9;border-radius:50%;cursor:pointer;color:var(--muted)}
+.modal h2{font-size:18px;font-weight:800;margin-bottom:6px}
+.modal p{font-size:13px;color:var(--muted);margin-bottom:16px}
+.modal textarea{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:12px;font-family:inherit;font-size:14px;min-height:120px;resize:none;outline:none}
+.modal textarea:focus{border-color:var(--purple)}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:#fff;padding:14px 20px;border-radius:12px;font-size:13px;font-weight:600;z-index:200;animation:slideIn .3s ease;box-shadow:0 12px 30px rgba(15,23,42,0.3);max-width:340px}
+.toast.success{background:var(--success)} .toast.warn{background:var(--warning)} .toast.err{background:var(--danger)}
+@keyframes slideIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+
+.empty{text-align:center;padding:30px;color:var(--muted);font-size:13px}
+.empty i{font-size:32px;opacity:.3;display:block;margin-bottom:10px}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-icon">🏛️</div>
+    <div class="brand-text">URBANGUARD
+      <small>GOVERNMENT COMMAND CENTER</small>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span style="font-size:12px"><span class="live-dot"></span>LIVE SYNC</span>
+    <span class="clock" id="clock">--:--:--</span>
+    <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Exit</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- ALERT LEVEL CONTROL -->
+  <div class="section">
+    <div class="section-title"><i class="fas fa-tower-broadcast"></i> Emergency Alert Level — Drives Citizen Banner Live</div>
+    <div class="alert-control">
+      <div class="alert-header">
+        <div>
+          <div class="alert-title">Current Status: <span id="currentStatusText">NORMAL</span></div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px">Click any level below to broadcast it to all citizen devices instantly</div>
+        </div>
+        <div class="alert-status" id="statusBadge" style="background:#d1fae5;color:#065f46">● NORMAL</div>
+      </div>
+      <div class="alert-levels" id="levelButtons">
+        <button class="level-btn lv-0 active" onclick="setAlertLevel(0)">
+          <div class="num">0</div><div class="lbl">Normal</div>
+        </button>
+        <button class="level-btn lv-1" onclick="setAlertLevel(1)">
+          <div class="num">1</div><div class="lbl">Watch</div>
+        </button>
+        <button class="level-btn lv-2" onclick="setAlertLevel(2)">
+          <div class="num">2</div><div class="lbl">Alert</div>
+        </button>
+        <button class="level-btn lv-3" onclick="setAlertLevel(3)">
+          <div class="num">3</div><div class="lbl">Danger</div>
+        </button>
+        <button class="level-btn lv-4" onclick="setAlertLevel(4)">
+          <div class="num">4</div><div class="lbl">Critical</div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- BROADCAST COMPOSER -->
+    <div class="card">
+      <h3><i class="fas fa-bullhorn"></i> Send Official Broadcast</h3>
+      <form class="broadcast-form" onsubmit="sendBroadcast(event)">
+        <select id="broadcastType">
+          <option value="official">📢 General Announcement</option>
+          <option value="evac">🚨 Evacuation Order</option>
+          <option value="shelter">🏕️ Shelter Update</option>
+          <option value="road">🚧 Road Closure</option>
+        </select>
+        <textarea id="broadcastText" placeholder="Type your message to citizens... e.g., 'Immediate evacuation required for Zone A. Proceed to Velachery Govt School.'" required></textarea>
+        <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Publish to All Citizens</button>
+      </form>
+    </div>
+
+    <!-- SUPPORT INBOX -->
+    <div class="card">
+      <h3><i class="fas fa-inbox"></i> Citizen Support Messages <span class="count" id="supportCount">0</span></h3>
+      <div id="supportList"><div class="empty"><i class="fas fa-envelope-open"></i>No messages yet</div></div>
+    </div>
+
+  </div>
+
+  <div class="grid" style="margin-top:24px">
+
+    <!-- PANIC SIGNALS -->
+    <div class="card">
+      <h3><i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i> Live Panic Signals <span class="count" style="background:var(--danger)" id="panicCount">0</span></h3>
+      <div id="panicList"><div class="empty"><i class="fas fa-shield-alt"></i>No active panic signals</div></div>
+    </div>
+
+    <!-- CITIZEN REPORTS -->
+    <div class="card">
+      <h3><i class="fas fa-map-pin"></i> Community Reports <span class="count" id="reportCount">0</span></h3>
+      <div id="reportList"><div class="empty"><i class="fas fa-users"></i>No community reports</div></div>
+    </div>
+
+  </div>
+
+  <!-- SENT BROADCASTS LOG -->
+  <div class="section" style="margin-top:24px">
+    <div class="card">
+      <h3><i class="fas fa-history"></i> Broadcast History</h3>
+      <div id="broadcastHistory"><div class="empty"><i class="fas fa-comment-dots"></i>No broadcasts sent</div></div>
+    </div>
+  </div>
+
+</div>
+
+<style>
+.ug-gov-node-panel{background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px;margin-bottom:24px;box-shadow:0 4px 20px rgba(15,23,42,.06)}.ug-gov-node-head{display:flex;align-items:center;gap:10px;margin-bottom:4px}.ug-gov-node-head i{color:var(--purple)}.ug-gov-node-head h3{font-size:15px}.ug-gov-node-sub{font-size:12px;color:var(--muted);margin-bottom:16px}.ug-gov-filters{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}.ug-gov-filters select{width:100%;padding:11px;border:1.5px solid var(--line);border-radius:10px;background:#fff;font:inherit}.ug-gov-node-wrap{overflow:auto}.ug-gov-node-wrap table{min-width:900px}.ug-gov-node-wrap th{font-size:10px;text-transform:uppercase;color:var(--muted);padding:9px;text-align:left;border-bottom:2px solid var(--line)}.ug-gov-node-wrap td{padding:11px 9px;border-bottom:1px solid var(--line);font-size:12px}.ug-gov-pill{padding:3px 8px;border-radius:999px;background:#d1fae5;color:#065f46;font-size:10px;font-weight:800;text-transform:uppercase}@media(max-width:700px){.ug-gov-filters{grid-template-columns:1fr}}
+</style>
+<div class="ug-gov-node-panel"><div class="ug-gov-node-head"><i class="fas fa-sitemap"></i><h3>Registered Flood Monitoring Nodes</h3><span class="count" id="govNodeCount" style="margin-left:auto">0</span></div><div class="ug-gov-node-sub">Live registry received from the administrator. Select the state and district to view nodes under that government jurisdiction.</div><div class="ug-gov-filters"><select id="govNodeState" onchange="ugGovFilterDistricts()"><option value="">Select State</option></select><select id="govNodeDistrict" onchange="renderGovernmentNodes()"><option value="">Select District</option></select></div><div class="ug-gov-node-wrap"><table><thead><tr><th>Node</th><th>State</th><th>District</th><th>Latitude</th><th>Longitude</th><th>ThingSpeak Channel</th><th>Installed</th><th>Installer / Worker ID</th><th>Status</th></tr></thead><tbody id="govNodeRows"></tbody></table></div></div>
+<!-- REPLY MODAL -->
+<div class="modal-overlay" id="replyModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeReply()"><i class="fas fa-times"></i></button>
+    <h2>Reply to Citizen</h2>
+    <p id="replyContext">Original message...</p>
+    <textarea id="replyText" placeholder="Type your official reply..." required></textarea>
+    <button class="btn-primary" style="margin-top:14px" onclick="sendReply()"><i class="fas fa-reply"></i> Send Official Reply</button>
+  </div>
+</div>
+
+<script>
+// ============================================
+// GOVERNMENT COMMAND CENTER
+// Syncs with citizen portal via localStorage
+// ============================================
+
+let currentAlertLevel = 0;
+const STATUS_NAMES = ['NORMAL','WATCH','ALERT','DANGER','CRITICAL'];
+const STATUS_COLORS = [
+  {bg:'#d1fae5', color:'#065f46'},
+  {bg:'#fef3c7', color:'#92400e'},
+  {bg:'#ffedd5', color:'#9a3412'},
+  {bg:'#fee2e2', color:'#991b1b'},
+  {bg:'#fecaca', color:'#7f1d1d'}
+];
+
+// ---------- INIT ----------
+window.addEventListener('load', () => {
+  // Load existing state
+  const saved = localStorage.getItem('nfms_alert_level');
+  if (saved !== null) currentAlertLevel = parseInt(saved);
+  updateAlertUI();
+
+  // Load all data
+  refreshAll();
+
+  // Listen for citizen activity (from other tabs)
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'nfms_public_report_sync' || e.key === 'nfms_support_sync' || e.key === 'nfms_panic_signal') {
+      refreshAll();
+      toast('📡 New activity from citizens', 'success');
+    }
+  });
+
+  // Clock
+  setInterval(() => {
+    document.getElementById('clock').textContent = new Date().toLocaleTimeString();
+  }, 1000);
+});
+
+// ---------- ALERT LEVEL ----------
+function setAlertLevel(level){
+  currentAlertLevel = level;
+  localStorage.setItem('nfms_alert_level', level);
+
+  // Force sync event for other tabs
+  localStorage.setItem('nfms_alert_sync', Date.now());
+
+  updateAlertUI();
+  toast(`✅ Alert level set to ${STATUS_NAMES[level]} — Citizens notified`, level >= 3 ? 'warn' : 'success');
+}
+
+function updateAlertUI(){
+  document.querySelectorAll('.level-btn').forEach((b,i) => {
+    b.classList.toggle('active', i === currentAlertLevel);
+  });
+
+  const statusText = document.getElementById('currentStatusText');
+  const badge = document.getElementById('statusBadge');
+
+  statusText.textContent = STATUS_NAMES[currentAlertLevel];
+  badge.textContent = '● ' + STATUS_NAMES[currentAlertLevel];
+  badge.style.background = STATUS_COLORS[currentAlertLevel].bg;
+  badge.style.color = STATUS_COLORS[currentAlertLevel].color;
+}
+
+// ---------- BROADCASTS ----------
+function sendBroadcast(e){
+  e.preventDefault();
+  const type = document.getElementById('broadcastType').value;
+  const text = document.getElementById('broadcastText').value.trim();
+  if (!text) return;
+
+  const broadcasts = JSON.parse(localStorage.getItem('nfms_broadcasts') || '[]');
+  broadcasts.unshift({
+    id: Date.now(),
+    type: type,
+    text: text,
+    time: new Date().toLocaleTimeString(),
+    sender: 'COMMAND CENTER'
+  });
+  localStorage.setItem('nfms_broadcasts', JSON.stringify(broadcasts.slice(0, 50)));
+  localStorage.setItem('nfms_broadcast_sync', Date.now());
+
+  document.getElementById('broadcastText').value = '';
+  refreshAll();
+  toast('📢 Broadcast sent to all citizens', 'success');
+}
+
+// ---------- SUPPORT REPLIES ----------
+let currentReplyMsg = null;
+
+function openReply(msgId){
+  const messages = JSON.parse(localStorage.getItem('nfms_support_messages') || '[]');
+  currentReplyMsg = messages.find(m => m.id === msgId);
+  if (!currentReplyMsg) return;
+
+  document.getElementById('replyContext').textContent = `"${currentReplyMsg.message.substring(0, 120)}..."`;
+  document.getElementById('replyText').value = '';
+  document.getElementById('replyModal').classList.add('active');
+}
+
+function closeReply(){
+  document.getElementById('replyModal').classList.remove('active');
+  currentReplyMsg = null;
+}
+
+function sendReply(){
+  const reply = document.getElementById('replyText').value.trim();
+  if (!reply || !currentReplyMsg) return;
+
+  const replies = JSON.parse(localStorage.getItem('nfms_support_replies') || '[]');
+  replies.unshift({
+    id: Date.now(),
+    originalMsg: currentReplyMsg.message,
+    subject: currentReplyMsg.subject,
+    reply: reply,
+    time: new Date().toLocaleTimeString()
+  });
+  localStorage.setItem('nfms_support_replies', JSON.stringify(replies.slice(0, 50)));
+  localStorage.setItem('nfms_support_reply_sync', Date.now());
+
+  // Remove original from inbox
+  const messages = JSON.parse(localStorage.getItem('nfms_support_messages') || '[]');
+  const filtered = messages.filter(m => m.id !== currentReplyMsg.id);
+  localStorage.setItem('nfms_support_messages', JSON.stringify(filtered));
+
+  closeReply();
+  refreshAll();
+  toast('📩 Reply sent to citizen', 'success');
+}
+
+// ---------- REFRESH ALL DATA ----------
+function refreshAll(){
+  loadSupport();
+  loadPanic();
+  loadReports();
+  loadHistory();
+}
+
+function loadSupport(){
+  const messages = JSON.parse(localStorage.getItem('nfms_support_messages') || '[]');
+  const container = document.getElementById('supportList');
+  document.getElementById('supportCount').textContent = messages.length;
+
+  if (messages.length === 0){
+    container.innerHTML = '<div class="empty"><i class="fas fa-envelope-open"></i>No messages yet</div>';
+    return;
+  }
+
+  container.innerHTML = messages.slice(0, 5).map(m => `
+    <div class="list-item">
+      <div class="icon"><i class="fas fa-envelope"></i></div>
+      <div class="body">
+        <div class="title">${m.subject || 'General'} <span style="font-weight:500;color:var(--muted)">— ${m.time}</span></div>
+        <div class="desc">${escapeHtml(m.message)}</div>
+        <button class="reply-btn" onclick="openReply(${m.id})"><i class="fas fa-reply"></i> Reply</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function loadPanic(){
+  const panic = localStorage.getItem('nfms_panic_signal');
+  const container = document.getElementById('panicList');
+  const count = document.getElementById('panicCount');
+
+  if (!panic){
+    container.innerHTML = '<div class="empty"><i class="fas fa-shield-alt"></i>No active panic signals</div>';
+    count.textContent = '0';
+    return;
+  }
+
+  const p = JSON.parse(panic);
+  count.textContent = '1';
+  container.innerHTML = `
+    <div class="list-item urgent">
+      <div class="icon"><i class="fas fa-exclamation-triangle"></i></div>
+      <div class="body">
+        <div class="title">🚨 SOS SIGNAL RECEIVED</div>
+        <div class="desc">
+          Location: <strong>${p.location || 'Unknown'}</strong><br>
+          Phone: <strong>${p.phone || 'N/A'}</strong><br>
+          Time: ${p.time}
+        </div>
+        <button class="reply-btn" style="background:var(--danger);color:#fff" onclick="respondToPanic('${p.location}')">
+          <i class="fas fa-phone"></i> Dispatch Team
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function respondToPanic(location){
+  toast(`✅ Response team dispatched to ${location}`, 'success');
+  // Also send a broadcast
+  const broadcasts = JSON.parse(localStorage.getItem('nfms_broadcasts') || '[]');
+  broadcasts.unshift({
+    id: Date.now(),
+    type: 'official',
+    text: `✅ Response team dispatched to ${location}. Help is on the way.`,
+    time: new Date().toLocaleTimeString(),
+    sender: 'COMMAND CENTER'
+  });
+  localStorage.setItem('nfms_broadcasts', JSON.stringify(broadcasts.slice(0, 50)));
+  localStorage.setItem('nfms_broadcast_sync', Date.now());
+  refreshAll();
+}
+
+function loadReports(){
+  const reports = JSON.parse(localStorage.getItem('nfms_public_reports') || '[]');
+  const container = document.getElementById('reportList');
+  document.getElementById('reportCount').textContent = reports.length;
+
+  if (reports.length === 0){
+    container.innerHTML = '<div class="empty"><i class="fas fa-users"></i>No community reports</div>';
+    return;
+  }
+
+  container.innerHTML = reports.slice(0, 5).map(r => `
+    <div class="list-item ${r.urgent ? 'urgent' : ''}">
+      <div class="icon"><i class="fas ${r.urgent ? 'fa-exclamation' : 'fa-map-marker-alt'}"></i></div>
+      <div class="body">
+        <div class="title">${escapeHtml(r.location)} ${r.urgent ? '<span style="background:#dc2626;color:#fff;padding:2px 6px;border-radius:4px;font-size:10px;margin-left:6px">URGENT</span>' : ''}</div>
+        <div class="desc">${escapeHtml(r.message)}</div>
+        <div class="time">${r.time} • From: ${r.phone || 'Anonymous'}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function loadHistory(){
+  const broadcasts = JSON.parse(localStorage.getItem('nfms_broadcasts') || '[]');
+  const container = document.getElementById('broadcastHistory');
+
+  if (broadcasts.length === 0){
+    container.innerHTML = '<div class="empty"><i class="fas fa-comment-dots"></i>No broadcasts sent</div>';
+    return;
+  }
+
+  container.innerHTML = broadcasts.slice(0, 8).map(b => `
+    <div class="list-item">
+      <div class="icon"><i class="fas fa-bullhorn"></i></div>
+      <div class="body">
+        <div class="title">${b.type.toUpperCase()} <span style="font-weight:500;color:var(--muted)">— ${b.time}</span></div>
+        <div class="desc">${escapeHtml(b.text)}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ---------- UTILS ----------
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
+
+function toast(msg, type = ''){
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3200);
+}
+
+function logout(){
+  localStorage.removeItem('ug_demo_role');
+  window.location.href = 'index.html';
+}
+
+window.setAlertLevel = setAlertLevel;
+window.sendBroadcast = sendBroadcast;
+window.openReply = openReply;
+window.closeReply = closeReply;
+window.sendReply = sendReply;
+window.respondToPanic = respondToPanic;
+window.logout = logout;
+const UG_NODE_STORAGE_G='urbanguard_nodes_v1',UG_NODE_SYNC_G='urbanguard_nodes_sync',UG_STATES_G=["Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal", "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Jammu and Kashmir", "Ladakh", "Lakshadweep", "Puducherry"],UG_DISTRICTS_G={"Andhra Pradesh": ["Alluri Sitharama Raju", "Anakapalli", "Ananthapuramu", "Annamayya", "Bapatla", "Chittoor", "Dr. B.R. Ambedkar Konaseema", "East Godavari", "Eluru", "Guntur", "Kakinada", "Krishna", "Kurnool", "Nandyal", "NTR", "Palnadu", "Parvathipuram Manyam", "Prakasam", "Srikakulam", "Sri Potti Sriramulu Nellore", "Sri Sathya Sai", "Tirupati", "Visakhapatnam", "Vizianagaram", "West Godavari", "YSR Kadapa"], "Arunachal Pradesh": ["Anjaw", "Changlang", "Dibang Valley", "East Kameng", "East Siang", "Kamle", "Kra Daadi", "Kurung Kumey", "Lepa Rada", "Lohit", "Longding", "Lower Dibang Valley", "Lower Siang", "Lower Subansiri", "Namsai", "Pakke-Kessang", "Papum Pare", "Shi-Yomi", "Siang", "Tawang", "Tirap", "Upper Siang", "Upper Subansiri", "West Kameng", "West Siang"], "Assam": ["Baksa", "Bajali", "Barpeta", "Biswanath", "Bongaigaon", "Cachar", "Charaideo", "Chirang", "Darrang", "Dhemaji", "Dhubri", "Dibrugarh", "Dima Hasao", "Goalpara", "Golaghat", "Hailakandi", "Hojai", "Jorhat", "Kamrup", "Kamrup Metropolitan", "Karbi Anglong", "Kokrajhar", "Lakhimpur", "Majuli", "Morigaon", "Nagaon", "Nalbari", "Sivasagar", "Sonitpur", "South Salmara-Mankachar", "Tamulpur", "Tinsukia", "Udalguri", "West Karbi Anglong"], "Bihar": ["Araria", "Arwal", "Aurangabad", "Banka", "Begusarai", "Bhagalpur", "Bhojpur", "Buxar", "Darbhanga", "East Champaran", "Gaya", "Gopalganj", "Jamui", "Jehanabad", "Kaimur", "Katihar", "Khagaria", "Kishanganj", "Lakhisarai", "Madhepura", "Madhubani", "Munger", "Muzaffarpur", "Nalanda", "Nawada", "Patna", "Purnia", "Rohtas", "Saharsa", "Samastipur", "Saran", "Sheikhpura", "Sheohar", "Sitamarhi", "Siwan", "Supaul", "Vaishali", "West Champaran"], "Chhattisgarh": ["Balod", "Baloda Bazar", "Balrampur-Ramanujganj", "Bastar", "Bemetara", "Bijapur", "Bilaspur", "Dantewada", "Dhamtari", "Durg", "Gariaband", "Gaurela-Pendra-Marwahi", "Janjgir-Champa", "Jashpur", "Kabirdham", "Kanker", "Kondagaon", "Korba", "Korea", "Mahasamund", "Manendragarh-Chirmiri-Bharatpur", "Mungeli", "Narayanpur", "Raigarh", "Rajnandgaon", "Sakti", "Sarangarh-Bilaigarh", "Sukma", "Surajpur", "Surguja"], "Goa": ["North Goa", "South Goa"], "Gujarat": ["Ahmedabad", "Amreli", "Anand", "Aravalli", "Banaskantha", "Bharuch", "Bhavnagar", "Botad", "Chhota Udaipur", "Dahod", "Dang", "Devbhumi Dwarka", "Gandhinagar", "Gir Somnath", "Jamnagar", "Junagadh", "Kachchh", "Kheda", "Mahisagar", "Mehsana", "Morbi", "Narmada", "Navsari", "Panchmahal", "Patan", "Porbandar", "Rajkot", "Sabarkantha", "Surat", "Surendranagar", "Tapi", "Vadodara", "Valsad"], "Haryana": ["Ambala", "Bhiwani", "Charkhi Dadri", "Faridabad", "Fatehabad", "Gurugram", "Hisar", "Jhajjar", "Jind", "Kaithal", "Karnal", "Kurukshetra", "Mahendragarh", "Nuh", "Palwal", "Panchkula", "Panipat", "Rewari", "Rohtak", "Sirsa", "Sonipat", "Yamunanagar"], "Himachal Pradesh": ["Bilaspur", "Chamba", "Hamirpur", "Kangra", "Kinnaur", "Kullu", "Lahaul and Spiti", "Mandi", "Shimla", "Sirmaur", "Solan", "Una"], "Jharkhand": ["Bokaro", "Chatra", "Deoghar", "Dhanbad", "Dumka", "East Singhbhum", "Garhwa", "Giridih", "Godda", "Gumla", "Hazaribagh", "Jamtara", "Khunti", "Koderma", "Latehar", "Lohardaga", "Pakur", "Palamu", "Ramgarh", "Ranchi", "Sahebganj", "Seraikela-Kharsawan", "Simdega", "West Singhbhum"], "Karnataka": ["Bagalkot", "Ballari", "Belagavi", "Bengaluru Rural", "Bengaluru Urban", "Bidar", "Chamarajanagar", "Chikkaballapur", "Chikkamagaluru", "Chitradurga", "Dakshina Kannada", "Davanagere", "Dharwad", "Gadag", "Hassan", "Haveri", "Kalaburagi", "Kodagu", "Kolar", "Koppal", "Mandya", "Mysuru", "Raichur", "Ramanagara", "Shivamogga", "Tumakuru", "Udupi", "Uttara Kannada", "Vijayapura", "Yadgir"], "Kerala": ["Alappuzha", "Ernakulam", "Idukki", "Kannur", "Kasaragod", "Kollam", "Kottayam", "Kozhikode", "Malappuram", "Palakkad", "Pathanamthitta", "Thiruvananthapuram", "Thrissur", "Wayanad"], "Madhya Pradesh": ["Agar Malwa", "Alirajpur", "Anuppur", "Ashoknagar", "Balaghat", "Barwani", "Betul", "Bhind", "Bhopal", "Burhanpur", "Chhatarpur", "Chhindwara", "Damoh", "Datia", "Dewas", "Dhar", "Dindori", "Guna", "Gwalior", "Harda", "Indore", "Jabalpur", "Jhabua", "Katni", "Khandwa", "Khargone", "Maihar", "Mandla", "Mandsaur", "Mauganj", "Morena", "Narmadapuram", "Narsinghpur", "Neemuch", "Panna", "Raisen", "Rajgarh", "Ratlam", "Rewa", "Sagar", "Satna", "Sehore", "Seoni", "Shahdol", "Shajapur", "Sheopur", "Shivpuri", "Sidhi", "Singrauli", "Tikamgarh", "Ujjain", "Umaria", "Vidisha"], "Maharashtra": ["Ahmednagar", "Akola", "Amravati", "Beed", "Bhandara", "Buldhana", "Chandrapur", "Dhule", "Gadchiroli", "Gondia", "Hingoli", "Jalgaon", "Jalna", "Kolhapur", "Latur", "Mumbai City", "Mumbai Suburban", "Nagpur", "Nanded", "Nandurbar", "Nashik", "Osmanabad", "Palghar", "Parbhani", "Pune", "Raigad", "Ratnagiri", "Sangli", "Satara", "Sindhudurg", "Solapur", "Thane", "Wardha", "Washim", "Yavatmal"], "Manipur": ["Bishnupur", "Chandel", "Churachandpur", "Imphal East", "Imphal West", "Jiribam", "Kakching", "Kamjong", "Kangpokpi", "Noney", "Pherzawl", "Senapati", "Tamenglong", "Tengnoupal", "Thoubal", "Ukhrul"], "Meghalaya": ["East Garo Hills", "East Jaintia Hills", "East Khasi Hills", "North Garo Hills", "Ri Bhoi", "South Garo Hills", "South West Garo Hills", "South West Khasi Hills", "West Garo Hills", "West Jaintia Hills", "West Khasi Hills"], "Mizoram": ["Aizawl", "Champhai", "Hnahthial", "Khawzawl", "Kolasib", "Lawngtlai", "Lunglei", "Mamit", "Saitual", "Serchhip"], "Nagaland": ["Chumoukedima", "Dimapur", "Kiphire", "Kohima", "Longleng", "Meluri", "Mokokchung", "Mon", "Niuland", "Noklak", "Peren", "Phek", "Shamator", "Tuensang", "Wokha", "Zunheboto"], "Odisha": ["Angul", "Balangir", "Balasore", "Bargarh", "Bhadrak", "Boudh", "Cuttack", "Deogarh", "Dhenkanal", "Gajapati", "Ganjam", "Jagatsinghpur", "Jajpur", "Jharsuguda", "Kalahandi", "Kandhamal", "Kendrapara", "Keonjhar", "Khordha", "Koraput", "Malkangiri", "Mayurbhanj", "Nabarangpur", "Nayagarh", "Nuapada", "Puri", "Rayagada", "Sambalpur", "Subarnapur", "Sundargarh"], "Punjab": ["Amritsar", "Barnala", "Bathinda", "Faridkot", "Fatehgarh Sahib", "Fazilka", "Ferozepur", "Gurdaspur", "Hoshiarpur", "Jalandhar", "Kapurthala", "Ludhiana", "Malerkotla", "Mansa", "Moga", "Pathankot", "Patiala", "Rupnagar", "Sahibzada Ajit Singh Nagar", "Sangrur", "Shahid Bhagat Singh Nagar", "Sri Muktsar Sahib", "Tarn Taran"], "Rajasthan": ["Ajmer", "Alwar", "Anupgarh", "Balotra", "Banswara", "Baran", "Barmer", "Beawar", "Bharatpur", "Bhilwara", "Bikaner", "Bundi", "Chittorgarh", "Churu", "Dausa", "Deeg", "Dholpur", "Didwana-Kuchamana", "Dungarpur", "Ganganagar", "Hanumangarh", "Jaipur", "Jaisalmer", "Jalore", "Jhalawar", "Jhunjhunu", "Jodhpur", "Karauli", "Kota", "Nagaur", "Pali", "Phalodi", "Pratapgarh", "Rajsamand", "Salumbar", "Sawai Madhopur", "Sikar", "Sirohi", "Tonk", "Udaipur"], "Sikkim": ["Gangtok", "Gyalshing", "Mangan", "Namchi", "Pakyong", "Soreng"], "Tamil Nadu": ["Ariyalur", "Chengalpattu", "Chennai", "Coimbatore", "Cuddalore", "Dharmapuri", "Dindigul", "Erode", "Kallakurichi", "Kancheepuram", "Karur", "Krishnagiri", "Madurai", "Mayiladuthurai", "Nagapattinam", "Kanniyakumari", "Namakkal", "Perambalur", "Pudukkottai", "Ramanathapuram", "Ranipet", "Salem", "Sivaganga", "Tenkasi", "Thanjavur", "Theni", "Thoothukudi", "Tiruchirappalli", "Tirunelveli", "Tirupathur", "Tiruppur", "Tiruvallur", "Tiruvarur", "Tiruvannamalai", "The Nilgiris", "Vellore", "Viluppuram", "Virudhunagar"], "Telangana": ["Adilabad", "Bhadradri Kothagudem", "Hanamkonda", "Hyderabad", "Jagtial", "Jangaon", "Jayashankar Bhupalpally", "Jogulamba Gadwal", "Kamareddy", "Karimnagar", "Khammam", "Komaram Bheem Asifabad", "Mahabubabad", "Mahabubnagar", "Mancherial", "Medak", "Medchal-Malkajgiri", "Mulugu", "Nagarkurnool", "Nalgonda", "Narayanpet", "Nirmal", "Nizamabad", "Peddapalli", "Rajanna Sircilla", "Rangareddy", "Sangareddy", "Siddipet", "Suryapet", "Vikarabad", "Wanaparthy", "Warangal", "Yadadri Bhuvanagiri"], "Tripura": ["Dhalai", "Gomati", "Khowai", "North Tripura", "Sepahijala", "South Tripura", "Unakoti", "West Tripura"], "Uttar Pradesh": ["Agra", "Aligarh", "Ambedkar Nagar", "Amethi", "Amroha", "Auraiya", "Ayodhya", "Azamgarh", "Baghpat", "Bahraich", "Ballia", "Balrampur", "Banda", "Barabanki", "Bareilly", "Basti", "Bhadohi", "Bijnor", "Budaun", "Bulandshahr", "Chandauli", "Chitrakoot", "Deoria", "Etah", "Etawah", "Farrukhabad", "Fatehpur", "Firozabad", "Gautam Buddha Nagar", "Ghaziabad", "Ghazipur", "Gonda", "Gorakhpur", "Hamirpur", "Hapur", "Hardoi", "Hathras", "Jalaun", "Jaunpur", "Jhansi", "Kannauj", "Kanpur Dehat", "Kanpur Nagar", "Kasganj", "Kaushambi", "Kushinagar", "Lakhimpur Kheri", "Lalitpur", "Lucknow", "Maharajganj", "Mahoba", "Mainpuri", "Mathura", "Mau", "Meerut", "Mirzapur", "Moradabad", "Muzaffarnagar", "Pilibhit", "Pratapgarh", "Prayagraj", "Raebareli", "Rampur", "Saharanpur", "Sambhal", "Sant Kabir Nagar", "Shahjahanpur", "Shamli", "Shravasti", "Siddharthnagar", "Sitapur", "Sonbhadra", "Sultanpur", "Unnao", "Varanasi"], "Uttarakhand": ["Almora", "Bageshwar", "Chamoli", "Champawat", "Dehradun", "Haridwar", "Nainital", "Pauri Garhwal", "Pithoragarh", "Rudraprayag", "Tehri Garhwal", "Udham Singh Nagar", "Uttarkashi"], "West Bengal": ["Alipurduar", "Bankura", "Paschim Bardhaman", "Purba Bardhaman", "Birbhum", "Cooch Behar", "Darjeeling", "Hooghly", "Howrah", "Jalpaiguri", "Jhargram", "Kalimpong", "Kolkata", "Maldah", "Murshidabad", "Nadia", "North 24 Parganas", "South 24 Parganas", "Paschim Medinipur", "Purba Medinipur", "Uttar Dinajpur", "Dakshin Dinajpur"], "Andaman and Nicobar Islands": ["Nicobar", "North and Middle Andaman", "South Andaman"], "Chandigarh": ["Chandigarh"], "Dadra and Nagar Haveli and Daman and Diu": ["Dadra and Nagar Haveli", "Daman", "Diu"], "Delhi": ["Central Delhi", "East Delhi", "New Delhi", "North Delhi", "North East Delhi", "North West Delhi", "Shahdara", "South Delhi", "South East Delhi", "South West Delhi", "West Delhi"], "Jammu and Kashmir": ["Anantnag", "Bandipora", "Baramulla", "Budgam", "Doda", "Ganderbal", "Jammu", "Kathua", "Kishtwar", "Kulgam", "Kupwara", "Poonch", "Pulwama", "Rajouri", "Ramban", "Reasi", "Samba", "Shopian", "Srinagar", "Udhampur"], "Ladakh": ["Kargil", "Leh"], "Lakshadweep": ["Agatti", "Amini", "Andrott", "Bitra", "Chetlat", "Kavaratti", "Kalpeni", "Kiltan", "Minicoy"], "Puducherry": ["Karaikal", "Mahe", "Puducherry", "Yanam"]};
+function ugGovNodes(){try{return JSON.parse(localStorage.getItem(UG_NODE_STORAGE_G)||'[]')}catch(e){return[]}}
+function ugGovInitNodes(){const s=document.getElementById('govNodeState');if(!s)return;s.innerHTML='<option value="">Select State</option>'+UG_STATES_G.map(x=>`<option value="${x}">${x}</option>`).join('');renderGovernmentNodes()}
+function ugGovFilterDistricts(){const state=document.getElementById('govNodeState').value,d=document.getElementById('govNodeDistrict'),list=UG_DISTRICTS_G[state]||[];d.innerHTML='<option value="">Select District</option>'+list.map(x=>`<option value="${x}">${x}</option>`).join('');renderGovernmentNodes()}
+function renderGovernmentNodes(){const body=document.getElementById('govNodeRows');if(!body)return;const st=document.getElementById('govNodeState').value,di=document.getElementById('govNodeDistrict').value,all=ugGovNodes(),rows=all.filter(n=>(!st||n.state===st)&&(!di||n.district===di)),count=document.getElementById('govNodeCount');if(count)count.textContent=rows.length;if(!rows.length){body.innerHTML='<tr><td colspan="9" style="text-align:center;padding:28px;color:var(--muted)">No registered nodes for the selected state and district.</td></tr>';return}body.innerHTML=rows.map(n=>`<tr><td><b>${escapeHtml(n.id)}</b></td><td>${escapeHtml(n.state)}</td><td>${escapeHtml(n.district)}</td><td>${Number(n.lat).toFixed(5)}</td><td>${Number(n.lng).toFixed(5)}</td><td>${escapeHtml(n.channelId)}</td><td>${escapeHtml(n.installed)}</td><td>${escapeHtml(n.installer)}<br><span style="font-size:10px;color:var(--muted)">${escapeHtml(n.workerId)}</span></td><td><span class="ug-gov-pill">${escapeHtml(n.status||'active')}</span></td></tr>`).join('')}
+window.addEventListener('load',ugGovInitNodes);window.addEventListener('storage',e=>{if(e.key===UG_NODE_STORAGE_G||e.key===UG_NODE_SYNC_G)renderGovernmentNodes()});window.ugGovFilterDistricts=ugGovFilterDistricts;window.renderGovernmentNodes=renderGovernmentNodes;
+
+</script>
+</body>
+</html>
